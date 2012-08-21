@@ -36,32 +36,43 @@ global class FGW_APIFactory {
 
     public static FGW_IAPI getFederal_API_Instance(){
         String IAPIClass;
+        FGW_IAPI fedAPI;
                 
         FGW_Application_Settings__c AppSettings = FGW_Constants.AppSettings;
         
         FGW_API_Settings__c FederalSettings = FGW_API_Settings__c.getInstance(AppSettings.Federal_API_Name__c);
-       /*
-        if (legSettings != null && APIsettings != null) {
-            IAPIClass = legSettings.API_Class_Name__c;
-        }                
-        else {
-            IAPIClass = defaultCongressAPIClass;
+        
+        IAPIClass = FederalSettings.Class_Name__c;
+
+        try{
+            Type t = Type.forName(IAPIClass);        
+            fedAPI = (FGW_IAPI)t.newInstance();
         }
-*/
-        Type t = Type.forName(IAPIClass);        
-        FGW_IAPI fedAPI = (FGW_IAPI)t.newInstance();
+        catch (Exception e){
+        	throw new FGW_Exception.APICreationException(e, 'Error Creating Federal API Instance');
+        }
+        
         return fedAPI;
     }
     
     public static FGW_IAPI getState_API_Instance(){
     	String IAPIClass;
+    	FGW_IAPI stateAPI;
     	
     	FGW_Application_Settings__c AppSettings = FGW_Constants.AppSettings; 
             	 
     	FGW_API_Settings__c StateSettings = FGW_API_Settings__c.getInstance(AppSettings.State_API_Name__c);
     	
-    	Type t = Type.forName(IAPIClass);
-    	FGW_IAPI stateAPI = (FGW_IAPI)t.newInstance();
+    	IAPIClass = StateSettings.Class_Name__c;
+    	
+    	try{
+    	   Type t = Type.forName(IAPIClass);
+    	   stateAPI = (FGW_IAPI)t.newInstance();
+    	}
+    	catch (Exception e){
+    		throw new FGW_Exception.APICreationException(e, 'Error Creating State API Instance');    		
+    	}
+    	
     	return stateAPI;    	
     }
 }
