@@ -55,7 +55,7 @@
         <externalId>false</externalId>
         <label>Legislation</label>
         <referenceTo>Legislation__c</referenceTo>
-        <relationshipLabel>Contacts related to this Legislation</relationshipLabel>
+        <relationshipLabel>Legislator Roles</relationshipLabel>
         <relationshipName>Contact_Leg</relationshipName>
         <relationshipOrder>0</relationshipOrder>
         <type>MasterDetail</type>
