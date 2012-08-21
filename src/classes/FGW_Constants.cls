@@ -37,14 +37,14 @@ global with sharing class FGW_Constants {
     //possible filter operators for query requests
     global enum operators{LessThan, LessThanEqualTo, GreaterThan, GreatThanEqualTo, NotEqual, Match, MatchCS, Exists, ValueIn, ValueNotIn, All}
 
-    global static FGW_Application_Settings__c AppSettings;
+    global static FGW_Application_Settings__c AppSettings = getAppSettings();
 
-    global FGW_Application_Settings__c getAppSettings(){
+    private static FGW_Application_Settings__c getAppSettings(){
         if (AppSettings == null){
             AppSettings = FGW_Application_Settings__c.getOrgDefaults();        
             
-            //no settings defined at all for this org, load some defaults
-            if (AppSettings == null){
+            //no settings defined at all for this org, create some defaults
+            if (AppSettings.Id == null){
                 AppSettings = new FGW_Application_Settings__c(
                     Federal_API_Name__c = 'FGW_RealTimeCongressAPI',
                     State_API_Name__c = 'FGW_OpenStatesAPI'                
