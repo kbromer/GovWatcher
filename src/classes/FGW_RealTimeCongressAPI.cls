@@ -28,10 +28,57 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 /**
-* @author Wai Ho, Salesforce Foundation
+* @author Wai Ho & Salesforce.com Foundation
 * @date Exponent Partners 2011, Salesforce Foundation 2012
 * @description Access to the Sunlight Foundation Real Time Congress API 
 */
-public with sharing class FGW_RealTimeCongressAPI {
+global class FGW_RealTimeCongressAPI implements FGW_IAPI{
+
+    
+    public FGW_RealTimeCongressAPI(){
+    	
+    	system.debug('CONSTRUCTOR FIRED');
+    }
+    
+    
+    global List<Legislation__c> getBills(List<FGW_RequestFilterParameters> params){
+    	
+    	return new List<Legislation__c>();
+    }
+
+    global List<Amendment__c> getAmendments(List<FGW_RequestFilterParameters> params){
+    	
+    	return new List<Amendment__c>();
+    }
+
+    global List<Legislator_Vote__c> getVotes(List<FGW_RequestFilterParameters> params){
+    	
+    	return new List<Legislator_Vote__c>();
+    }
+
+
+    global List<Contact> getLegislators(List<FGW_RequestFilterParameters> params){    	
+    	return new List<Contact>();
+    }
+
+ 
+    global Amendment__c getAmendment(String amendmentId){
+    	return new Amendment__c();
+    }
+ 
+    global Legislation__c getBill(String billId){
+    	return new Legislation__c();
+    }     
+    
+    global Contact getLegislator(String bioguide_id){
+    	return new Contact();
+    }
+    
+    
+    
+    
+
+
+
 
 }
