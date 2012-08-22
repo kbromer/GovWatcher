@@ -40,18 +40,15 @@ global class FGW_APIFactory {
                 
         FGW_Application_Settings__c AppSettings = FGW_Constants.AppSettings;
         
-        FGW_API_Settings__c FederalSettings = FGW_API_Settings__c.getInstance(AppSettings.Federal_API_Name__c);
-        
-        IAPIClass = FederalSettings.Class_Name__c;
-
         try{
+            FGW_API_Settings__c FederalSettings = FGW_API_Settings__c.getInstance(AppSettings.Federal_API_Name__c);
+            IAPIClass = FederalSettings.Class_Name__c;
             Type t = Type.forName(IAPIClass);        
             fedAPI = (FGW_IAPI)t.newInstance();
         }
         catch (Exception e){
         	throw new FGW_Exception.APICreationException(e, 'Error Creating Federal API Instance');
         }
-        
         return fedAPI;
     }
     
@@ -60,19 +57,16 @@ global class FGW_APIFactory {
     	FGW_IAPI stateAPI;
     	
     	FGW_Application_Settings__c AppSettings = FGW_Constants.AppSettings; 
-            	 
-    	FGW_API_Settings__c StateSettings = FGW_API_Settings__c.getInstance(AppSettings.State_API_Name__c);
-    	
-    	IAPIClass = StateSettings.Class_Name__c;
     	
     	try{
-    	   Type t = Type.forName(IAPIClass);
-    	   stateAPI = (FGW_IAPI)t.newInstance();
+            FGW_API_Settings__c StateSettings = FGW_API_Settings__c.getInstance(AppSettings.State_API_Name__c);
+            IAPIClass = StateSettings.Class_Name__c;
+            Type t = Type.forName(IAPIClass);
+            stateAPI = (FGW_IAPI)t.newInstance();
     	}
     	catch (Exception e){
     		throw new FGW_Exception.APICreationException(e, 'Error Creating State API Instance');    		
-    	}
-    	
+    	}    	
     	return stateAPI;    	
     }
 }
