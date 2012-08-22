@@ -33,8 +33,30 @@
 * @description Exception methods for the Foundation GovWatcher
 */
 public virtual class FGW_Exception extends Exception{
-
+    
     //errors when instantiating a new API instance from the settings
-    public class APICreationException extends FGW_Exception{}
-
+    public class APICreationException extends FGW_Exception{
+        public APICreationException(Exception e, String s){
+            generateError(e, s);                    	     	
+        }
+    }
+        
+    
+    
+    private void generateError(Exception e, String s){
+        FGW_Error__c error = new FGW_Error__c(
+            Error_Datetime__c = system.now(),
+            Error_Line_Number__c = String.valueOf(e.getLineNumber()),    
+            Error_Message__c = e.getMessage().substring(0,254),
+            Error_Stack_Trace__c = e.getStackTraceString().substring(0,254),
+            Error_Type__c = e.getTypeName()            
+        );
+        
+        if (s != null && s != '')
+            error.Friendly_Message__c = s;
+        else
+            error.Friendly_Message__c = e.getMessage().substring(0,254);     
+            	
+    	insert error;
+    }
 }
