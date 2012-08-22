@@ -37,22 +37,23 @@ global with sharing class FGW_Constants {
     //possible filter operators for query requests
     global enum operators{LessThan, LessThanEqualTo, GreaterThan, GreatThanEqualTo, NotEqual, Match, MatchCS, Exists, ValueIn, ValueNotIn, All}
     global static FGW_Application_Settings__c AppSettings = getAppSettings();
+    
+    //lock-in the API to be used for this transaction
+    global static final FGW_API_Settings__c FederalAPI = FGW_API_Settings__c.getInstance(AppSettings.Federal_API_Name__c); 
+    global static final FGW_API_Settings__c StateAPI = FGW_API_Settings__c.getInstance(AppSettings.State_API_Name__c);
 
     private static FGW_Application_Settings__c getAppSettings(){
         if (AppSettings == null){
-            AppSettings = FGW_Application_Settings__c.getOrgDefaults();        
-            
+            AppSettings = FGW_Application_Settings__c.getOrgDefaults();
             //no settings defined at all for this org, create some defaults
             if (AppSettings.Id == null){
                 AppSettings = new FGW_Application_Settings__c(
-                    Federal_API_Name__c = 'FGW_RealTimeCongressAPI',
-                    State_API_Name__c = 'FGW_OpenStatesAPI'                
+                    Federal_API_Name__c = 'Real Time Congress',
+                    State_API_Name__c = 'Open States'                
                 );
                 insert AppSettings;                	
             }
         }    
     	return AppSettings;
     }
-
-
 }
