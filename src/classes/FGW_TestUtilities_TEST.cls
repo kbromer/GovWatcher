@@ -46,9 +46,8 @@ public with sharing class FGW_TestUtilities_TEST {
     	return '';
     }
     
-    public String getBillJSON(){
-    	
-    	return '';
+    public static String getBillJSON(){
+    	return ([select Body from StaticResource where Name='FGW_BillJSON_RTC'].body).toString();    	
     }
 
 }
