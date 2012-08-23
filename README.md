@@ -5,4 +5,4 @@ This package allows for easy tracking of legislation in Salesforce.com. It consi
 
 Credits
 -------
-Code contributed by Iraq and Afghanistan Veterans of America. Originally written by Exponent Partners. Modified by Salesforce.com Foundation. 
+Inspired by Iraq and Afghanistan Veterans of America and Exponent Partners.  
