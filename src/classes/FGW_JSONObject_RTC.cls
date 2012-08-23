@@ -192,12 +192,11 @@ public with sharing class FGW_JSONObject_RTC{
     public static testMethod void testBillObjectModel(){
     	FGW_JSONObject_RTC deserializedBill = (FGW_JSONObject_RTC)JSON.deserialize(FGW_TestUtilities_TEST.getBillJSON(), FGW_JSONObject_RTC.class);
         system.assertNotEquals(deserializedBill, null);
-        system.debug('ONE FIELD HERE: ' + deserializedBill.bills[0].popular_title);  
-    	
     }
+    
     public static testMethod void testVoteObjectModel(){
-    	
-    	
+        FGW_JSONObject_RTC deserializedVote = (FGW_JSONObject_RTC)JSON.deserialize(FGW_TestUtilities_TEST.getVoteJSON(), FGW_JSONObject_RTC.class);
+        system.assertNotEquals(deserializedVote, null);    	
     }
     
     public static testMethod void testAmendmentObjectModel(){
