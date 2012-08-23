@@ -44,4 +44,5 @@ global interface FGW_IAPI{
     List<Amendment__c> getAmendments(List<FGW_RequestFilterParameters> params);
     List<Legislator_Vote__c> getVotes(List<FGW_RequestFilterParameters> params);    
     List<Contact> getLegislators(List<FGW_RequestFilterParameters> params);
+    List<Roll_Vote__c> getRollVotes(List<FGW_RequestFilterParameters> params);
 }
