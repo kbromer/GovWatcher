@@ -33,6 +33,10 @@
 * @description Object model to hold deserialized JSON for RealTimeCongress API 
 */
 public with sharing class FGW_JSONObject_RTC{
+	
+	public List<Amendment> amendments;
+	public List<Bill> bills;	
+	
     public class Bill{
         public String bill_id;
         public String bill_type;
@@ -59,7 +63,7 @@ public with sharing class FGW_JSONObject_RTC{
         public List<Passage_Vote> passage_votes;                        
         public integer passage_votes_count;
         public String last_passage_vote_at;     
-        public List<RelatedBillHash> related_bills;
+  //      public List<RelatedBillHash> related_bills;
         public String introduced_at;
         public String senate_passage_result;
         public String senate_passage_result_at;
@@ -127,7 +131,7 @@ public with sharing class FGW_JSONObject_RTC{
         public String chamber;
     }
     
-    public class Amendment{
+    public class Amendment{    	
         public String session;
         public String x_number;
         public String chamber;
@@ -137,7 +141,7 @@ public with sharing class FGW_JSONObject_RTC{
         public String purpose;
         public String sponsor_type;
         public String sponsor_id;
-        public String sponsor;  //this will need further parsing, can be either a committee or a sponsor
+        public Legislator sponsor;  //this will need further parsing, can be either a committee or a sponsor
         public String bill_id;
         public Bill bill;
         public List<Action> actions;
@@ -183,5 +187,22 @@ public with sharing class FGW_JSONObject_RTC{
         public Integer Nay;
         public Integer Present;
         public Integer Yea;    	
+    }
+    
+    public static testMethod void testBillObjectModel(){
+    	FGW_JSONObject_RTC deserializedBill = (FGW_JSONObject_RTC)JSON.deserialize(FGW_TestUtilities_TEST.getBillJSON(), FGW_JSONObject_RTC.class);
+        system.assertNotEquals(deserializedBill, null);
+        system.debug('ONE FIELD HERE: ' + deserializedBill.bills[0].popular_title);  
+    	
+    }
+    public static testMethod void testVoteObjectModel(){
+    	
+    	
+    }
+    
+    public static testMethod void testAmendmentObjectModel(){
+    	FGW_JSONObject_RTC deserializedAmendment = (FGW_JSONObject_RTC)JSON.deserialize(FGW_TestUtilities_TEST.getAmendmentJSON(), FGW_JSONObject_RTC.class);
+    	system.assertNotEquals(deserializedAmendment, null);
+        system.debug('ONE FIELD HERE: ' + deserializedAmendment.amendments[0].sponsor_id);
     }
 }
