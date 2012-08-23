@@ -33,7 +33,8 @@
 * @description Global parameter object consumed by a callout request to specify callout params 
 */
 global with sharing class FGW_RequestFilterParameters {	
+    global List<String> objectNames;
     global List<String> fieldNames;
     global List<FGW_Constants.operators> boolOperators;
-    global List<String> comparisonValue;	
+    global List<String> comparisonValues;	
 }
