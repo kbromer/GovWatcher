@@ -60,7 +60,14 @@ global class FGW_RealTimeCongressAPI implements FGW_IAPI{
     global List<Contact> getLegislators(List<FGW_RequestFilterParameters> params){    	
     	return new List<Contact>();
     }
-
+    
+    
+    global List<Roll_Vote__c> getRollVotes(List<FGW_RequestFilterParameters> params){
+    	return new List<Roll_Vote__c>();
+    }
+    
+    
+    
  
     global Amendment__c getAmendment(String amendmentId){
     	return new Amendment__c();
