@@ -37,7 +37,7 @@ global interface FGW_IAPI{
     // Get single requests
     Amendment__c getAmendment(String amendmentId);
     Legislation__c getBill(String billId);
-    Contact getLegislator(String bioguide_id);
+    Contact getLegislator(String bioguide_id);    
     
     // Get larger requests    
     List<Legislation__c> getBills(List<FGW_RequestFilterParameters> params);    
