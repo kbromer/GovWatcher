@@ -35,15 +35,12 @@
 @isTest
 public with sharing class FGW_TestUtilities_TEST {
 
-
-
     public static String getAmendmentJSON(){    	
     	return ([select Body from StaticResource where Name='FGW_AmendmentJSON_RTC'].body).toString();
     }
     
-    public String getVoteJSON(){
-    	
-    	return '';
+    public static String getVoteJSON(){    	
+    	return ([select Body from StaticResource where Name='FGW_VoteJSON_RTC'].body).toString();
     }
     
     public static String getBillJSON(){
