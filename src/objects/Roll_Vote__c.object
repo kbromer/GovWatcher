@@ -39,6 +39,19 @@
     <enableHistory>false</enableHistory>
     <enableReports>false</enableReports>
     <fields>
+        <fullName>Amendment__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <description>The associated Amendment, if there is one.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The associated Amendment, if there is one.</inlineHelpText>
+        <label>Amendment</label>
+        <referenceTo>Amendment__c</referenceTo>
+        <relationshipLabel>Roll Votes</relationshipLabel>
+        <relationshipName>Roll_Votes</relationshipName>
+        <required>false</required>
+        <type>Lookup</type>
+    </fields>
+    <fields>
         <fullName>Date_Voted__c</fullName>
         <description>Date/Time at which vote was taken.</description>
         <externalId>false</externalId>
@@ -75,14 +88,14 @@
     </fields>
     <fields>
         <fullName>Legislation__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
         <externalId>false</externalId>
         <label>Legislation</label>
         <referenceTo>Legislation__c</referenceTo>
         <relationshipLabel>Roll Votes</relationshipLabel>
         <relationshipName>Roll_Votes</relationshipName>
-        <relationshipOrder>0</relationshipOrder>
-        <type>MasterDetail</type>
-        <writeRequiresMasterRead>false</writeRequiresMasterRead>
+        <required>false</required>
+        <type>Lookup</type>
     </fields>
     <fields>
         <fullName>Num_Nay_Votes__c</fullName>
@@ -169,5 +182,5 @@
     </nameField>
     <pluralLabel>Roll Votes</pluralLabel>
     <searchLayouts/>
-    <sharingModel>ControlledByParent</sharingModel>
+    <sharingModel>ReadWrite</sharingModel>
 </CustomObject>
