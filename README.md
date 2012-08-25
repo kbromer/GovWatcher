@@ -5,4 +5,4 @@ This package allows for easy tracking of legislation in Salesforce.com. It consi
 
 Credits
 -------
-Inspired by Iraq and Afghanistan Veterans of America and Exponent Partners.  
+Based on work by Iraq and Afghanistan Veterans of America and Exponent Partners.  
