@@ -53,9 +53,8 @@
     </fields>
     <label>Amendment</label>
     <nameField>
-        <displayFormat>Amend-{MMDDYY}-{00000}</displayFormat>
-        <label>Amendment Name</label>
-        <type>AutoNumber</type>
+        <label>Amendment ID</label>
+        <type>Text</type>
     </nameField>
     <pluralLabel>Amendments</pluralLabel>
     <searchLayouts/>
