@@ -36,6 +36,9 @@ global with sharing class FGW_Constants {
 
     //possible filter operators for query requests
     global enum operators{Equals, LessThan, LessThanEqualTo, GreaterThan, GreatThanEqualTo, NotEqual, Match, MatchCS, Exists, ValueIn, ValueNotIn, All}
+    //query type, full or headers
+    global enum querytype{Full, Headers}
+    
     global static FGW_Application_Settings__c AppSettings = getAppSettings();
     
     //lock-in the API to be used for this transaction
