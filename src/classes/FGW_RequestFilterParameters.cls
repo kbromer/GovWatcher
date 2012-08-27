@@ -37,6 +37,6 @@ global with sharing class FGW_RequestFilterParameters {
     global List<String> fieldNames;
     global List<FGW_Constants.operators> boolOperators;
     global List<String> comparisonValues; 
-    global List<FGW_Constants.querytype> queryTypes; 
+    global FGW_Constants.querytype queryType; 
     global String adv_query;
 }
