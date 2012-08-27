@@ -217,6 +217,30 @@
         <unique>false</unique>
     </fields>
     <fields>
+        <fullName>Chamber__c</fullName>
+        <description>Chamber this Legislator resides in</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Chamber this Legislator resides in</inlineHelpText>
+        <label>Chamber</label>
+        <picklist>
+            <picklistValues>
+                <fullName>House</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Senate</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Executive Branch</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Picklist</type>
+    </fields>
+    <fields>
         <fullName>Congressional_District__c</fullName>
         <externalId>false</externalId>
         <label>Congressional District</label>
