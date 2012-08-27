@@ -1,6 +1,51 @@
-<apex:page >
-  <!-- Begin Default Content REMOVE THIS -->
-  <h1>Congratulations</h1>
-  This is your new Page
-  <!-- End Default Content REMOVE THIS -->
+<apex:page tabstyle="GovWatcher_Settings__tab" controller="FGW_Settings_CTRL" id="FGW_Settings" >
+    <apex:pageblock >
+        <apex:sectionHeader title="GovWatcher" subtitle="Configuration & Settings" />
+        <apex:Pagemessages />
+        <apex:PageBlockSection columns="1">
+            <apex:outputtext value="{!$Label.FGW_Settings_Description}" style="font-style:italic;" />
+        </apex:PageBlockSection>
+       
+        <apex:TabPanel switchtype="client" value="{!activeTabPanel}" id="tabpanel">
+            <apex:tab label="Application Configuration" name="app_settings">
+                <apex:form >
+                    
+                    
+                    
+                    
+                    <apex:outputPanel style="text-align: center; display: block; margin-left:auto; margin-right:auto;">
+                        <apex:commandButton value="Save" rendered="{!isEditingAppSettings}" action="{!saveAppSettings}"/>  
+                        <apex:commandButton value="Cancel" rendered="{!isEditingAppSettings}" action="{!cancel}"/>
+                        <apex:commandButton value="Edit" rendered="{!NOT(isEditingAppSettings)}" action="{!editApp_settings}" rerender="tabpanel"/>
+                    </apex:outputPanel>            
+            
+                </apex:form>
+            
+            </apex:tab>
+            
+            <apex:tab label="API Configuration" name="api_settings">
+            
+            </apex:tab>     
+            
+            <apex:tab label="Error Console" name="error_console">
+                <apex:outputtext value="{!$Label.FGW_ErrorConsole_Help_Text}" style="font-style: italic;"/>
+                <apex:pageblocksection title="GovWatcher Errors" collapsible="false" id="errorsection" columns="1">
+                        <apex:pageblocksectionitem rendered="{!errorCount < 1}">
+                           <apex:outputtext value="No Errors Found"/>
+                        </apex:pageblocksectionitem> 
+                        <apex:pageblocktable value="{!errorList}" var="e" rendered="{!errorCount > 0}">
+                            <apex:column headervalue="Error">
+                                <apex:outputlink target="_blank" title="Error Record" value="{!e.Id}">
+                                    {!URLFOR($Action.FGW_Error__c.View, e.Id)}
+                                </apex:outputlink>                                    
+                            </apex:column>
+                            <apex:column value="{!e.Error_Datetime__c}"/>
+                            <apex:column value="{!e.Error_Type__c}"/>
+                            <apex:column value="{!e.Friendly_Message__c}"/>                            
+                        </apex:pageblocktable>
+                   </apex:pageblocksection>
+            </apex:tab>   
+        
+        </apex:TabPanel>
+    </apex:pageblock>  
 </apex:page>

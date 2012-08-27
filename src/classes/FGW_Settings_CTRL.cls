@@ -34,4 +34,49 @@
 */
 public with sharing class FGW_Settings_CTRL {
 
+
+    public String activeTabPanel{get;set;}
+    public Boolean isEditingAppSettings{get;private set;}
+    public List<FGW_Error__c> errorList{get;set;}
+    public Integer errorCount{get{return errorList.size();}} 
+    
+    
+    public FGW_Settings_CTRL(){
+
+        //set the active panel
+        activeTabPanel = 'app_settings';
+        
+        //check for possible errors
+        errorList = new List<FGW_Error__c>();
+        errorList = [select Error_Datetime__c, Error_Line_Number__c, Error_Message__c, Error_Stack_Trace__c,
+                            Error_Type__c, Friendly_Message__c, Id from FGW_Error__c];
+        
+        
+        
+        //set the GovWatcher scheduled job, if possible
+        
+        
+    }
+    
+    
+    
+    
+    public PageReference saveAppSettings(){
+    	
+    	return null;
+    }
+    
+    public PageReference cancel(){
+    	
+    	return null;
+    }
+    
+    
+    public PageReference editApp_settings(){
+    	return null;
+    }
+      
+    
+
+
 }
