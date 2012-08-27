@@ -36,5 +36,6 @@ global with sharing class FGW_RequestFilterParameters {
     global List<String> objectNames;
     global List<String> fieldNames;
     global List<FGW_Constants.operators> boolOperators;
-    global List<String> comparisonValues;	
+    global List<String> comparisonValues; 
+    global String adv_query;
 }
