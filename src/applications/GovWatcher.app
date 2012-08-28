@@ -10,4 +10,5 @@
     <tab>standard-Dashboard</tab>
     <tab>standard-Document</tab>
     <tab>Legislation__c</tab>
+    <tab>GovWatcher_Settings</tab>
 </CustomApplication>
