@@ -35,13 +35,14 @@
                         </apex:pageblocksectionitem> 
                         <apex:pageblocktable value="{!errorList}" var="e" rendered="{!errorCount > 0}">
                             <apex:column headervalue="Error">
-                                <apex:outputlink target="_blank" title="Error Record" value="{!e.Id}">
-                                    {!URLFOR($Action.FGW_Error__c.View, e.Id)}
+                                <apex:outputlink target="_blank" title="Error Record" value="{!URLFOR($Action.FGW_Error__c.View, e.Id)}">
+                                    {!e.Id}
                                 </apex:outputlink>                                    
                             </apex:column>
                             <apex:column value="{!e.Error_Datetime__c}"/>
                             <apex:column value="{!e.Error_Type__c}"/>
-                            <apex:column value="{!e.Friendly_Message__c}"/>                            
+                            <apex:column value="{!e.Friendly_Message__c}"/>
+                            <apex:column value="{!e.Error_Message__c}"/>                                  
                         </apex:pageblocktable>
                    </apex:pageblocksection>
             </apex:tab>   
