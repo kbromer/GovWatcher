@@ -5,6 +5,17 @@
     <description>Settings for the GovWatcher API</description>
     <enableFeeds>false</enableFeeds>
     <fields>
+        <fullName>Chatter_User_Id__c</fullName>
+        <description>User ID of the Chatter user</description>
+        <externalId>false</externalId>
+        <inlineHelpText>User ID of the Chatter user</inlineHelpText>
+        <label>Chatter User Id</label>
+        <length>18</length>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
         <fullName>Federal_API_Name__c</fullName>
         <description>The class name of the Federal congressional API to be used for queries</description>
         <externalId>false</externalId>
