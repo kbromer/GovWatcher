@@ -37,26 +37,32 @@ public virtual class FGW_Exception extends Exception{
     //errors when instantiating a new API instance from the settings
     public class APICreationException extends FGW_Exception{
         public APICreationException(Exception e, String s){
-            generateError(e, s);                    	     	
+            FGW_Exception.generateError(e, s);                           	     	
         }
     }
-        
+    
+    public class CalloutStatusException extends FGW_Exception{}
     
     
-    private void generateError(Exception e, String s){
+    public static void generateError(Exception e, String s){
+        FGW_Exception.createErrorObject(system.now(), e.getLineNumber(), e.getMessage(), e.getStackTraceString(), e.getTypeName(), s);
+    }
+    
+    @future
+    public static void createErrorObject(Datetime d, Integer line_number, String message, String stack_trace, String type_name, String friendly_message){    	
+    	
         FGW_Error__c error = new FGW_Error__c(
-            Error_Datetime__c = system.now(),
-            Error_Line_Number__c = String.valueOf(e.getLineNumber()),    
-            Error_Message__c = e.getMessage().substring(0,254),
-            Error_Stack_Trace__c = e.getStackTraceString().substring(0,254),
-            Error_Type__c = e.getTypeName()            
+            Error_Datetime__c = d,
+            Error_Line_Number__c = string.valueOf(line_number),    
+            Error_Message__c = message,
+            Error_Stack_Trace__c = stack_trace,
+            Error_Type__c = type_name            
         );
         
-        if (s != null && s != '')
-            error.Friendly_Message__c = s;
+        if (friendly_message != null && friendly_message != '')
+            error.Friendly_Message__c = friendly_message;
         else
-            error.Friendly_Message__c = e.getMessage().substring(0,254);     
-            	
+            error.Friendly_Message__c = message;            	
     	insert error;
     }
 }
