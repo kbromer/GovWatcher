@@ -5,6 +5,15 @@
     <description>Holds information about the various APIs GW is able to access for information.</description>
     <enableFeeds>false</enableFeeds>
     <fields>
+        <fullName>API_Endpoint__c</fullName>
+        <description>The actual HTTP endpoint for this API</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The actual HTTP endpoint for this API</inlineHelpText>
+        <label>API Endpoint</label>
+        <required>true</required>
+        <type>Url</type>
+    </fields>
+    <fields>
         <fullName>API_Key__c</fullName>
         <description>Key used for authentication to this API</description>
         <externalId>false</externalId>
@@ -12,6 +21,17 @@
         <label>API Key</label>
         <length>255</length>
         <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>API_Type__c</fullName>
+        <description>Type of information this API access.  Currently supported values are &quot;State&quot; or &quot;Federal&quot;</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Type of information this API access.  Currently supported values are &quot;State&quot; or &quot;Federal&quot;</inlineHelpText>
+        <label>API Type</label>
+        <length>255</length>
+        <required>true</required>
         <type>Text</type>
         <unique>false</unique>
     </fields>
