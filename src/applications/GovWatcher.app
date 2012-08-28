@@ -11,4 +11,5 @@
     <tab>standard-Document</tab>
     <tab>Legislation__c</tab>
     <tab>GovWatcher_Settings</tab>
+    <tab>GovWatcher_Console</tab>
 </CustomApplication>
