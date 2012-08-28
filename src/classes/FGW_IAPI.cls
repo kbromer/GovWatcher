@@ -33,13 +33,6 @@
 * @description Global interface for congressional APIs, supports multiple implementations 
 */
 global interface FGW_IAPI{
-	
-    // Get single requests
-    Amendment__c getAmendment(String amendmentId);
-    Legislation__c getBill(String billId);
-    Contact getLegislator(String bioguide_id);    
-    
-    // Get larger requests    
     List<Legislation__c> getBills(List<FGW_RequestFilterParameters> params);    
     List<Amendment__c> getAmendments(List<FGW_RequestFilterParameters> params);
     List<Legislator_Vote__c> getVotes(List<FGW_RequestFilterParameters> params);    
