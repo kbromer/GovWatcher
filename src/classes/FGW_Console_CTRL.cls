@@ -30,6 +30,81 @@
 /**
 * @author Salesforce.com Foundation
 * @date Salesforce Foundation 2012
-* @description Access to the Sunlight Foundation Real Time Congress API 
+* @description Main GovWatcher console controller
 */
-public class FGW_Console_CTRL{}
+public with sharing class FGW_Console_CTRL{
+    
+    public FGW_Application_Settings__c AppSettings;
+    public Id ChatterUserId{get;set;}
+    public Id FeedDisplayId{get; set;}
+    public List<Legislation__c> followedLegislation;
+    public List<Contact> followedLegislators;
+    public String FeedName{get;set;}     
+    
+         
+    
+    public FGW_Console_CTRL(){
+        AppSettings = FGW_Constants.AppSettings;
+        ChatterUserId = AppSettings.Chatter_User_Id__c; 
+        FeedDisplayId = ChatterUserId;
+        FeedName = [select Name from User where Id = :ChatterUserId].Name;          
+    }
+    
+    public void viewAllFeeds(){
+        FeedDisplayId = ChatterUserId;
+        FeedName = [select Name from User where Id = :ChatterUserId].Name;
+    }
+    
+    public void assignFeedName(){           
+        String f;
+        
+        if (((String)FeedDisplayId).startsWith('003'))
+            FeedName = [select Name from Contact where Id = :FeedDisplayId].Name;
+        else
+            FeedName = [select Name from Legislation__c where Id = :FeedDisplayId].Name;
+    }
+    
+    public List<Legislation__c> getfollowedLegislation(){
+        followedLegislation = new List<Legislation__c>();
+        
+        //get all of the legislation IDs that the chatter user follows
+        EntitySubscription[] followingES = [select id, parentid, subscriberid, parent.name
+                                    from EntitySubscription
+                                    where subscriberid =:ChatterUserId];//Set to the User's Id
+
+        List<Id> legIds = new List<Id> ();
+
+        String legSObjectPrefix =  Legislation__c.sObjectType.getDescribe().getKeyPrefix();
+
+        for(EntitySubscription es: followingES){
+            if(('' + es.parentid).substring(0,3) == legSObjectPrefix){
+                legIds.add(es.parentid);
+            }
+        }
+                
+        followedLegislation = [select Name, Status__c from Legislation__c where Id IN :legIds];
+        return followedLegislation;
+    }    
+    
+    public List<Contact> getfollowedLegislators(){
+        followedLegislators = new List<Contact>();
+        
+        //get all of the legislation IDs that the chatter user follows
+        EntitySubscription[] followingES = [select id, parentid, subscriberid, parent.name
+                                    from EntitySubscription
+                                    where subscriberid =:ChatterUserId];//Set to the User's Id
+
+        List<Id> conIds = new List<Id> ();
+
+        String conSObjectPrefix =  Contact.sObjectType.getDescribe().getKeyPrefix();
+
+        for(EntitySubscription es: followingES){
+            if(('' + es.parentid).substring(0,3) == conSObjectPrefix){
+                conIds.add(es.parentid);
+            }
+        }
+        followedLegislators = [select Name from Contact where Id IN :conIds];       
+        return followedLegislators;
+    }
+    
+}
