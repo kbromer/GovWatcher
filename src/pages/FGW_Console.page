@@ -1,6 +1,161 @@
-<apex:page >
-<!-- Begin Default Content REMOVE THIS -->
-<h1>Congratulations</h1>
-This is your new Page
-<!-- End Default Content REMOVE THIS -->
+<apex:page controller="FGW_Console_CTRL" >
+<style type="text/css">
+            .hBox{
+                margin-bottom:30px;
+                border: 1px solid #AAA;
+                box-shadow: 0 0 1px #CCC;
+                border-radius: 5px;
+                background: white;
+                border-top: 4px solid #006b54;
+                padding: 5px 20px 20px 10px;
+            }
+                .hBox .header{
+                    font-size:115%;
+                    padding-bottom:20px;
+                }
+                .hBox table{
+                    width:100%;
+                    font-align:center;
+                }
+                .hBox table td{
+                    vertical-align:middle;
+                }
+                .dRow img{
+                    border-radius: 10px;
+                    height: 64px;
+                    width: 64px;
+                }
+    </style>
+    <apex:sectionHeader title="Foundation Legislative App" subtitle="Legislative Tracking Control"/>
+    <apex:pageblock >
+        
+       <table width="100%" id="wrapTable">
+        <tr style="vertical-align:top;">
+            <td id="searchTD" width="50%">            
+            <apex:form >
+            <div class="hBox" style="border-top:4px solid #006b54;">
+                    <div class="header">
+                        <h3>Tracked Legislation</h3>
+                    </div>                    
+                  
+            <apex:pageblocktable value="{!followedLegislation}" var="leg">
+                    <apex:column >
+                         <apex:facet name="header">Your Follow Status</apex:facet>
+                        <chatter:follow entityId="{!leg.Id}"/>
+                    </apex:column>  
+                    
+                    <apex:column >
+                        <apex:facet name="header">Legislation Name</apex:facet>
+                        <apex:outputtext value="{!leg.Name}"/>
+                    </apex:column>
+                    
+                    <apex:column >
+                         <apex:facet name="header">Legislation Status</apex:facet>
+                         <apex:outputtext value="{!leg.Status__c}"/>
+                    </apex:column>
+                    <apex:column >
+                        <apex:facet name="header">Stop Tracking?</apex:facet>
+                        <apex:outputtext value="Unfollow"/>                                                        
+                    </apex:column>
+                    
+                    
+                    <apex:column > 
+                        <apex:facet name="header">Feed</apex:facet>
+                        <a href="javascript:ChangeFeed('{!leg.Id}');">View</a>                        
+                    </apex:column>                          
+                  
+                </apex:pageblocktable>
+                <apex:actionFunction action="{!assignFeedName}" name="ChangeFeed" rerender="FeedDisplayPanel">
+                    <apex:param name="feedDisplayId" value="" assignTo="{!FeedDisplayId}"/>
+                </apex:actionFunction>
+                
+                
+     </div>      
+            </apex:form>
+              <apex:form >  
+            <div class="hBox" style="border-top:4px solid #006b54;">
+                    <div class="header">
+                        <h3>Tracked Legislators</h3>
+                    </div>                    
+                  
+            <apex:pageblocktable value="{!followedLegislators}" var="con"> 
+                    <apex:column >
+                         <apex:facet name="header">Your Follow Status</apex:facet>  
+                         <chatter:follow entityId="{!con.Id}"/>                      
+                    </apex:column>  
+                    
+                    <apex:column >
+                        <apex:facet name="header">Legislator Name</apex:facet>
+                        <apex:outputtext value="{!con.Name}"/>
+                    </apex:column>                    
+                 
+                    <apex:column >
+                        <apex:facet name="header">Stop Tracking?</apex:facet>
+                        <apex:outputtext value="Unfollow"/>                                                        
+                    </apex:column>
+                    <apex:column >
+                        <apex:facet name="header">Feed</apex:facet>
+                        <a href="javascript:ChangeFeed('{!con.Id}');">View</a>                                                      
+                    </apex:column>                         
+                  
+                </apex:pageblocktable>
+                
+                <apex:actionFunction action="{!assignFeedName}" name="ChangeFeed" rerender="FeedDisplayPanel">
+                    <apex:param name="feedDisplayId" value="" assignTo="{!FeedDisplayId}"/>
+                </apex:actionFunction>
+                
+                </div>  
+                </apex:form>   
+            </td>
+                
+                
+                
+                
+                
+                <td>
+                
+            
+            <apex:outputpanel id="FeedDisplayPanel">                                
+            <div class="hBox" style="border-top:4px solid #006b54;">
+                
+                    <div class="header">
+                        <h3>{!FeedName}</h3>
+                    </div>                    
+            
+                <chatter:feed entityId="{!FeedDisplayId}" showPublisher="false"/>
+                            </div> 
+                            
+            </apex:outputpanel>          
+            <apex:form >
+            <apex:commandLink action="{!viewAllFeeds}" value="Reset Feed" id="resetFeed" rerender="FeedDisplayPanel"/>
+            </apex:form>                 
+        </td>
+        </tr>
+        </table>
+        
+        
+        
+        <table width="100%" id="actionTable">
+            <tr style="vertical-align:top;">
+                <td id="mainTD" width="100%">     
+
+
+                         
+            <div class="hBox" style="border-top:4px solid #006b54;">
+                
+                    <div class="header">
+                        <h3>Add New Information</h3>
+                    </div>                    
+                </div>
+
+
+
+                </td>
+            </tr>
+
+        </table>
+
+    
+    </apex:pageblock>
+
 </apex:page>
