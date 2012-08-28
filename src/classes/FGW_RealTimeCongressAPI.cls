@@ -28,8 +28,8 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 /**
-* @author Wai Ho & Salesforce.com Foundation
-* @date Exponent Partners 2011, Salesforce Foundation 2012
+* @author Salesforce.com Foundation
+* @date Salesforce Foundation 2012
 * @description Access to the Sunlight Foundation Real Time Congress API 
 */
 global class FGW_RealTimeCongressAPI implements FGW_IAPI{
@@ -39,53 +39,109 @@ global class FGW_RealTimeCongressAPI implements FGW_IAPI{
     private final String Endpoint;     
     private final Map<String, MAP<String, String>> RTC_Translation;
     
+    //keep the list around in case we need it...    
     private List<FGW_JSONObject_RTC> resultsList;    
     
     public FGW_RealTimeCongressAPI(){
     	API_Config = FGW_API_Settings__c.getInstance('Real Time Congress');
     	API_Key = API_Config.API_Key__c;
     	Endpoint = API_Config.API_Endpoint__c;    
-    	RTC_Translation = getRTCMap();
+    	RTC_Translation = getRTCMap();    	
     }    
     
     global List<Legislation__c> getBills(List<FGW_RequestFilterParameters> params){
-    	resultsList = new List<FGW_JSONObject_RTC>();
-        resultsList = runQueries('bills.json', params);
-    	system.debug('resultlist size' + resultsList.size());
-    	List<Legislation__c> returnList = new List<Legislation__c>();
     	
-    	returnList = parseLegislationResults(resultsList);
-    	system.debug('LEG RESULT....' + returnlist.size());
+    	resultsList = new List<FGW_JSONObject_RTC>();
+        List<Legislation__c> returnList = new List<Legislation__c>();
+        
+        //error handling done internal to this execution path
+        resultsList = runQueries('bills.json', params);
+    	
+    	try{
+    	   returnList = parseLegislationResults(resultsList);
+    	}catch(Exception e){
+    		FGW_Exception.generateError(e, 'Error parsing callout results');
+    	}
+    	
     	return returnList;
     }
     
     global List<Amendment__c> getAmendments(List<FGW_RequestFilterParameters> params){
-    	
-    	return new List<Amendment__c>();
+        resultsList = new List<FGW_JSONObject_RTC>();        
+        List<Amendment__c> returnList = new List<Amendment__c>();
+        
+        //error handling done internal to this execution path
+        resultsList = runQueries('amendments.json', params);
+        
+        try{
+           returnList = parseAmendmentResults(resultsList);
+        }catch(Exception e){
+            FGW_Exception.generateError(e, 'Error parsing callout results');
+        }
+        
+        return returnList;    	
     }
     global List<Legislator_Vote__c> getVotes(List<FGW_RequestFilterParameters> params){
-    	
-    	return new List<Legislator_Vote__c>();
+        resultsList = new List<FGW_JSONObject_RTC>();        
+        List<Legislator_Vote__c> returnList = new List<Legislator_Vote__c>();
+        
+        //error handling done internal to this execution path
+        resultsList = runQueries('votes.json', params);
+        
+        try{
+           returnList = parseLegislatorVotesResults(resultsList);
+        }catch(Exception e){
+            FGW_Exception.generateError(e, 'Error parsing callout results');
+        }
+        
+        return returnList;
     }
 
-    global List<Contact> getLegislators(List<FGW_RequestFilterParameters> params){    	
-    	return new List<Contact>();
+    global List<Contact> getLegislators(List<FGW_RequestFilterParameters> params){
+        resultsList = new List<FGW_JSONObject_RTC>();        
+        List<Contact> returnList = new List<Contact>();
+        
+        //error handling done internal to this execution path
+        resultsList = runQueries('votes.json', params);
+        
+        try{
+           returnList = parseContactResults(resultsList);
+        }catch(Exception e){
+            FGW_Exception.generateError(e, 'Error parsing callout results');
+        }
+        
+        return returnList;
     }    
     
     global List<Roll_Vote__c> getRollVotes(List<FGW_RequestFilterParameters> params){
-    	return new List<Roll_Vote__c>();
-    }
+        resultsList = new List<FGW_JSONObject_RTC>();        
+        List<Roll_Vote__c> returnList = new List<Roll_Vote__c>();
+        
+        //error handling done internal to this execution path
+        resultsList = runQueries('votes.json', params);
+        
+        try{
+           returnList = parseRollVoteResults(resultsList);
+        }catch(Exception e){
+            FGW_Exception.generateError(e, 'Error parsing callout results');
+        }
+        
+        return returnList;
+    } 
  
-    global Amendment__c getAmendment(String amendmentId){
-    	return new Amendment__c();
-    }
- 
-    global Legislation__c getBill(String billId){
-    	return new Legislation__c();
-    }     
+    /** Object Creation Methods **/
     
-    global Contact getLegislator(String bioguide_id){
-    	return new Contact();
+    private List<Amendment__c> parseAmendmentResults(List<FGW_JSONObject_RTC> resultList){
+    	List<Amendment__c> returnList = new List<Amendment__c>();    	 
+    	 
+        for (FGW_JSONObject_RTC JSObj : resultList){
+            for (FGW_JSONObject_RTC.Amendment a : JSObj.amendments){
+                Amendment__c amd = new Amendment__c();  
+                amd.Name = a.x_number;
+                returnList.add(amd);            
+            }   
+        }
+        return returnList;
     }
     
     private List<Legislation__c> parseLegislationResults(List<FGW_JSONObject_RTC> resultList){
@@ -95,21 +151,76 @@ global class FGW_RealTimeCongressAPI implements FGW_IAPI{
     	for (FGW_JSONObject_RTC JSObj : resultList){
             for (FGW_JSONObject_RTC.Bill b : JSObj.bills){
                 Legislation__c leg = new Legislation__c();	
-            	leg.Name = b.bill_id;
-                returnList.add(leg);
-            
+                leg.Name = b.bill_id;
+                returnList.add(leg);            
             }   
-    	}
+        }
+        
+        return returnList;
+    }        
+    
+    private List<Contact> parseContactResults(List<FGW_JSONObject_RTC> resultList){
+        
+        List<Contact> returnList = new List<Contact>();       
+        
+        for (FGW_JSONObject_RTC JSObj : resultList){
+            for (FGW_JSONObject_RTC.Roll_Vote rv : JSObj.rollvotes){
+                for (String s : rv.voters.keySet()){
+                    for (FGW_JSONObject_RTC.Vote v : rv.voters.get(s)){                        
+                        Contact c = new Contact();
+                        c.LastName = v.voter.last_name;                        
+                        returnList.add(c);
+                    }                        
+                }           
+            }   
+        }   
+        
+        return returnList;
+    }
     	
-    	
+    private List<Roll_Vote__c> parseRollVoteResults(List<FGW_JSONObject_RTC> resultList){
+        
+        List<Roll_Vote__c> returnList = new List<Roll_Vote__c>();       
+        
+        for (FGW_JSONObject_RTC JSObj : resultList){
+            for (FGW_JSONObject_RTC.Roll_Vote r : JSObj.rollvotes){
+                Roll_Vote__c rv = new Roll_Vote__c();  
+                
+                rv.Name = r.roll_id;
+                
+                if (r.amendment_id != null && r.amendment_id != '')
+                    rv.Amendment__c = r.amendment_id;
+                else{
+                	rv.Legislation__c = r.bill_id;
+                }                    
+                returnList.add(rv);            
+            }   
+        }  	
     	return returnList;
     }
     
     
     
-    
-    
-    
+    private List<Legislator_Vote__c> parseLegislatorVotesResults(List<FGW_JSONObject_RTC> resultList){
+        
+        List<Legislator_Vote__c> returnList = new List<Legislator_Vote__c>();       
+        
+        for (FGW_JSONObject_RTC JSObj : resultList){
+            for (FGW_JSONObject_RTC.Roll_Vote rv : JSObj.rollvotes){
+            	for (String s : rv.voter_ids.keySet()){
+                    for (FGW_JSONObject_RTC.Vote v : rv.voters.get(s)){                    
+                    
+                        Legislator_Vote__c lv = new Legislator_Vote__c();  
+                        lv.Roll_Vote__c = rv.bill_id;
+                        lv.Legislator__c = v.voter.bioguide_id;
+                        returnList.add(lv);
+                    }                        
+            	}           
+            }   
+        }   
+        return returnList;
+    }
+    /** Call & Parsing Methods **/    
     
     //handles the callout and return the JSON Object for further parsing
     private List<FGW_JSONObject_RTC> runQueries(String collection, List<FGW_RequestFilterParameters> params){
@@ -118,28 +229,40 @@ global class FGW_RealTimeCongressAPI implements FGW_IAPI{
     	
     	//for each collection of filters, run the query and return the parsed JSON object
     	for (FGW_RequestFilterParameters rfp : params){
-           
-           HttpRequest req = buildQueryString(collection, rfp);
-           HttpResponse res = doCallout(req);
-           
-           
-           
-           FGW_JSONObject_RTC deserializedObj = (FGW_JSONObject_RTC)JSON.deserialize(res.getBody(), FGW_JSONObject_RTC.class);
-           
-           returnList.add(deserializedObj);           
-           system.debug('SIZE: ' + returnList.size());
-        }        
-        
-        
-        
-        
+            
+            HttpRequest req = new HttpRequest();
+            HttpResponse res = new HttpResponse();
+            FGW_JSONObject_RTC deserializedObj = new FGW_JSONObject_RTC();
+                       
+            try{
+                req = buildHTTPRequest(collection, rfp);
+                res = doCallout(req);
+            
+                if (res.getStatusCode() == 200){                
+                	String JSONBody = res.getBody();
+                	//replace apex protected words
+                	JSONBody = JSONBody.replace('number', 'x_number');
+                	JSONBody = JSONBody.replace('as', 'x_as');                	
+                	
+                    deserializedObj = (FGW_JSONObject_RTC)JSON.deserialize(JSONBody, FGW_JSONObject_RTC.class);
+                    returnList.add(deserializedObj);                
+                }
+                else{
+                    throw new FGW_Exception.CalloutStatusException('Callout Error: ' + res.toString());             
+                }               
+            }catch (Exception e){
+            	FGW_Exception.generateError(e, 'Error Creating Valid Request');
+            }
+                       
+            system.debug('SIZE: ' + returnList.size());
+        }            
         return returnList;        
     }
     
     
     
     //construct the request, one request per filter param object
-    private HttpRequest buildQueryString(String ResourceName, FGW_RequestFilterParameters params){
+    private HttpRequest buildHTTPRequest(String ResourceName, FGW_RequestFilterParameters params){
         
         String parameter_string = '';
         
@@ -160,27 +283,27 @@ global class FGW_RealTimeCongressAPI implements FGW_IAPI{
         }
                 
         //take only what you need to survive...
-        if (ResourceName == 'bills.json' && params.queryType == FGW_Constants.querytype.Headers){
+        if (ResourceName == 'bills.json' && params.queryReturnType == FGW_Constants.queryReturntype.Basic){
             parameter_string += '&sections=basic';            
         }
-
-        //encode        
-        parameter_string = EncodingUtil.urlEncode(parameter_string, 'UTF-8');
         
         // Compose the URL
         String url = Endpoint + '/' + ResourceName + '?' + parameter_string;
-        
+        system.debug('ENDPOINT: ' + url);
+
        // Instantiate a new HTTP request, GET method, set endpoint
         HttpRequest req = new HttpRequest();
         req.setEndpoint(url);        
         req.setMethod('GET');
-        req.setHeader('X-APIKEY', API_Key);
+        req.setHeader('X-APIKEY', API_Key);   
+        
         return req; 
     }
     
     private HttpResponse doCallout(HttpRequest req){    	
     	Http h = new Http();
-    	HttpResponse res = h.send(req);
+    	HttpResponse res = new HttpResponse();    	
+    	res = h.send(req);
         return res;
     }
     
