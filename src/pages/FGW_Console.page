@@ -1,5 +1,39 @@
-<apex:page controller="FGW_Console_CTRL" >
-<style type="text/css">
+<!-- 
+Copyright (c) 2012, salesforce.com foundation, Inc.
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without modification, 
+are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice, 
+    this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright notice, 
+    this list of conditions and the following disclaimer in the documentation 
+    and/or other materials provided with the distribution.
+    * Neither the name of the salesforce.com foundation. nor the names of its contributors 
+    may be used to endorse or promote products derived from this software 
+    without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
+BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, 
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
+LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
+OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED 
+OF THE POSSIBILITY OF SUCH DAMAGE.
+
+GovWatcher Console
+by Salesforce.com Foundation
+-->
+<apex:page controller="FGW_Console_CTRL" tabstyle="GovWatcher_Console__tab" >
+    <apex:includescript value="{!URLFOR($Resource.FGW_JQueryUI, 'js/jquery-1.8.0.min.js')}"/>
+    <apex:includescript value="{!URLFOR($Resource.FGW_JQueryUI, 'js/jquery-ui-1.8.23.custom.min.js')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.FGW_JQueryUI, 'css/custom-theme/jquery-ui-1.8.23.custom.css')}"/>
+    
+    <style type="text/css">
             .hBox{
                 margin-bottom:30px;
                 border: 1px solid #AAA;
@@ -26,14 +60,41 @@
                     width: 64px;
                 }
     </style>
-    <apex:sectionHeader title="Foundation Legislative App" subtitle="Legislative Tracking Control"/>
+    <script type="text/javascript">
+    
+        var j$ = jQuery.noConflict();
+        j$(function() {
+            //make our boxes resizable, need to do it by class
+            j$( "#legislationbox" ).resizable();
+            j$( "#legislationbox" ).draggable();
+            
+            j$( "#legislatorbox" ).resizable();
+            j$( "#legislatorbox" ).draggable();
+            
+            j$( "#feedbox" ).resizable();
+            j$( "#feedbox" ).draggable();
+            
+            j$( "#searchbox" ).resizable();
+            j$( "#searchbox" ).draggable();
+        });        
+                
+   
+    </script>
+    
+    
+    
+    
+    
+    
+    
+    <apex:sectionHeader title="GovWatcher" subtitle="Track and search for Legislation and Legislators"/>
     <apex:pageblock >
         
        <table width="100%" id="wrapTable">
         <tr style="vertical-align:top;">
             <td id="searchTD" width="50%">            
             <apex:form >
-            <div class="hBox" style="border-top:4px solid #006b54;">
+            <div class="hBox" style="border-top:4px solid #006b54;" id="legislationbox">
                     <div class="header">
                         <h3>Tracked Legislation</h3>
                     </div>                    
@@ -73,7 +134,7 @@
      </div>      
             </apex:form>
               <apex:form >  
-            <div class="hBox" style="border-top:4px solid #006b54;">
+            <div class="hBox" style="border-top:4px solid #006b54;" id="legislatorbox">
                     <div class="header">
                         <h3>Tracked Legislators</h3>
                     </div>                    
@@ -116,19 +177,22 @@
                 
             
             <apex:outputpanel id="FeedDisplayPanel">                                
-            <div class="hBox" style="border-top:4px solid #006b54;">
+            <div class="hBox" style="border-top:4px solid #006b54;" id="feedbox">
                 
                     <div class="header">
                         <h3>{!FeedName}</h3>
                     </div>                    
             
                 <chatter:feed entityId="{!FeedDisplayId}" showPublisher="false"/>
-                            </div> 
                             
-            </apex:outputpanel>          
             <apex:form >
             <apex:commandLink action="{!viewAllFeeds}" value="Reset Feed" id="resetFeed" rerender="FeedDisplayPanel"/>
-            </apex:form>                 
+            </apex:form>    
+            </div>             
+            </apex:outputpanel>          
+            
+            
+                             
         </td>
         </tr>
         </table>
@@ -141,7 +205,7 @@
 
 
                          
-            <div class="hBox" style="border-top:4px solid #006b54;">
+            <div class="hBox" style="border-top:4px solid #006b54;" id="searchbox">
                 
                     <div class="header">
                         <h3>Add New Information</h3>
