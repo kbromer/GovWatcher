@@ -65,17 +65,17 @@ by Salesforce.com Foundation
         var j$ = jQuery.noConflict();
         j$(function() {
             //make our boxes resizable, need to do it by class
-            j$( "#legislationbox" ).resizable();
-            j$( "#legislationbox" ).draggable();
+            j$( "#legislationbox" ).resizable({ containment: "#pbdiv" });
+            j$( "#legislationbox" ).draggable({ containment: "#pbdiv" });
             
-            j$( "#legislatorbox" ).resizable();
-            j$( "#legislatorbox" ).draggable();
+            j$( "#legislatorbox" ).resizable({ containment: "#pbdiv" });
+            j$( "#legislatorbox" ).draggable({ containment: "#pbdiv" });
             
-            j$( "#feedbox" ).resizable();
-            j$( "#feedbox" ).draggable();
+            j$( "#feedbox" ).resizable({ containment: "#pbdiv" });
+            j$( "#feedbox" ).draggable({ containment: "#pbdiv" });
             
-            j$( "#searchbox" ).resizable();
-            j$( "#searchbox" ).draggable();
+            j$( "#searchbox" ).resizable({ containment: "#pbdiv" });
+            j$( "#searchbox" ).draggable({ containment: "#pbdiv" });
         });        
                 
    
@@ -87,8 +87,9 @@ by Salesforce.com Foundation
     
     
     
-    <apex:sectionHeader title="GovWatcher" subtitle="Track and search for Legislation and Legislators"/>
+    <apex:sectionHeader title="GovWatcher" subtitle="Track and Search for Legislation and Legislators"/>
     <apex:pageblock >
+        <div id="pbdiv" style="height:600px">
         
        <table width="100%" id="wrapTable">
         <tr style="vertical-align:top;">
@@ -206,11 +207,17 @@ by Salesforce.com Foundation
 
                          
             <div class="hBox" style="border-top:4px solid #006b54;" id="searchbox">
-                
+                <apex:form >                
                     <div class="header">
-                        <h3>Add New Information</h3>
+                        <h3>Add New Information</h3>                        
                     </div>                    
-                </div>
+                    
+                    <apex:inputText value="{!adv_query}" id="theTextInput"/>
+                    
+                
+            
+                </apex:form>
+            </div>
 
 
 
@@ -219,7 +226,7 @@ by Salesforce.com Foundation
 
         </table>
 
-    
+    </div>
     </apex:pageblock>
 
 </apex:page>
