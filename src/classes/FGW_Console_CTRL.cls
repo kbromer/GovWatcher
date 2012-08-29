@@ -40,6 +40,7 @@ public with sharing class FGW_Console_CTRL{
     public List<Legislation__c> followedLegislation;
     public List<Contact> followedLegislators;
     public String FeedName{get;set;}     
+    public String adv_query{get;set;}
     
          
     
