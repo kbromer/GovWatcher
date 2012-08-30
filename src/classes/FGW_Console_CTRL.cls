@@ -40,7 +40,8 @@ public with sharing class FGW_Console_CTRL{
     public List<Legislation__c> followedLegislation;
     public List<Contact> followedLegislators;
     public String FeedName{get;set;}     
-    public String adv_query{get;set;}
+    public String adv_query{get;set;} 
+    public String queryObject{get;set;}
     
          
     
@@ -107,5 +108,27 @@ public with sharing class FGW_Console_CTRL{
         followedLegislators = [select Name from Contact where Id IN :conIds];       
         return followedLegislators;
     }
+    
+    public PageReference runAdvQuery(){
+        FGW_RequestFilterParameters rfp = new FGW_RequestFilterParameters();
+        rfp.adv_query = adv_query;
+        runQuery(new List<FGW_RequestFilterParameters>{rfp}, null);
+        
+        
+        return null;        
+    }
+    
+    private void runQuery(List<FGW_RequestFilterParameters> rfps, String APIName){
+        FGW_IAPI fp = FGW_APIFactory.getFederal_API_Instance(APIName);
+        
+        if (queryObject == 'Legislation')
+            List<Legislation__c> l = fp.getBills(rfps);        	
+    	else if (queryObject == 'Legislator')
+            List<Contact> c = fp.getLegislators(rfps);    	   
+    	
+    	
+    }
+    
+    
     
 }
