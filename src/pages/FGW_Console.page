@@ -212,10 +212,12 @@ by Salesforce.com Foundation
                         <h3>Add New Information</h3>                        
                     </div>                    
                     
-                    <apex:inputText value="{!adv_query}" id="theTextInput"/>
-                    
-                
-            
+                    <apex:inputText value="{!adv_query}" id="theTextInput"/>                    
+                    <apex:selectList value="{!queryObject}" multiselect="false" size="1">
+                        <apex:selectOption itemvalue="Legislation" itemlabel="Legislation"/>
+                        <apex:selectOption itemvalue="Legislator" itemlabel="Legislator"/>                                                
+                    </apex:selectList>
+                    <apex:commandButton title="Submit Query" action="{!runAdvQuery}" value="Submit"/>            
                 </apex:form>
             </div>
 
