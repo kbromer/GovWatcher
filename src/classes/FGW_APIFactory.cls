@@ -42,7 +42,7 @@ global class FGW_APIFactory {
         FGW_API_Settings__c FederalSettings;
         
         try{        	
-            FederalSettings = FGW_API_Settings__c.getInstance((APIName != null ? APIName : AppSettings.Federal_API_Name__c));    
+            FederalSettings = FGW_API_Settings__c.getInstance(APIName != null ? APIName : AppSettings.Federal_API_Name__c);    
             IAPIClass = FederalSettings.Class_Name__c;
             Type t = Type.forName(IAPIClass);        
             fedAPI = (FGW_IAPI)t.newInstance();
