@@ -39,4 +39,5 @@ global with sharing class FGW_RequestFilterParameters {
     global List<String> comparisonValues;
     global FGW_Constants.queryReturnType queryReturnType; 
     global String adv_query;
+    global String APIName;    
 }
