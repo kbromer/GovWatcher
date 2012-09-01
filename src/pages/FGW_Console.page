@@ -76,6 +76,11 @@ by Salesforce.com Foundation
             
             j$( "#searchbox" ).resizable({ containment: "#pbdiv" });
             j$( "#searchbox" ).draggable({ containment: "#pbdiv" });
+            
+            j$( "#resultsbox" ).resizable({ containment: "#pbdiv" });
+            j$( "#resultsbox" ).draggable({ containment: "#pbdiv" });
+                        
+            
         });        
                 
    
@@ -195,38 +200,70 @@ by Salesforce.com Foundation
             
                              
         </td>
-        </tr>
-        </table>
+              </tr>
         
+           <tr style="vertical-align:top;">
         
-        
-        <table width="100%" id="actionTable">
-            <tr style="vertical-align:top;">
-                <td id="mainTD" width="100%">     
-
-
-                         
-            <div class="hBox" style="border-top:4px solid #006b54;" id="searchbox">
+                <td>
+               <div class="hBox" style="border-top:4px solid #006b54;" id="resultsbox">
                 <apex:form >                
                     <div class="header">
-                        <h3>Add New Information</h3>                        
+                        <h3>Query Matches</h3>                        
+                    </div>        
+                    </apex:form>
+        </div>     
+        
+        
+        
+        </td>
+        
+        
+        
+        
+        
+        <td>
+               <div class="hBox" style="border-top:4px solid #006b54;" id="searchbox">
+                <apex:form >                
+                    <div class="header">
+                        <h3>Add New Queries</h3>                        
                     </div>                    
                     
-                    <apex:inputText value="{!adv_query}" id="theTextInput"/>                    
-                    <apex:selectList value="{!queryObject}" multiselect="false" size="1">
-                        <apex:selectOption itemvalue="Legislation" itemlabel="Legislation"/>
-                        <apex:selectOption itemvalue="Legislator" itemlabel="Legislator"/>                                                
-                    </apex:selectList>
-                    <apex:commandButton title="Submit Query" action="{!runAdvQuery}" value="Submit"/>            
+                    <apex:tabpanel switchtype="client">
+                    
+                        
+                        <apex:tab label="Standard">
+                        </apex:tab>
+                        
+                        <apex:tab label="Advanced">
+                            <apex:inputText value="{!adv_query}" id="theTextInput"/>                    
+                            <apex:selectList value="{!queryObject}" multiselect="false" size="1">
+                                <apex:selectOption itemvalue="Legislation" itemlabel="Legislation"/>
+                                <apex:selectOption itemvalue="Legislator" itemlabel="Legislator"/>                                                
+                            </apex:selectList>
+                            <apex:commandButton title="Submit Query" action="{!runAdvQuery}" value="Submit"/>            
+                        </apex:tab>
+                    
+                
+                    </apex:tabpanel>
+                
                 </apex:form>
             </div>
+        
+        </td>
 
-
-
-                </td>
-            </tr>
-
+        </tr>
+        
+        
+       
         </table>
+        
+        
+        
+
+                         
+
+
+
 
     </div>
     </apex:pageblock>
