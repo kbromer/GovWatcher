@@ -2,7 +2,7 @@
 <CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
     <enableFeeds>true</enableFeeds>
     <fieldSets>
-        <fullName>Legislator_TC_Fields</fullName>
+        <fullName>FGW_Legislator_Console_Fields</fullName>
         <availableFields>
             <field>LastCURequestDate</field>
             <isRequired>false</isRequired>
@@ -204,7 +204,7 @@
             <field>Congressional_District__c</field>
             <isRequired>false</isRequired>
         </displayedFields>
-        <label>Legislator TC Fields</label>
+        <label>FGW Legislator Console Fields</label>
     </fieldSets>
     <fields>
         <fullName>Bioguide_ID__c</fullName>
