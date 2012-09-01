@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <actionOverrides>
         <actionName>Accept</actionName>
         <type>Default</type>
@@ -39,7 +39,7 @@
     <enableHistory>true</enableHistory>
     <enableReports>true</enableReports>
     <fieldSets>
-        <fullName>Legislation_TC_Fields</fullName>
+        <fullName>FGW_Legislation_Console_Fields</fullName>
         <availableFields>
             <field>Active__c</field>
             <isRequired>false</isRequired>
@@ -69,10 +69,6 @@
             <isRequired>false</isRequired>
         </availableFields>
         <availableFields>
-            <field>LastModifiedDate</field>
-            <isRequired>false</isRequired>
-        </availableFields>
-        <availableFields>
             <field>Categories__c</field>
             <isRequired>false</isRequired>
         </availableFields>
@@ -86,10 +82,6 @@
         </availableFields>
         <availableFields>
             <field>Description__c</field>
-            <isRequired>false</isRequired>
-        </availableFields>
-        <availableFields>
-            <field>Display_on_Website__c</field>
             <isRequired>false</isRequired>
         </availableFields>
         <availableFields>
@@ -110,14 +102,6 @@
         </availableFields>
         <availableFields>
             <field>Notes__c</field>
-            <isRequired>false</isRequired>
-        </availableFields>
-        <availableFields>
-            <field>Position_Status__c</field>
-            <isRequired>false</isRequired>
-        </availableFields>
-        <availableFields>
-            <field>Report_card_eligible__c</field>
             <isRequired>false</isRequired>
         </availableFields>
         <availableFields>
@@ -145,10 +129,6 @@
             <isRequired>false</isRequired>
         </availableFields>
         <availableFields>
-            <field>Uniqueness_Test__c</field>
-            <isRequired>false</isRequired>
-        </availableFields>
-        <availableFields>
             <field>CreatedById</field>
             <isRequired>false</isRequired>
         </availableFields>
@@ -172,6 +152,10 @@
             <field>LastModifiedById</field>
             <isRequired>false</isRequired>
         </availableFields>
+        <availableFields>
+            <field>LastModifiedDate</field>
+            <isRequired>false</isRequired>
+        </availableFields>
         <description>Fields displayed on the legislation table in the tracking control page for the LegApp.</description>
         <displayedFields>
             <field>Bill_Title__c</field>
@@ -182,14 +166,10 @@
             <isRequired>false</isRequired>
         </displayedFields>
         <displayedFields>
-            <field>Position__c</field>
-            <isRequired>false</isRequired>
-        </displayedFields>
-        <displayedFields>
             <field>Congressional_Session__c</field>
             <isRequired>false</isRequired>
         </displayedFields>
-        <label>Legislation TC Fields</label>
+        <label>FGW Legislation Console Fields</label>
     </fieldSets>
     <fields>
         <fullName>Active__c</fullName>
@@ -496,87 +476,6 @@
         <visibleLines>5</visibleLines>
     </fields>
     <fields>
-        <fullName>Position_Status__c</fullName>
-        <externalId>false</externalId>
-        <label>Position/Status</label>
-        <picklist>
-            <picklistValues>
-                <fullName>Review Board</fullName>
-                <default>true</default>
-            </picklistValues>
-            <picklistValues>
-                <fullName>Review</fullName>
-                <default>false</default>
-            </picklistValues>
-            <picklistValues>
-                <fullName>Watch</fullName>
-                <default>false</default>
-            </picklistValues>
-            <picklistValues>
-                <fullName>Ignore</fullName>
-                <default>false</default>
-            </picklistValues>
-            <picklistValues>
-                <fullName>Support</fullName>
-                <default>false</default>
-            </picklistValues>
-            <picklistValues>
-                <fullName>Oppose</fullName>
-                <default>false</default>
-            </picklistValues>
-            <sorted>false</sorted>
-        </picklist>
-        <trackFeedHistory>false</trackFeedHistory>
-        <trackHistory>false</trackHistory>
-        <type>Picklist</type>
-    </fields>
-    <fields>
-        <fullName>Position__c</fullName>
-        <description>Our position on the bill</description>
-        <externalId>false</externalId>
-        <inlineHelpText>Our position on the bill</inlineHelpText>
-        <label>Our Position</label>
-        <picklist>
-            <picklistValues>
-                <fullName>Review Board</fullName>
-                <default>false</default>
-            </picklistValues>
-            <picklistValues>
-                <fullName>Review</fullName>
-                <default>false</default>
-            </picklistValues>
-            <picklistValues>
-                <fullName>Watch</fullName>
-                <default>false</default>
-            </picklistValues>
-            <picklistValues>
-                <fullName>Ignore</fullName>
-                <default>false</default>
-            </picklistValues>
-            <picklistValues>
-                <fullName>Support</fullName>
-                <default>false</default>
-            </picklistValues>
-            <picklistValues>
-                <fullName>Oppose</fullName>
-                <default>false</default>
-            </picklistValues>
-            <sorted>false</sorted>
-        </picklist>
-        <trackFeedHistory>false</trackFeedHistory>
-        <trackHistory>false</trackHistory>
-        <type>Picklist</type>
-    </fields>
-    <fields>
-        <fullName>Report_card_eligible__c</fullName>
-        <defaultValue>false</defaultValue>
-        <externalId>false</externalId>
-        <label>Use in report card</label>
-        <trackFeedHistory>false</trackFeedHistory>
-        <trackHistory>false</trackHistory>
-        <type>Checkbox</type>
-    </fields>
-    <fields>
         <fullName>Sponsor_Info__c</fullName>
         <externalId>false</externalId>
         <label>Sponsor Info</label>
@@ -652,26 +551,12 @@ HYPERLINK(&quot;http://hdl.loc.gov/loc.uscongress/legislation.&quot; + text(Cong
         <type>Text</type>
         <unique>false</unique>
     </fields>
-    <fields>
-        <fullName>Uniqueness_Test__c</fullName>
-        <caseSensitive>false</caseSensitive>
-        <description>Formula to ensure only one record per bill.</description>
-        <externalId>false</externalId>
-        <label>Uniqueness Test</label>
-        <length>80</length>
-        <required>false</required>
-        <trackFeedHistory>false</trackFeedHistory>
-        <trackHistory>false</trackHistory>
-        <type>Text</type>
-        <unique>true</unique>
-    </fields>
     <label>Legislation</label>
     <listViews>
         <fullName>Active</fullName>
         <columns>NAME</columns>
         <columns>Full_Bill_Number__c</columns>
         <columns>Bill_Title__c</columns>
-        <columns>Position__c</columns>
         <columns>Status__c</columns>
         <columns>Latest_Major_Action__c</columns>
         <columns>Date_Bill_Info_Updated__c</columns>
@@ -691,7 +576,6 @@ HYPERLINK(&quot;http://hdl.loc.gov/loc.uscongress/legislation.&quot; + text(Cong
         <columns>Bill_Title__c</columns>
         <columns>Latest_Major_Action__c</columns>
         <columns>Status__c</columns>
-        <columns>Position__c</columns>
         <columns>UPDATEDBY_USER</columns>
         <columns>LAST_UPDATE</columns>
         <filterScope>Everything</filterScope>
@@ -712,18 +596,18 @@ HYPERLINK(&quot;http://hdl.loc.gov/loc.uscongress/legislation.&quot; + text(Cong
     <searchLayouts>
         <customTabListAdditionalFields>Full_Bill_Number__c</customTabListAdditionalFields>
         <customTabListAdditionalFields>Bill_Title__c</customTabListAdditionalFields>
-        <customTabListAdditionalFields>Position__c</customTabListAdditionalFields>
+        <customTabListAdditionalFields xsi:nil="true"/>
         <customTabListAdditionalFields>Status__c</customTabListAdditionalFields>
         <customTabListAdditionalFields>Latest_Major_Action__c</customTabListAdditionalFields>
         <lookupDialogsAdditionalFields>Full_Bill_Number__c</lookupDialogsAdditionalFields>
         <lookupDialogsAdditionalFields>Bill_Title__c</lookupDialogsAdditionalFields>
-        <lookupDialogsAdditionalFields>Position__c</lookupDialogsAdditionalFields>
+        <lookupDialogsAdditionalFields xsi:nil="true"/>
         <lookupDialogsAdditionalFields>Status__c</lookupDialogsAdditionalFields>
         <lookupDialogsAdditionalFields>Latest_Major_Action__c</lookupDialogsAdditionalFields>
         <searchFilterFields>NAME</searchFilterFields>
         <searchResultsAdditionalFields>Full_Bill_Number__c</searchResultsAdditionalFields>
         <searchResultsAdditionalFields>Bill_Title__c</searchResultsAdditionalFields>
-        <searchResultsAdditionalFields>Position__c</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields xsi:nil="true"/>
         <searchResultsAdditionalFields>Status__c</searchResultsAdditionalFields>
         <searchResultsAdditionalFields>Latest_Major_Action__c</searchResultsAdditionalFields>
     </searchLayouts>
