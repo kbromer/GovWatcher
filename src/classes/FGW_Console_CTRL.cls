@@ -43,13 +43,29 @@ public with sharing class FGW_Console_CTRL{
     public String adv_query{get;set;} 
     public String queryObject{get;set;}
     
-         
+    //the name of the non-default API to use for this query 
+    public String APIOverrideName{get; set;}
+    private Map<String, FGW_API_Settings__c> availableFedAPIs;
+    private Map<String, FGW_API_Settings__c> availableStateAPIs;
+    
+    
     
     public FGW_Console_CTRL(){
         AppSettings = FGW_Constants.AppSettings;
         ChatterUserId = AppSettings.Chatter_User_Id__c; 
         FeedDisplayId = ChatterUserId;
-        FeedName = [select Name from User where Id = :ChatterUserId].Name;          
+        FeedName = [select Name from User where Id = :ChatterUserId].Name;
+        Map<String, FGW_API_Settings__c> allAPIs = FGW_API_Settings__c.getAll();
+        availableFedAPIs = new Map<String, FGW_API_Settings__c>();
+        availableStateAPIs = new Map<String, FGW_API_Settings__c>();
+        
+        for (String s : allAPIs.keySet()){
+        	FGW_API_Settings__c a = allAPIs.get(s);
+        	if (a.API_Type__c == 'Federal')
+        	   availableFedAPIs.put(a.Name, a);
+        	else if (a.API_Type__c == 'State')
+        	   availableStateAPIs.put(a.Name, a);
+        }
     }
     
     public void viewAllFeeds(){
@@ -112,20 +128,29 @@ public with sharing class FGW_Console_CTRL{
     public PageReference runAdvQuery(){
         FGW_RequestFilterParameters rfp = new FGW_RequestFilterParameters();
         rfp.adv_query = adv_query;
-        runQuery(new List<FGW_RequestFilterParameters>{rfp}, null);
+        
+        rfp.APIName = APIOverrideName != null ? APIOverrideName : null;
+        runQueries(new List<FGW_RequestFilterParameters>{rfp});
         
         
         return null;        
     }
     
-    private void runQuery(List<FGW_RequestFilterParameters> rfps, String APIName){
-        FGW_IAPI fp = FGW_APIFactory.getFederal_API_Instance(APIName);
+
+    
+    
+    private void runQueries(List<FGW_RequestFilterParameters> rfps){
         
-        if (queryObject == 'Legislation')
-            List<Legislation__c> l = fp.getBills(rfps);        	
-    	else if (queryObject == 'Legislator')
-            List<Contact> c = fp.getLegislators(rfps);    	   
-    	
+        //get the default api
+        FGW_IAPI fp = FGW_APIFactory.getFederal_API_Instance(null);
+        
+        
+        for (FGW_RequestFilterParameters rfp : rfps){
+            if (queryObject == 'Legislation')
+                List<Legislation__c> l = fp.getBills(rfps);        	
+            else if (queryObject == 'Legislator')
+                List<Contact> c = fp.getLegislators(rfps);    	   
+        }
     	
     }
     
