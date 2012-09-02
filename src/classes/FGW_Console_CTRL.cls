@@ -43,6 +43,9 @@ public with sharing class FGW_Console_CTRL{
     public String adv_query{get;set;} 
     public String queryObject{get;set;}
     
+    //search results
+    public List<FGW_Search_Result__c> searchResults{get;set;}
+    
     //the name of the non-default API to use for this query 
     public String APIOverrideName{get; set;}
     private Map<String, FGW_API_Settings__c> availableFedAPIs;
@@ -66,6 +69,9 @@ public with sharing class FGW_Console_CTRL{
         	else if (a.API_Type__c == 'State')
         	   availableStateAPIs.put(a.Name, a);
         }
+        
+        searchResults = [select Name from FGW_Search_Result__c order by LastModifiedDate desc];
+        
     }
     
     public void viewAllFeeds(){
@@ -125,12 +131,14 @@ public with sharing class FGW_Console_CTRL{
         return followedLegislators;
     }
     
-    public PageReference runAdvQuery(){
+    public PageReference runAdvSearch(){
         FGW_RequestFilterParameters rfp = new FGW_RequestFilterParameters();
         rfp.adv_query = adv_query;
+        rfp.queryReturnType = FGW_Constants.queryReturntype.Basic;
+        
         
         rfp.APIName = APIOverrideName != null ? APIOverrideName : null;
-        runQueries(new List<FGW_RequestFilterParameters>{rfp});
+        searchResults = runSearches(new List<FGW_RequestFilterParameters>{rfp});
         
         
         return null;        
@@ -139,19 +147,51 @@ public with sharing class FGW_Console_CTRL{
 
     
     
-    private void runQueries(List<FGW_RequestFilterParameters> rfps){
+    private List<FGW_Search_Result__c> runSearches(List<FGW_RequestFilterParameters> rfps){
+        //get the default APIs for State & Federal
+        FGW_IAPI default_FedAPI = FGW_APIFactory.getDefault_Federal_API_Instance();
+        FGW_IAPI default_StateAPI = FGW_APIFactory.getDefault_State_API_Instance();        
         
-        //get the default api
-        FGW_IAPI fp = FGW_APIFactory.getFederal_API_Instance(null);
-        
+        List<FGW_Search_Result__c> searchResults = new List<FGW_Search_Result__c>();
         
         for (FGW_RequestFilterParameters rfp : rfps){
-            if (queryObject == 'Legislation')
-                List<Legislation__c> l = fp.getBills(rfps);        	
-            else if (queryObject == 'Legislator')
-                List<Contact> c = fp.getLegislators(rfps);    	   
+            
+            //hold the result, either Legislation__c or Contacts here
+            List<SObject> searchObjs = new List<SObject>();
+            
+            //use the default federal API
+            if (rfp.APIName == FGW_Constants.FederalAPI.Name){
+                if (queryObject == 'Legislation')
+                    searchObjs = default_FedAPI.getBills(rfps);        	
+                else if (queryObject == 'Legislator')
+                    searchObjs = default_FedAPI.getLegislators(rfps);        
+            }
+            //use the default state API     	   
+            else if (rfp.APIName == FGW_Constants.StateAPI.Name){
+            	if (queryObject == 'Legislation')
+                    searchObjs = default_StateAPI.getBills(rfps);         
+                else if (queryObject == 'Legislator')
+                    searchObjs = default_StateAPI.getLegislators(rfps); 
+            }
+        
+            //its a non-default API, so we need a new API object to accomodate
+            else{            	
+            	FGW_IAPI custom_API = FGW_APIFactory.getAPI_Instance(rfp.APIName);
+            	
+            	if (queryObject == 'Legislation')
+                    searchObjs = custom_API.getBills(rfps);         
+                else if (queryObject == 'Legislator')
+                    searchObjs = custom_API.getLegislators(rfps); 
+            }
+        
+            for (SObject obj : searchObjs){
+            	FGW_Search_Result__c sr = FGW_Utilities.convertObjectToSearchResult(obj);
+                sr.Saved_Search__c = rfp.SavedSearchId;          
+            	searchResults.add(sr);
+            }            
+        
         }
-    	
+        return searchResults;
     }
     
     
