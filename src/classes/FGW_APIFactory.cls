@@ -34,40 +34,30 @@
 */
 global class FGW_APIFactory {
 
-    public static FGW_IAPI getFederal_API_Instance(String APIName){
-        String IAPIClass;
-        FGW_IAPI fedAPI;
-                
-        FGW_Application_Settings__c AppSettings = FGW_Constants.AppSettings;
-        FGW_API_Settings__c FederalSettings;
-        
-        try{        	
-            FederalSettings = FGW_API_Settings__c.getInstance(APIName != null ? APIName : AppSettings.Federal_API_Name__c);    
-            IAPIClass = FederalSettings.Class_Name__c;
-            Type t = Type.forName(IAPIClass);        
-            fedAPI = (FGW_IAPI)t.newInstance();
-        }
-        catch (Exception e){
-        	throw new FGW_Exception.APICreationException(e, 'Error Creating Federal API Instance');
-        }
-        return fedAPI;
+    public static FGW_Application_Settings__c AppSettings = FGW_Constants.AppSettings;
+
+    public static FGW_IAPI getDefault_Federal_API_Instance(){
+        return getAPI_Instance(AppSettings.Federal_API_Name__c);
     }
     
-    public static FGW_IAPI getState_API_Instance(String APIName){
+    public static FGW_IAPI getDefault_State_API_Instance(){
+        return FGW_APIFactory.getAPI_Instance(AppSettings.State_API_Name__c);    	
+    }
+    
+    public static FGW_IAPI getAPI_Instance(String APIName){
+            	
     	String IAPIClass;
-    	FGW_IAPI stateAPI;
-    	
-    	FGW_Application_Settings__c AppSettings = FGW_Constants.AppSettings; 
-    	
-    	try{
-            FGW_API_Settings__c StateSettings = FGW_API_Settings__c.getInstance(APIName != null ? APIName : AppSettings.State_API_Name__c);
-            IAPIClass = StateSettings.Class_Name__c;
+        FGW_IAPI API;
+        
+        try{
+            FGW_API_Settings__c APISettings = FGW_API_Settings__c.getInstance(APIName);
+            IAPIClass = APISettings.Class_Name__c;
             Type t = Type.forName(IAPIClass);
-            stateAPI = (FGW_IAPI)t.newInstance();
-    	}
-    	catch (Exception e){
-    		throw new FGW_Exception.APICreationException(e, 'Error Creating State API Instance');    		
-    	}    	
-    	return stateAPI;    	
+            API = (FGW_IAPI)t.newInstance();
+        }
+        catch (Exception e){
+            throw new FGW_Exception.APICreationException(e, 'Error Creating API Instance');           
+        }       
+        return API;
     }
 }
