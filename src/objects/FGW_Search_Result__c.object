@@ -49,7 +49,11 @@
             <isRequired>false</isRequired>
         </availableFields>
         <availableFields>
-            <field>LastModifiedDate</field>
+            <field>LastModifiedById</field>
+            <isRequired>false</isRequired>
+        </availableFields>
+        <availableFields>
+            <field>SystemModstamp</field>
             <isRequired>false</isRequired>
         </availableFields>
         <availableFields>
@@ -58,14 +62,6 @@
         </availableFields>
         <availableFields>
             <field>CreatedDate</field>
-            <isRequired>false</isRequired>
-        </availableFields>
-        <availableFields>
-            <field>SystemModstamp</field>
-            <isRequired>false</isRequired>
-        </availableFields>
-        <availableFields>
-            <field>LastModifiedById</field>
             <isRequired>false</isRequired>
         </availableFields>
         <description>Fields displayed as part of the Search Results table in the GovWatcher Console.</description>
@@ -79,6 +75,10 @@
         </displayedFields>
         <displayedFields>
             <field>Saved_Search__c</field>
+            <isRequired>false</isRequired>
+        </displayedFields>
+        <displayedFields>
+            <field>LastModifiedDate</field>
             <isRequired>false</isRequired>
         </displayedFields>
         <label>FGW Search Result Console Fields</label>
