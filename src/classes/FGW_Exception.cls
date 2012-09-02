@@ -41,6 +41,9 @@ public virtual class FGW_Exception extends Exception{
         }
     }
     
+    //error recognizing API-returned object for search results
+    public class SearchConversionException extends FGW_Exception{}
+    
     public class CalloutStatusException extends FGW_Exception{}
     
     
