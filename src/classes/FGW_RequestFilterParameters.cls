@@ -40,4 +40,5 @@ global with sharing class FGW_RequestFilterParameters {
     global FGW_Constants.queryReturnType queryReturnType; 
     global String adv_query;
     global String APIName;    
+    global Id SavedSearchId;
 }
