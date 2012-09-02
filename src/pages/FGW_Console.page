@@ -208,9 +208,19 @@ by Salesforce.com Foundation
                <div class="hBox" style="border-top:4px solid #006b54;" id="resultsbox">
                 <apex:form >                
                     <div class="header">
-                        <h3>Query Matches</h3>                        
+                        <h3>Search Results</h3>                        
                     </div>        
-                    </apex:form>
+                    
+                    <apex:pageBlockTable var="s" value="{!searchResults}" width="90%" >
+                    
+                    <apex:repeat value="{!$ObjectType.FGW_Search_Result__c.FieldSets.FGW_Search_Result_Console_Fields}" var="f">
+                        <apex:column value="{!s[f]}">
+                            <apex:facet name="header">{!f.Label}</apex:facet>
+                        </apex:column>
+                    </apex:repeat> 
+                    
+                    </apex:pageBlockTable>
+                </apex:form>
         </div>     
         
         
@@ -225,7 +235,7 @@ by Salesforce.com Foundation
                <div class="hBox" style="border-top:4px solid #006b54;" id="searchbox">
                 <apex:form >                
                     <div class="header">
-                        <h3>Add New Queries</h3>                        
+                        <h3>Add New Search</h3>                        
                     </div>                    
                     
                     <apex:tabpanel switchtype="client">
