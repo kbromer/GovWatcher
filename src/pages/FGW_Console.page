@@ -240,7 +240,7 @@ by Salesforce.com Foundation
                                 <apex:selectOption itemvalue="Legislation" itemlabel="Legislation"/>
                                 <apex:selectOption itemvalue="Legislator" itemlabel="Legislator"/>                                                
                             </apex:selectList>
-                            <apex:commandButton title="Submit Query" action="{!runAdvQuery}" value="Submit"/>            
+                            <apex:commandButton title="Submit Query" action="{!runAdvSearch}" value="Submit"/>            
                         </apex:tab>
                     
                 
