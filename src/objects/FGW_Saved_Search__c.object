@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionOverrides>
+        <actionName>Accept</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Clone</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Delete</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Edit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>List</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>New</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Tab</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>View</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <deploymentStatus>Deployed</deploymentStatus>
+    <description>Object that represents a search to track in GovWatcher.  Consists of parameters, a level (State/Federal/etc.) and an optional API specification.</description>
+    <enableActivities>false</enableActivities>
+    <enableFeeds>false</enableFeeds>
+    <enableHistory>false</enableHistory>
+    <enableReports>false</enableReports>
+    <fields>
+        <fullName>API_Name__c</fullName>
+        <description>An optional API specification for this search.  If no name is provided, the default API for the specified universe is used</description>
+        <externalId>false</externalId>
+        <inlineHelpText>An optional API specification for this search.  If no name is provided, the default API for the specified universe is used</inlineHelpText>
+        <label>API Name</label>
+        <length>80</length>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Search_Parameters__c</fullName>
+        <description>A semicolon delimited list of query parameters, operations and values.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>A semicolon delimited list of query parameters, operations and values.</inlineHelpText>
+        <label>Search Parameters</label>
+        <length>32768</length>
+        <type>LongTextArea</type>
+        <visibleLines>3</visibleLines>
+    </fields>
+    <fields>
+        <fullName>Search_Universe__c</fullName>
+        <description>The universe to apply this search (State, Federal, etc.)</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The universe to apply this search (State, Federal, etc.)</inlineHelpText>
+        <label>Search Universe</label>
+        <picklist>
+            <picklistValues>
+                <fullName>Federal</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>State</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <type>Picklist</type>
+    </fields>
+    <label>Saved Search</label>
+    <nameField>
+        <displayFormat>QUERY-{MMDDYY}-{00000}</displayFormat>
+        <label>Search Number</label>
+        <type>AutoNumber</type>
+    </nameField>
+    <pluralLabel>Saved Searches</pluralLabel>
+    <searchLayouts/>
+    <sharingModel>ReadWrite</sharingModel>
+</CustomObject>
