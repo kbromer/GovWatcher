@@ -39,25 +39,33 @@ public with sharing class FGW_Utilities{
     public static FGW_Search_Result__c convertObjectToSearchResult(SObject obj){
     	FGW_Search_Result__c result;
     	
-    	try{
+    	try{    	
     	    if (obj instanceof Contact){
                 Contact c = (Contact)obj;
-                result = new FGW_Search_Result__c(
-                    Name = (c.Name).subString(0, 79)	      
-    		    );
+                result = new FGW_Search_Result__c();
+                if ((c.Name.length()) > 80)
+                	result.Name = c.Name.subString(0, 79);
+                else
+                    result.Name = c.Name;    	
             }
             else if (obj instanceof Legislation__c){
                 Legislation__c l = (Legislation__c)obj;
-                result = new FGW_Search_Result__c( 
-                    Name = (l.Bill_Title__c).subString(0, 79)
-                );
+                result = new FGW_Search_Result__c(); 
+                if (l.Name.length() > 80)
+                    result.Name = (l.Name).subString(0, 79);
+                else
+                    result.Name = l.Name;
+                result.Full_Name__c = l.Bill_Title__c;                    
+                    
+                            
             }
             else{
+        
                 throw new FGW_Exception.SearchConversionException();
             }
     	}catch(Exception e){
             FGW_Exception.generateError(e, 'Error converting search results');
-        }    	
+        }            	
     	return result;
     }
 
