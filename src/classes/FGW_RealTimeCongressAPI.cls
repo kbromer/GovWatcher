@@ -152,6 +152,7 @@ global class FGW_RealTimeCongressAPI implements FGW_IAPI{
             for (FGW_JSONObject_RTC.Bill b : JSObj.bills){
                 Legislation__c leg = new Legislation__c();	
                 leg.Name = b.bill_id;
+                leg.Bill_Title__c = b.official_title;
                 returnList.add(leg);            
             }   
         }
@@ -242,7 +243,7 @@ global class FGW_RealTimeCongressAPI implements FGW_IAPI{
                 	String JSONBody = res.getBody();
                 	//replace apex protected words
                 	JSONBody = JSONBody.replace('number', 'x_number');
-                	JSONBody = JSONBody.replace('as', 'x_as');                	
+                	JSONBody = JSONBody.replace(' as ', ' x_as ');                	
                 	
                     deserializedObj = (FGW_JSONObject_RTC)JSON.deserialize(JSONBody, FGW_JSONObject_RTC.class);
                     returnList.add(deserializedObj);                
