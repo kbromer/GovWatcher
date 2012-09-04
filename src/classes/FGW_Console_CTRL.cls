@@ -135,7 +135,12 @@ public with sharing class FGW_Console_CTRL{
         FGW_RequestFilterParameters rfp = new FGW_RequestFilterParameters();
         rfp.adv_query = adv_query;
         rfp.queryReturnType = FGW_Constants.queryReturntype.Basic;
-        rfp.APIName = APIOverrideName;
+        if (APIOverrideName != null && APIOverrideName != '')
+            rfp.APIName = APIOverrideName;
+        else
+            rfp.APIName = FGW_Constants.FederalAPI.Name;                    
+        
+        system.debug(rfp.APIName);
         searchResults = runSearches(new List<FGW_RequestFilterParameters>{rfp});
         
         return null;        
@@ -183,7 +188,7 @@ public with sharing class FGW_Console_CTRL{
         
             for (SObject obj : searchObjs){
             	FGW_Search_Result__c sr = FGW_Utilities.convertObjectToSearchResult(obj);
-                sr.Saved_Search__c = rfp.SavedSearchId; 
+                if(rfp.SavedSearchID != null) sr.Saved_Search__c = rfp.SavedSearchId;
                 sr.API_Name__c  = rfp.APIName;        
             	searchResults.add(sr);
             }      
