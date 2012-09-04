@@ -41,7 +41,7 @@ by Salesforce.com Foundation
                 border-radius: 5px;
                 background: white;
                 border-top: 4px solid #006b54;
-                padding: 5px 20px 20px 10px;
+                /*padding: 5px 20px 20px 10px;*/
             }
                 .hBox .header{
                     font-size:115%;
@@ -65,7 +65,7 @@ by Salesforce.com Foundation
         var j$ = jQuery.noConflict();
         j$(function() {
             //make our boxes resizable, need to do it by class
-            j$( "#legislationbox" ).resizable({ containment: "#pbdiv" });
+       /*     j$( "#legislationbox" ).resizable({ containment: "#pbdiv" });
             j$( "#legislationbox" ).draggable({ containment: "#pbdiv" });
             
             j$( "#legislatorbox" ).resizable({ containment: "#pbdiv" });
@@ -78,9 +78,11 @@ by Salesforce.com Foundation
             j$( "#searchbox" ).draggable({ containment: "#pbdiv" });
             
             j$( "#resultsbox" ).resizable({ containment: "#pbdiv" });
-            j$( "#resultsbox" ).draggable({ containment: "#pbdiv" });
+            j$( "#resultsbox" ).draggable({ containment: "#pbdiv" }); */
                         
-            
+    
+            j$( "#accordion" ).accordion();
+    
         });        
                 
    
@@ -98,24 +100,26 @@ by Salesforce.com Foundation
         
        <table width="100%" id="wrapTable">
         <tr style="vertical-align:top;">
-            <td id="searchTD" width="50%">            
-            <apex:form >
+            <td id="searchTD" width="75%">            
+            
+            <div id="accordion">
+            
+               <div class="header">
+                        <h3><a href="#">Tracked Legislation</a></h3>
+                    </div>                   
             <div class="hBox" style="border-top:4px solid #006b54;" id="legislationbox">
-                    <div class="header">
-                        <h3>Tracked Legislation</h3>
-                    </div>                    
+                <apex:form >
+                  
                   
             <apex:pageblocktable value="{!followedLegislation}" var="leg">
                     <apex:column >
                          <apex:facet name="header">Your Follow Status</apex:facet>
                         <chatter:follow entityId="{!leg.Id}"/>
                     </apex:column>  
-                    
                     <apex:column >
                         <apex:facet name="header">Legislation Name</apex:facet>
                         <apex:outputtext value="{!leg.Name}"/>
                     </apex:column>
-                    
                     <apex:column >
                          <apex:facet name="header">Legislation Status</apex:facet>
                          <apex:outputtext value="{!leg.Status__c}"/>
@@ -124,27 +128,26 @@ by Salesforce.com Foundation
                         <apex:facet name="header">Stop Tracking?</apex:facet>
                         <apex:outputtext value="Unfollow"/>                                                        
                     </apex:column>
-                    
-                    
                     <apex:column > 
                         <apex:facet name="header">Feed</apex:facet>
                         <a href="javascript:ChangeFeed('{!leg.Id}');">View</a>                        
                     </apex:column>                          
-                  
                 </apex:pageblocktable>
                 <apex:actionFunction action="{!assignFeedName}" name="ChangeFeed" rerender="FeedDisplayPanel">
                     <apex:param name="feedDisplayId" value="" assignTo="{!FeedDisplayId}"/>
                 </apex:actionFunction>
-                
-                
-     </div>      
-            </apex:form>
-              <apex:form >  
+                </apex:form>
+            </div>      
+            
+            
+                     <div class="header">
+                        <h3><a href="#">Tracked Legislators</a></h3>
+                    </div>  
+            
+            
             <div class="hBox" style="border-top:4px solid #006b54;" id="legislatorbox">
-                    <div class="header">
-                        <h3>Tracked Legislators</h3>
-                    </div>                    
-                  
+                <apex:form >  
+                               
             <apex:pageblocktable value="{!followedLegislators}" var="con"> 
                     <apex:column >
                          <apex:facet name="header">Your Follow Status</apex:facet>  
@@ -170,18 +173,41 @@ by Salesforce.com Foundation
                 <apex:actionFunction action="{!assignFeedName}" name="ChangeFeed" rerender="FeedDisplayPanel">
                     <apex:param name="feedDisplayId" value="" assignTo="{!FeedDisplayId}"/>
                 </apex:actionFunction>
-                
+                    </apex:form>   
                 </div>  
-                </apex:form>   
+                
+               <div class="header">
+                        <h3><a href="#">Search Results</a></h3>                        
+                    </div>        
+                    
+            
+                
+               <div class="hBox" style="border-top:4px solid #006b54;" id="resultsbox">
+                    <apex:form >                
+               
+                    <apex:pageBlockTable var="s" value="{!searchResults}" >
+                    
+                    <apex:repeat value="{!$ObjectType.FGW_Search_Result__c.FieldSets.FGW_Search_Result_Console_Fields}" var="f">
+                        <apex:column value="{!s[f]}">
+                            <apex:facet name="header">{!f.Label}</apex:facet>
+                        </apex:column>
+                    </apex:repeat> 
+                    
+                    </apex:pageBlockTable>
+                    </apex:form>
+                    </div>     
+                
+        
+        
+        
+        </div>
+        
+          
+          
             </td>
                 
                 
-                
-                
-                
-                <td>
-                
-            
+            <td>
             <apex:outputpanel id="FeedDisplayPanel">                                
             <div class="hBox" style="border-top:4px solid #006b54;" id="feedbox">
                 
@@ -204,28 +230,7 @@ by Salesforce.com Foundation
         
            <tr style="vertical-align:top;">
         
-                <td>
-               <div class="hBox" style="border-top:4px solid #006b54;" id="resultsbox">
-                <apex:form >                
-                    <div class="header">
-                        <h3>Search Results</h3>                        
-                    </div>        
-                    
-                    <apex:pageBlockTable var="s" value="{!searchResults}" width="90%" >
-                    
-                    <apex:repeat value="{!$ObjectType.FGW_Search_Result__c.FieldSets.FGW_Search_Result_Console_Fields}" var="f">
-                        <apex:column value="{!s[f]}">
-                            <apex:facet name="header">{!f.Label}</apex:facet>
-                        </apex:column>
-                    </apex:repeat> 
-                    
-                    </apex:pageBlockTable>
-                </apex:form>
-        </div>     
-        
-        
-        
-        </td>
+            
         
         
         
