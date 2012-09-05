@@ -44,7 +44,7 @@ public with sharing class FGW_Console_CTRL{
     public String queryObject{get;set;}
     
     //search results
-    public List<FGW_Search_Result__c> searchResults{get;set;}
+    public List<SearchResult> searchResults{get;set;}
     
     //the name of the non-default API to use for this query 
     public String APIOverrideName{get; set;}
@@ -70,7 +70,11 @@ public with sharing class FGW_Console_CTRL{
         	   availableStateAPIs.put(a.Name, a);
         }
         
-        searchResults = [select Name from FGW_Search_Result__c order by LastModifiedDate desc];
+        List<FGW_Search_Result__c> existingResults = new List<FGW_Search_Result__c>();
+        existingResults = [select Name from FGW_Search_Result__c order by LastModifiedDate desc];
+        for (FGW_Search_Result__c sr : existingResults){
+        	searchResults.add(new SearchResult(sr));
+        }
         
     }
     
@@ -149,12 +153,12 @@ public with sharing class FGW_Console_CTRL{
 
     
     
-    private List<FGW_Search_Result__c> runSearches(List<FGW_RequestFilterParameters> rfps){
+    private List<SearchResult> runSearches(List<FGW_RequestFilterParameters> rfps){
         //get the default APIs for State & Federal
         FGW_IAPI default_FedAPI = FGW_APIFactory.getDefault_Federal_API_Instance();
         FGW_IAPI default_StateAPI = FGW_APIFactory.getDefault_State_API_Instance();        
         
-        List<FGW_Search_Result__c> searchResults = new List<FGW_Search_Result__c>();
+        List<SearchResult> searchResults = new List<SearchResult>();
         
         for (FGW_RequestFilterParameters rfp : rfps){
             
@@ -189,13 +193,19 @@ public with sharing class FGW_Console_CTRL{
             for (SObject obj : searchObjs){
             	FGW_Search_Result__c sr = FGW_Utilities.convertObjectToSearchResult(obj);
                 if(rfp.SavedSearchID != null) sr.Saved_Search__c = rfp.SavedSearchId;
-                sr.API_Name__c  = rfp.APIName;        
-            	searchResults.add(sr);
+                sr.API_Name__c  = rfp.APIName;                        
+            	searchResults.add(new SearchResult(sr));
             }      
         }
         return searchResults;
     }
     
-    
+    public class SearchResult{
+        public boolean isSelected{get;set;}
+        public FGW_Search_Result__c SearchResult{get;set;}
+        public SearchResult(FGW_Search_Result__c sr){
+        	SearchResult = sr;
+        }    	
+    }
     
 }
