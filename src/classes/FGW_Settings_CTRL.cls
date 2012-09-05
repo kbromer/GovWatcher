@@ -49,7 +49,7 @@ public with sharing class FGW_Settings_CTRL {
         //check for possible errors
         errorList = new List<FGW_Error__c>();
         errorList = [select Error_Datetime__c, Error_Line_Number__c, Error_Message__c, Error_Stack_Trace__c,
-                            Error_Type__c, Friendly_Message__c, Id from FGW_Error__c];
+                            Error_Type__c, Friendly_Message__c, Id from FGW_Error__c order by Error_Datetime__c desc];
         
         
         
