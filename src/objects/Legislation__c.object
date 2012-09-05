@@ -89,14 +89,6 @@
             <isRequired>false</isRequired>
         </availableFields>
         <availableFields>
-            <field>Introduced__c</field>
-            <isRequired>false</isRequired>
-        </availableFields>
-        <availableFields>
-            <field>Latest_Major_Action__c</field>
-            <isRequired>false</isRequired>
-        </availableFields>
-        <availableFields>
             <field>Legislative_Body__c</field>
             <isRequired>false</isRequired>
         </availableFields>
@@ -105,19 +97,11 @@
             <isRequired>false</isRequired>
         </availableFields>
         <availableFields>
-            <field>Sponsor_Info__c</field>
-            <isRequired>false</isRequired>
-        </availableFields>
-        <availableFields>
             <field>Sponsor__c</field>
             <isRequired>false</isRequired>
         </availableFields>
         <availableFields>
             <field>Status__c</field>
-            <isRequired>false</isRequired>
-        </availableFields>
-        <availableFields>
-            <field>Status_in_Congress__c</field>
             <isRequired>false</isRequired>
         </availableFields>
         <availableFields>
@@ -178,6 +162,42 @@
         <externalId>false</externalId>
         <inlineHelpText>Whether we are currently tracking this bill</inlineHelpText>
         <label>Active</label>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Amendment_Count__c</fullName>
+        <description>Number of amendments proposed to this Bill</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Number of amendments proposed to this Bill</inlineHelpText>
+        <label>Amendment Count</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Awaiting_Signature_Date__c</fullName>
+        <description>When a bill began awaiting the president&apos;s signature</description>
+        <externalId>false</externalId>
+        <inlineHelpText>When a bill began awaiting the president&apos;s signature</inlineHelpText>
+        <label>Awaiting Signature Date</label>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <type>DateTime</type>
+    </fields>
+    <fields>
+        <fullName>Awaiting_Signature__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>Indicates if the bill is awaiting a signature from the President</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Indicates if the bill is awaiting a signature from the President</inlineHelpText>
+        <label>Awaiting Signature</label>
         <trackFeedHistory>false</trackFeedHistory>
         <trackHistory>false</trackHistory>
         <type>Checkbox</type>
@@ -275,6 +295,51 @@
         <unique>false</unique>
     </fields>
     <fields>
+        <fullName>Bill_Type__c</fullName>
+        <description>Type of bill - Bills, Resolutions, Joint Resolutions, Concurrent Resolutions</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Type of bill - Bills, Resolutions, Joint Resolutions, Concurrent Resolutions</inlineHelpText>
+        <label>Bill Type</label>
+        <picklist>
+            <picklistValues>
+                <fullName>hr</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>hres</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>hjres</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>hcres</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>s</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>sres</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>sjres</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>scres</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <type>Picklist</type>
+    </fields>
+    <fields>
         <fullName>Categories__c</fullName>
         <externalId>false</externalId>
         <label>Categories</label>
@@ -348,6 +413,20 @@
         <type>Picklist</type>
     </fields>
     <fields>
+        <fullName>Cosponsors_Count__c</fullName>
+        <description>Total number of cosponsoring legislators</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Total number of cosponsoring legislators</inlineHelpText>
+        <label>Cosponsors Count</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
         <fullName>Cosponsors__c</fullName>
         <externalId>false</externalId>
         <label>Cosponsors</label>
@@ -378,12 +457,23 @@
         <type>TextArea</type>
     </fields>
     <fields>
-        <fullName>Display_on_Website__c</fullName>
-        <defaultValue>false</defaultValue>
-        <description>Whether the bill should appear in the DC section of the website.</description>
+        <fullName>Enacted_Date__c</fullName>
+        <description>Date the Bill was enacted at</description>
         <externalId>false</externalId>
-        <inlineHelpText>Whether the bill should appear in the DC section of the website.</inlineHelpText>
-        <label>Display on Website</label>
+        <inlineHelpText>Date the Bill was enacted at</inlineHelpText>
+        <label>Enacted Date</label>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <type>DateTime</type>
+    </fields>
+    <fields>
+        <fullName>Enacted__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>If this Bill has been enacted</description>
+        <externalId>false</externalId>
+        <inlineHelpText>If this Bill has been enacted</inlineHelpText>
+        <label>Enacted</label>
         <trackFeedHistory>false</trackFeedHistory>
         <trackHistory>false</trackHistory>
         <type>Checkbox</type>
@@ -401,6 +491,30 @@
         <unique>false</unique>
     </fields>
     <fields>
+        <fullName>House_Passage_Date__c</fullName>
+        <description>Date of House passage vote</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Date of House passage vote</inlineHelpText>
+        <label>House Passage Date</label>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <type>DateTime</type>
+    </fields>
+    <fields>
+        <fullName>House_Passage_Status__c</fullName>
+        <description>Status of House passage of bill (pass, fail or null)</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Status of House passage of bill (pass, fail or null)</inlineHelpText>
+        <label>House Passage Status</label>
+        <length>255</length>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
         <fullName>Introduced_Date__c</fullName>
         <description>Date the bill was introduced</description>
         <externalId>false</externalId>
@@ -409,27 +523,7 @@
         <required>false</required>
         <trackFeedHistory>false</trackFeedHistory>
         <trackHistory>false</trackHistory>
-        <type>Date</type>
-    </fields>
-    <fields>
-        <fullName>Introduced__c</fullName>
-        <externalId>false</externalId>
-        <label>Introduced</label>
-        <required>false</required>
-        <trackFeedHistory>false</trackFeedHistory>
-        <trackHistory>false</trackHistory>
-        <type>Date</type>
-    </fields>
-    <fields>
-        <fullName>Latest_Major_Action__c</fullName>
-        <externalId>false</externalId>
-        <label>Latest Major Action</label>
-        <length>255</length>
-        <required>false</required>
-        <trackFeedHistory>false</trackFeedHistory>
-        <trackHistory>false</trackHistory>
-        <type>Text</type>
-        <unique>false</unique>
+        <type>DateTime</type>
     </fields>
     <fields>
         <fullName>Legislative_Body__c</fullName>
@@ -476,6 +570,57 @@
         <visibleLines>5</visibleLines>
     </fields>
     <fields>
+        <fullName>Passage_Vote_Count__c</fullName>
+        <description>Count of total number of passage votes on this bill</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Count of total number of passage votes on this bill</inlineHelpText>
+        <label>Passage Vote Count</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Senate_Passage_Date__c</fullName>
+        <description>Date of Senate passage vote</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Date of Senate passage vote</inlineHelpText>
+        <label>Senate Passage Date</label>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <type>DateTime</type>
+    </fields>
+    <fields>
+        <fullName>Senate_Passage_Status__c</fullName>
+        <description>Status of Senate passage of bill (pass, fail or null)</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Status of Senate passage of bill (pass, fail or null)</inlineHelpText>
+        <label>Senate Passage Status</label>
+        <length>255</length>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Sponsor_ID__c</fullName>
+        <description>Bioguide ID of the sponsor</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Bioguide ID of the sponsor</inlineHelpText>
+        <label>Sponsor ID</label>
+        <length>255</length>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
         <fullName>Sponsor_Info__c</fullName>
         <externalId>false</externalId>
         <label>Sponsor Info</label>
@@ -500,21 +645,21 @@
         <type>Lookup</type>
     </fields>
     <fields>
-        <fullName>Status__c</fullName>
+        <fullName>Status_Change_Date__c</fullName>
+        <description>The date/time of the last status change</description>
         <externalId>false</externalId>
-        <label>Status</label>
-        <length>80</length>
+        <inlineHelpText>The date/time of the last status change</inlineHelpText>
+        <label>Status Change Date</label>
         <required>false</required>
         <trackFeedHistory>false</trackFeedHistory>
         <trackHistory>false</trackHistory>
-        <type>Text</type>
-        <unique>false</unique>
+        <type>DateTime</type>
     </fields>
     <fields>
-        <fullName>Status_in_Congress__c</fullName>
+        <fullName>Status__c</fullName>
         <externalId>false</externalId>
-        <label>Status in Congress</label>
-        <length>80</length>
+        <label>Status</label>
+        <length>255</length>
         <required>false</required>
         <trackFeedHistory>false</trackFeedHistory>
         <trackHistory>false</trackHistory>
@@ -551,6 +696,28 @@ HYPERLINK(&quot;http://hdl.loc.gov/loc.uscongress/legislation.&quot; + text(Cong
         <type>Text</type>
         <unique>false</unique>
     </fields>
+    <fields>
+        <fullName>Vetoed_Date__c</fullName>
+        <description>Date of veto, if applicable</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Date of veto, if applicable</inlineHelpText>
+        <label>Vetoed Date</label>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <type>DateTime</type>
+    </fields>
+    <fields>
+        <fullName>Vetoed__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>Indicated if this Bill has been vetoed</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Indicated if this Bill has been vetoed</inlineHelpText>
+        <label>Vetoed</label>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <type>Checkbox</type>
+    </fields>
     <label>Legislation</label>
     <listViews>
         <fullName>Active</fullName>
@@ -558,7 +725,6 @@ HYPERLINK(&quot;http://hdl.loc.gov/loc.uscongress/legislation.&quot; + text(Cong
         <columns>Full_Bill_Number__c</columns>
         <columns>Bill_Title__c</columns>
         <columns>Status__c</columns>
-        <columns>Latest_Major_Action__c</columns>
         <columns>Date_Bill_Info_Updated__c</columns>
         <filterScope>Everything</filterScope>
         <filters>
@@ -574,7 +740,6 @@ HYPERLINK(&quot;http://hdl.loc.gov/loc.uscongress/legislation.&quot; + text(Cong
         <columns>NAME</columns>
         <columns>Full_Bill_Number__c</columns>
         <columns>Bill_Title__c</columns>
-        <columns>Latest_Major_Action__c</columns>
         <columns>Status__c</columns>
         <columns>UPDATEDBY_USER</columns>
         <columns>LAST_UPDATE</columns>
@@ -598,18 +763,18 @@ HYPERLINK(&quot;http://hdl.loc.gov/loc.uscongress/legislation.&quot; + text(Cong
         <customTabListAdditionalFields>Bill_Title__c</customTabListAdditionalFields>
         <customTabListAdditionalFields xsi:nil="true"/>
         <customTabListAdditionalFields>Status__c</customTabListAdditionalFields>
-        <customTabListAdditionalFields>Latest_Major_Action__c</customTabListAdditionalFields>
+        <customTabListAdditionalFields xsi:nil="true"/>
         <lookupDialogsAdditionalFields>Full_Bill_Number__c</lookupDialogsAdditionalFields>
         <lookupDialogsAdditionalFields>Bill_Title__c</lookupDialogsAdditionalFields>
         <lookupDialogsAdditionalFields xsi:nil="true"/>
         <lookupDialogsAdditionalFields>Status__c</lookupDialogsAdditionalFields>
-        <lookupDialogsAdditionalFields>Latest_Major_Action__c</lookupDialogsAdditionalFields>
+        <lookupDialogsAdditionalFields xsi:nil="true"/>
         <searchFilterFields>NAME</searchFilterFields>
         <searchResultsAdditionalFields>Full_Bill_Number__c</searchResultsAdditionalFields>
         <searchResultsAdditionalFields>Bill_Title__c</searchResultsAdditionalFields>
         <searchResultsAdditionalFields xsi:nil="true"/>
         <searchResultsAdditionalFields>Status__c</searchResultsAdditionalFields>
-        <searchResultsAdditionalFields>Latest_Major_Action__c</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields xsi:nil="true"/>
     </searchLayouts>
     <sharingModel>ReadWrite</sharingModel>
 </CustomObject>
