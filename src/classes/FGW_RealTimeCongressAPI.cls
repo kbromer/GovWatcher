@@ -131,6 +131,7 @@ global class FGW_RealTimeCongressAPI implements FGW_IAPI{
  
     /** Object Creation Methods **/
     
+    //Create Amendment from JSON result
     private List<Amendment__c> parseAmendmentResults(List<FGW_JSONObject_RTC> resultList){
     	List<Amendment__c> returnList = new List<Amendment__c>();    	 
     	 
@@ -144,6 +145,7 @@ global class FGW_RealTimeCongressAPI implements FGW_IAPI{
         return returnList;
     }
     
+    //Create legislation from JSON result
     private List<Legislation__c> parseLegislationResults(List<FGW_JSONObject_RTC> resultList){
     	
     	List<Legislation__c> returnList = new List<Legislation__c>();    	
@@ -201,6 +203,7 @@ global class FGW_RealTimeCongressAPI implements FGW_IAPI{
         return returnList;
     }        
     
+    //Create Contact from JSON results
     private List<Contact> parseContactResults(List<FGW_JSONObject_RTC> resultList){
         
         List<Contact> returnList = new List<Contact>();       
@@ -219,7 +222,8 @@ global class FGW_RealTimeCongressAPI implements FGW_IAPI{
         
         return returnList;
     }
-    	
+    
+    //create roll votes from JSON results    	
     private List<Roll_Vote__c> parseRollVoteResults(List<FGW_JSONObject_RTC> resultList){
         
         List<Roll_Vote__c> returnList = new List<Roll_Vote__c>();       
@@ -242,7 +246,7 @@ global class FGW_RealTimeCongressAPI implements FGW_IAPI{
     }
     
     
-    
+    //create votes from JSON results
     private List<Legislator_Vote__c> parseLegislatorVotesResults(List<FGW_JSONObject_RTC> resultList){
         
         List<Legislator_Vote__c> returnList = new List<Legislator_Vote__c>();       
@@ -262,6 +266,8 @@ global class FGW_RealTimeCongressAPI implements FGW_IAPI{
         }   
         return returnList;
     }
+    
+    
     /** Call & Parsing Methods **/    
     
     //handles the callout and return the JSON Object for further parsing
@@ -275,27 +281,34 @@ global class FGW_RealTimeCongressAPI implements FGW_IAPI{
             HttpRequest req = new HttpRequest();
             HttpResponse res = new HttpResponse();
             FGW_JSONObject_RTC deserializedObj = new FGW_JSONObject_RTC();
-                       
-            try{
-                req = buildHTTPRequest(collection, rfp);
-                res = doCallout(req);
+            Integer total_retrieved = 0;
+            Integer current_page = 1;
             
-                if (res.getStatusCode() == 200){                
-                	String JSONBody = res.getBody();
-                	//replace apex protected words
-                	JSONBody = JSONBody.replace('number', 'x_number');
-                	JSONBody = JSONBody.replace(' as ', ' x_as ');
-                    deserializedObj = (FGW_JSONObject_RTC)JSON.deserialize(JSONBody, FGW_JSONObject_RTC.class);
-                    returnList.add(deserializedObj);                
-                }
-                else{
-                    throw new FGW_Exception.CalloutStatusException('Callout Error: ' + res.toString());             
-                }               
-            }catch (Exception e){
-            	FGW_Exception.generateError(e, 'Error Creating Valid Request');
-            }
-                       
-            system.debug('SIZE: ' + returnList.size());
+            //wrap in do-while to control pagination                        
+            do{
+                try{
+                    req = buildHTTPRequest(collection, rfp, '&per_page=50&page=' + current_page);
+                    res = doCallout(req);
+            
+                    if (res.getStatusCode() == 200){                
+                    	String JSONBody = res.getBody();
+                    	//replace apex protected words
+                    	JSONBody = JSONBody.replace('number', 'x_number');
+                    	JSONBody = JSONBody.replace(' as ', ' x_as ');
+                        JSONBody = JSONBody.replace('page', 'x_page');
+                        system.debug(JSONBody);
+                        deserializedObj = (FGW_JSONObject_RTC)JSON.deserialize(JSONBody, FGW_JSONObject_RTC.class);
+                        returnList.add(deserializedObj);                
+                    }
+                    else{
+                        throw new FGW_Exception.CalloutStatusException('Callout Error: ' + res.toString());             
+                    }               
+                }catch (Exception e){
+            	   FGW_Exception.generateError(e, 'Error Creating Valid Request');
+                }            
+                current_page++;
+                total_retrieved += deserializedObj.x_page.count;                
+            }while(deserializedObj.count > total_retrieved && total_retrieved < 1000 && current_page < 11);
         }            
         return returnList;        
     }
@@ -303,7 +316,7 @@ global class FGW_RealTimeCongressAPI implements FGW_IAPI{
     
     
     //construct the request, one request per filter param object
-    private HttpRequest buildHTTPRequest(String ResourceName, FGW_RequestFilterParameters params){
+    private HttpRequest buildHTTPRequest(String ResourceName, FGW_RequestFilterParameters params, String page_param){
         
         String parameter_string = '';
         
@@ -329,7 +342,7 @@ global class FGW_RealTimeCongressAPI implements FGW_IAPI{
         }
         
         // Compose the URL
-        String url = Endpoint + '/' + ResourceName + '?' + parameter_string;
+        String url = Endpoint + '/' + ResourceName + '?' + parameter_string + page_param;
         system.debug('ENDPOINT: ' + url);
 
        // Instantiate a new HTTP request, GET method, set endpoint
