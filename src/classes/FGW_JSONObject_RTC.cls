@@ -119,17 +119,17 @@ public with sharing class FGW_JSONObject_RTC{
     }
     
     public class Legislator{
-        public String title;
-        public String nickname;
-        public String district;
-        public String bioguide_id;
-        public String govtrack_id;
-        public String last_name;
-        public String name_suffix;
-        public String party;
-        public String first_name;
-        public String state;
-        public String chamber;
+        public String title = '';
+        public String nickname = '';
+        public String district = '';
+        public String bioguide_id = '';
+        public String govtrack_id = '';
+        public String last_name = '';
+        public String name_suffix = '';
+        public String party = '';
+        public String first_name = '';
+        public String state = '';
+        public String chamber = '';
     }
     
     public class Amendment{    	
