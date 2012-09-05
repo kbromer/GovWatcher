@@ -37,6 +37,14 @@ public with sharing class FGW_JSONObject_RTC{
 	public List<Amendment> amendments;
 	public List<Bill> bills;	
 	public List<Roll_Vote> rollvotes;
+	public Integer count;
+	public x_Page x_page;
+
+	public class x_Page{
+		public Integer count;
+		public Integer per_page;
+		public Integer page;
+	}	
 	
     public class Bill{
         public String bill_id;
