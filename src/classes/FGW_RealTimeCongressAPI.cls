@@ -30,7 +30,7 @@
 /**
 * @author Salesforce.com Foundation
 * @date Salesforce Foundation 2012
-* @description Access to the Sunlight Foundation Real Time Congress API 
+* @description Access to the Sunlight Foundation Real Time Congress & Congress APIs 
 */
 global class FGW_RealTimeCongressAPI implements FGW_IAPI{
     
@@ -102,10 +102,12 @@ global class FGW_RealTimeCongressAPI implements FGW_IAPI{
         resultsList = new List<FGW_JSONObject_RTC>();        
         List<Contact> returnList = new List<Contact>();
         
+        //change endpoint to sunlight services API
+        this.Endpoint = 'http://services.sunlightlabs.com/api';
         
         
         //error handling done internal to this execution path
-        resultsList = runQueries('votes.json', params);
+        resultsList = runQueries('legislators.getList', params);
         
         try{
            returnList = parseContactResults(resultsList);
@@ -212,14 +214,36 @@ global class FGW_RealTimeCongressAPI implements FGW_IAPI{
         List<Contact> returnList = new List<Contact>();       
         
         for (FGW_JSONObject_RTC JSObj : resultList){
-            for (FGW_JSONObject_RTC.Roll_Vote rv : JSObj.rollvotes){
-                for (String s : rv.voters.keySet()){
-                    for (FGW_JSONObject_RTC.Vote v : rv.voters.get(s)){                        
-                        Contact c = new Contact();
-                        c.LastName = v.voter.last_name;                        
-                        returnList.add(c);
-                    }                        
-                }           
+            for (FGW_JSONObject_RTC.Legislator l : JSObj.response.legislators){
+            	
+            	Contact c = new Contact();
+            	system.debug('LASTNAME: ' + l.legislator.last_name); 
+                c.LastName = l.legislator.last_name + ' ' + l.legislator.name_suffix;
+                c.FirstName = l.legislator.first_name;
+                c.Bioguide_ID__c = l.legislator.bioguide_id;         
+                c.Title = l.legislator.title;
+                if (l.legislator.birthdate != null) c.Birthdate = date.valueOf(l.legislator.birthdate);               
+                c.Nickname__c = l.legislator.nickname;
+                if (l.legislator.party == 'D') c.Party_Affiliation__c = 'Democrat';
+                else if (l.legislator.party == 'R') c.Party_Affiliation__c = 'Republican';
+                else if (l.legislator.party == 'I') c.Party_Affiliation__c = 'Independent';
+                else if (l.legislator.party == 'G') c.Party_Affiliation__c = 'Green';
+                else c.Party_Affiliation__c = l.legislator.party;
+                c.Congressional_State__c = l.legislator.state;
+                c.Congressional_District__c = l.legislator.district;
+                c.Active_Member__c = l.legislator.in_office;
+                c.Phone = l.legislator.phone;
+                c.Fax = l.legislator.fax;
+                c.Congressional_Website__c = l.legislator.website;
+                c.Web_Contact_Form__c = l.legislator.webform;
+                c.Email = l.legislator.email;                
+                c.MailingStreet = l.legislator.congress_office;  
+                c.FEC_ID__c = l.legislator.fec_id;
+                c.Twitter_ID__c = l.legislator.twitter_id;
+                c.Youtube_Site__c = l.legislator.youtube_url;
+                c.Facebook_ID__c = l.legislator.facebook_id;
+                c.Govtrack_ID__c = l.legislator.govtrack_id;
+                returnList.add(c);
             }   
         }   
         
@@ -290,7 +314,12 @@ global class FGW_RealTimeCongressAPI implements FGW_IAPI{
             //wrap in do-while to control pagination                        
             do{
                 try{
-                    req = buildHTTPRequest(collection, rfp, '&per_page=50&page=' + current_page);
+                    //exclude the page parameter if using the legislators api
+                    if (collection != 'legislators.getList')
+                        req = buildHTTPRequest(collection, rfp, '&per_page=50&page=' + current_page);
+                    else
+                        req = buildHTTPRequest(collection, rfp, '');
+                    
                     res = doCallout(req);
             
                     if (res.getStatusCode() == 200){                
@@ -299,6 +328,12 @@ global class FGW_RealTimeCongressAPI implements FGW_IAPI{
                     	JSONBody = JSONBody.replace('number', 'x_number');
                     	JSONBody = JSONBody.replace(' as ', ' x_as ');
                         JSONBody = JSONBody.replace('page', 'x_page');
+                        
+                        //if its legislators, need to account for the slightly different legislator objects
+                        if (collection == 'legislators.getList'){
+                            JSONBody = JSONBody.replace('lastname', 'last_name');
+                            JSONBody = JSONBody.replace('firstname', 'first_name');
+                        }    
                         system.debug(JSONBody);
                         deserializedObj = (FGW_JSONObject_RTC)JSON.deserialize(JSONBody, FGW_JSONObject_RTC.class);
                         returnList.add(deserializedObj);                
@@ -310,7 +345,11 @@ global class FGW_RealTimeCongressAPI implements FGW_IAPI{
             	   FGW_Exception.generateError(e, 'Error Creating Valid Request');
                 }            
                 current_page++;
-                total_retrieved += deserializedObj.x_page.count;                
+                
+                if (deserializedObj.x_page != null)
+                    total_retrieved += deserializedObj.x_page.count;
+                else
+                    total_retrieved = 1000;                                        
             }while(deserializedObj.count > total_retrieved && total_retrieved < 1000 && current_page < 11);
         }            
         return returnList;        
@@ -343,6 +382,10 @@ global class FGW_RealTimeCongressAPI implements FGW_IAPI{
         if (ResourceName == 'bills.json' && params.queryReturnType == FGW_Constants.queryReturntype.Basic){
             parameter_string += '&sections=basic';            
         }
+        //if we're using the older API, include the key in the URL
+        if (ResourceName == 'legislators.getList'){
+        	parameter_string += '&apikey=' + this.API_Key;
+        }
         
         // Compose the URL
         String url = Endpoint + '/' + ResourceName + '?' + parameter_string + page_param;
@@ -352,8 +395,7 @@ global class FGW_RealTimeCongressAPI implements FGW_IAPI{
         HttpRequest req = new HttpRequest();
         req.setEndpoint(url);        
         req.setMethod('GET');
-        req.setHeader('X-APIKEY', API_Key);   
-        
+        req.setHeader('X-APIKEY', API_Key);
         return req; 
     }
     
