@@ -80,21 +80,29 @@ by Salesforce.com Foundation
             
             j$( "#resultsbox" ).resizable({ containment: "#pbdiv" });
             j$( "#resultsbox" ).draggable({ containment: "#pbdiv" }); */
-                        
-    
-            j$( "#accordion" ).accordion();
-    
+                   
+            j$( "#accordion" ).accordion({active: 0});
         });        
-                
+        
+        function openSearchResults() {
+            j$("#pbdiv").fadeTo('fast', .2);
+            j$("#accordion").accordion({active: 2});
+        }         
+                  
+        function fadeBackIn(){
+            j$("#pbdiv").fadeTo('fast', 1);
+        }
+                    
+        
    
     </script>
     
     <apex:sectionHeader title="GovWatcher" subtitle="Track and Search for Legislation and Legislators"/>
-    <apex:pageblock >
+    <apex:pageblock id="pageblockid">
         <div id="pbdiv">
-            <table width="100%" id="wrapTable">
+            <table width="100%" id="wrapTable">                
                 <tr style="vertical-align:top;">
-                    <td id="searchTD" width="75%">            
+                    <td id="searchTD" width="75%">
                         <div id="accordion">
                             
                             <div class="header">
@@ -160,11 +168,13 @@ by Salesforce.com Foundation
 					                </apex:actionFunction>
                                 </apex:form>   
                             </div>  
-                
+                                
                             <div class="header">
-                                <h3><a href="#">Search Results</a></h3>                        
+                                <h3 id="searchResults"><a href="#"><apex:outputpanel id="sheader">Search Results ({!searchResultsSize})</apex:outputpanel></a></h3>                        
                             </div>        
+                            
                             <div class="hBox" style="border-top:4px solid #006b54;" id="resultsbox">
+                                <apex:outputpanel id="panel">
                                 <apex:form >                
                                     <apex:pageBlockTable var="s" value="{!searchResults}" >
                                         <apex:repeat value="{!$ObjectType.FGW_Search_Result__c.FieldSets.FGW_Search_Result_Console_Fields}" var="f">
@@ -174,9 +184,11 @@ by Salesforce.com Foundation
                                         </apex:repeat> 
                                     </apex:pageBlockTable>
                                 </apex:form>
+                                </apex:outputpanel>
                             </div>     
-                
+                            
                         </div><!--close accordian--> 
+                        
                     </td>
                 
                     <td>
@@ -203,7 +215,7 @@ by Salesforce.com Foundation
                                     <h3>Add New Search</h3>                        
                                 </div>                    
                                 <apex:tabpanel switchtype="client">
-                                    <apex:tab label="Standard">
+                                    <apex:tab label="Standard"> 
                                     </apex:tab>
                         
 			                        <apex:tab label="Advanced">
@@ -212,9 +224,9 @@ by Salesforce.com Foundation
 			                                <apex:selectOption itemvalue="Legislation" itemlabel="Legislation"/>
 			                                <apex:selectOption itemvalue="Legislator" itemlabel="Legislator"/>                                                
 			                            </apex:selectList>
-			                            <apex:commandButton title="Submit Query" action="{!runAdvSearch}" value="Submit"/>            
+			                            <apex:commandButton title="Submit Query" action="{!runAdvSearch}" onClick="openSearchResults()" onComplete="fadeBackIn()" rerender="panel,sheader" value="Submit"/>            
                                     </apex:tab>
-                                </apex:tabpanel>
+                                </apex:tabpanel>                                
                             </apex:form>
                         </div>
                     </td>

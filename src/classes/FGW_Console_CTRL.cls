@@ -42,6 +42,7 @@ public with sharing class FGW_Console_CTRL{
     public String FeedName{get;set;}     
     public String adv_query{get;set;} 
     public String queryObject{get;set;}
+    public Integer searchResultsSize{get{return searchResults.size();}}
     
     //search results
     public List<SearchResult> searchResults{get;set;}
@@ -72,6 +73,7 @@ public with sharing class FGW_Console_CTRL{
         
         List<FGW_Search_Result__c> existingResults = new List<FGW_Search_Result__c>();
         existingResults = [select Name from FGW_Search_Result__c order by LastModifiedDate desc];
+        searchResults = new List<SearchResult>();
         for (FGW_Search_Result__c sr : existingResults){
         	searchResults.add(new SearchResult(sr));
         }
