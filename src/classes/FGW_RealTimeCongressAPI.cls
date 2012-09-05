@@ -36,8 +36,9 @@ global class FGW_RealTimeCongressAPI implements FGW_IAPI{
     
     private final FGW_API_Settings__c API_Config;
     private final String API_Key;
-    private final String Endpoint;     
     private final Map<String, MAP<String, String>> RTC_Translation;
+    //non-final to make endpoint switching easier if needed
+    private String Endpoint;
     
     //keep the list around in case we need it...    
     private List<FGW_JSONObject_RTC> resultsList;    
@@ -100,6 +101,8 @@ global class FGW_RealTimeCongressAPI implements FGW_IAPI{
     global List<Contact> getLegislators(List<FGW_RequestFilterParameters> params){
         resultsList = new List<FGW_JSONObject_RTC>();        
         List<Contact> returnList = new List<Contact>();
+        
+        
         
         //error handling done internal to this execution path
         resultsList = runQueries('votes.json', params);
