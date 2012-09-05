@@ -41,6 +41,7 @@ by Salesforce.com Foundation
                 border-radius: 5px;
                 background: white;
                 border-top: 4px solid #006b54;
+                height: 300px;
                 /*padding: 5px 20px 20px 10px;*/
             }
                 .hBox .header{
@@ -90,10 +91,10 @@ by Salesforce.com Foundation
     
     <apex:sectionHeader title="GovWatcher" subtitle="Track and Search for Legislation and Legislators"/>
     <apex:pageblock >
-        <div id="pbdiv" style="height:600px">
+        <div id="pbdiv">
             <table width="100%" id="wrapTable">
                 <tr style="vertical-align:top;">
-                    <td id="searchTD" width="75%" height="50%">            
+                    <td id="searchTD" width="75%">            
                         <div id="accordion">
                             
                             <div class="header">
