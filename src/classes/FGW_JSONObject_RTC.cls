@@ -37,6 +37,11 @@ public with sharing class FGW_JSONObject_RTC{
 	public List<Amendment> amendments;
 	public List<Bill> bills;	
 	public List<Roll_Vote> rollvotes;
+	
+	//used for legislators only
+	public Response response;	
+	
+	//used for non legislator metadata
 	public Integer count;
 	public x_Page x_page;
 
@@ -45,6 +50,10 @@ public with sharing class FGW_JSONObject_RTC{
 		public Integer per_page;
 		public Integer page;
 	}	
+	
+	public class Response{
+		public List<Legislator> legislators;
+	}
 	
     public class Bill{
         public String bill_id;
