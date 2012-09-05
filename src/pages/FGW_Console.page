@@ -88,199 +88,137 @@ by Salesforce.com Foundation
    
     </script>
     
-    
-    
-    
-    
-    
-    
     <apex:sectionHeader title="GovWatcher" subtitle="Track and Search for Legislation and Legislators"/>
     <apex:pageblock >
         <div id="pbdiv" style="height:600px">
-        
-       <table width="100%" id="wrapTable">
-        <tr style="vertical-align:top;">
-            <td id="searchTD" width="75%">            
-            
-            <div id="accordion">
-            
-               <div class="header">
-                        <h3><a href="#">Tracked Legislation</a></h3>
-                    </div>                   
-            <div class="hBox" style="border-top:4px solid #006b54;" id="legislationbox">
-                <apex:form >
-                  
-                  
-            <apex:pageblocktable value="{!followedLegislation}" var="leg">
-                    <apex:column >
-                         <apex:facet name="header">Your Follow Status</apex:facet>
-                        <chatter:follow entityId="{!leg.Id}"/>
-                    </apex:column>  
-                    <apex:column >
-                        <apex:facet name="header">Legislation Name</apex:facet>
-                        <apex:outputtext value="{!leg.Name}"/>
-                    </apex:column>
-                    <apex:column >
-                         <apex:facet name="header">Legislation Status</apex:facet>
-                         <apex:outputtext value="{!leg.Status__c}"/>
-                    </apex:column>
-                    <apex:column >
-                        <apex:facet name="header">Stop Tracking?</apex:facet>
-                        <apex:outputtext value="Unfollow"/>                                                        
-                    </apex:column>
-                    <apex:column > 
-                        <apex:facet name="header">Feed</apex:facet>
-                        <a href="javascript:ChangeFeed('{!leg.Id}');">View</a>                        
-                    </apex:column>                          
-                </apex:pageblocktable>
-                <apex:actionFunction action="{!assignFeedName}" name="ChangeFeed" rerender="FeedDisplayPanel">
-                    <apex:param name="feedDisplayId" value="" assignTo="{!FeedDisplayId}"/>
-                </apex:actionFunction>
-                </apex:form>
-            </div>      
-            
-            
-                     <div class="header">
-                        <h3><a href="#">Tracked Legislators</a></h3>
-                    </div>  
-            
-            
-            <div class="hBox" style="border-top:4px solid #006b54;" id="legislatorbox">
-                <apex:form >  
-                               
-            <apex:pageblocktable value="{!followedLegislators}" var="con"> 
-                    <apex:column >
-                         <apex:facet name="header">Your Follow Status</apex:facet>  
-                         <chatter:follow entityId="{!con.Id}"/>                      
-                    </apex:column>  
-                    
-                    <apex:column >
-                        <apex:facet name="header">Legislator Name</apex:facet>
-                        <apex:outputtext value="{!con.Name}"/>
-                    </apex:column>                    
-                 
-                    <apex:column >
-                        <apex:facet name="header">Stop Tracking?</apex:facet>
-                        <apex:outputtext value="Unfollow"/>                                                        
-                    </apex:column>
-                    <apex:column >
-                        <apex:facet name="header">Feed</apex:facet>
-                        <a href="javascript:ChangeFeed('{!con.Id}');">View</a>                                                      
-                    </apex:column>                         
-                  
-                </apex:pageblocktable>
-                
-                <apex:actionFunction action="{!assignFeedName}" name="ChangeFeed" rerender="FeedDisplayPanel">
-                    <apex:param name="feedDisplayId" value="" assignTo="{!FeedDisplayId}"/>
-                </apex:actionFunction>
-                    </apex:form>   
-                </div>  
-                
-               <div class="header">
-                        <h3><a href="#">Search Results</a></h3>                        
-                    </div>        
-                    
-            
-                
-               <div class="hBox" style="border-top:4px solid #006b54;" id="resultsbox">
-                    <apex:form >                
-               
-                    <apex:pageBlockTable var="s" value="{!searchResults}" >
-                    
-                    <apex:repeat value="{!$ObjectType.FGW_Search_Result__c.FieldSets.FGW_Search_Result_Console_Fields}" var="f">
-                        <apex:column value="{!s[f]}">
-                            <apex:facet name="header">{!f.Label}</apex:facet>
-                        </apex:column>
-                    </apex:repeat> 
-                    
-                    </apex:pageBlockTable>
-                    </apex:form>
-                    </div>     
-                
-        
-        
-        
-        </div>
-        
-          
-          
-            </td>
-                
-                
-            <td>
-            <apex:outputpanel id="FeedDisplayPanel">                                
-            <div class="hBox" style="border-top:4px solid #006b54;" id="feedbox">
-                
-                    <div class="header">
-                        <h3>{!FeedName}</h3>
-                    </div>                    
-            
-                <chatter:feed entityId="{!FeedDisplayId}" showPublisher="false"/>
+            <table width="100%" id="wrapTable">
+                <tr style="vertical-align:top;">
+                    <td id="searchTD" width="75%" height="50%">            
+                        <div id="accordion">
                             
-            <apex:form >
-            <apex:commandLink action="{!viewAllFeeds}" value="Reset Feed" id="resetFeed" rerender="FeedDisplayPanel"/>
-            </apex:form>    
-            </div>             
-            </apex:outputpanel>          
+                            <div class="header">
+                                <h3><a href="#">Tracked Legislation</a></h3>
+                            </div>                   
+                            <div class="hBox" style="border-top:4px solid #006b54;" id="legislationbox">
+                                <apex:form >
+                                    <apex:pageblocktable value="{!followedLegislation}" var="leg">
+					                    <apex:column >
+					                       <apex:facet name="header">Your Follow Status</apex:facet>
+					                       <chatter:follow entityId="{!leg.Id}"/>
+                                        </apex:column>  
+					                    <apex:column >
+					                        <apex:facet name="header">Legislation Name</apex:facet>
+					                        <apex:outputtext value="{!leg.Name}"/>
+					                    </apex:column>
+					                    <apex:column >
+					                         <apex:facet name="header">Legislation Status</apex:facet>
+					                         <apex:outputtext value="{!leg.Status__c}"/>
+					                    </apex:column>
+					                    <apex:column >
+					                        <apex:facet name="header">Stop Tracking?</apex:facet>
+					                        <apex:outputtext value="Unfollow"/>                                                        
+					                    </apex:column>
+					                    <apex:column > 
+					                        <apex:facet name="header">Feed</apex:facet>
+					                        <a href="javascript:ChangeFeed('{!leg.Id}');">View</a>                        
+					                    </apex:column>                          
+					                </apex:pageblocktable>
+                                    <apex:actionFunction action="{!assignFeedName}" name="ChangeFeed" rerender="FeedDisplayPanel">
+                                        <apex:param name="feedDisplayId" value="" assignTo="{!FeedDisplayId}"/>
+                                    </apex:actionFunction>
+                                </apex:form>
+                            </div>      
             
-            
-                             
-        </td>
-              </tr>
-        
-           <tr style="vertical-align:top;">
-        
-            
-        
-        
-        
-        
-        
-        <td>
-               <div class="hBox" style="border-top:4px solid #006b54;" id="searchbox">
-                <apex:form >                
-                    <div class="header">
-                        <h3>Add New Search</h3>                        
-                    </div>                    
-                    
-                    <apex:tabpanel switchtype="client">
-                    
-                        
-                        <apex:tab label="Standard">
-                        </apex:tab>
-                        
-                        <apex:tab label="Advanced">
-                            <apex:inputText value="{!adv_query}" id="theTextInput"/>                    
-                            <apex:selectList value="{!queryObject}" multiselect="false" size="1">
-                                <apex:selectOption itemvalue="Legislation" itemlabel="Legislation"/>
-                                <apex:selectOption itemvalue="Legislator" itemlabel="Legislator"/>                                                
-                            </apex:selectList>
-                            <apex:commandButton title="Submit Query" action="{!runAdvSearch}" value="Submit"/>            
-                        </apex:tab>
-                    
+                            <div class="header">
+                                <h3><a href="#">Tracked Legislators</a></h3>
+                            </div>  
+                            <div class="hBox" style="border-top:4px solid #006b54;" id="legislatorbox">
+                                <apex:form >  
+                               
+                                    <apex:pageblocktable value="{!followedLegislators}" var="con"> 
+					                    <apex:column >
+					                         <apex:facet name="header">Your Follow Status</apex:facet>  
+					                         <chatter:follow entityId="{!con.Id}"/>                      
+					                    </apex:column>
+					                    <apex:column >
+					                        <apex:facet name="header">Legislator Name</apex:facet>
+					                        <apex:outputtext value="{!con.Name}"/>
+					                    </apex:column>                    
+					                    <apex:column >
+					                        <apex:facet name="header">Stop Tracking?</apex:facet>
+					                        <apex:outputtext value="Unfollow"/>                                                        
+					                    </apex:column>
+					                    <apex:column >
+					                        <apex:facet name="header">Feed</apex:facet>
+					                        <a href="javascript:ChangeFeed('{!con.Id}');">View</a>                                                      
+					                    </apex:column>
+					                </apex:pageblocktable>
                 
-                    </apex:tabpanel>
+					                <apex:actionFunction action="{!assignFeedName}" name="ChangeFeed" rerender="FeedDisplayPanel">
+					                    <apex:param name="feedDisplayId" value="" assignTo="{!FeedDisplayId}"/>
+					                </apex:actionFunction>
+                                </apex:form>   
+                            </div>  
                 
-                </apex:form>
-            </div>
-        
-        </td>
-
-        </tr>
-        
-        
-       
-        </table>
-        
-        
-        
-
-                         
-
-
-
-
-    </div>
+                            <div class="header">
+                                <h3><a href="#">Search Results</a></h3>                        
+                            </div>        
+                            <div class="hBox" style="border-top:4px solid #006b54;" id="resultsbox">
+                                <apex:form >                
+                                    <apex:pageBlockTable var="s" value="{!searchResults}" >
+                                        <apex:repeat value="{!$ObjectType.FGW_Search_Result__c.FieldSets.FGW_Search_Result_Console_Fields}" var="f">
+                                            <apex:column value="{!s.SearchResult[f]}">
+                                                <apex:facet name="header">{!f.Label}</apex:facet> 
+                                            </apex:column>
+                                        </apex:repeat> 
+                                    </apex:pageBlockTable>
+                                </apex:form>
+                            </div>     
+                
+                        </div><!--close accordian--> 
+                    </td>
+                
+                    <td>
+                        <apex:outputpanel id="FeedDisplayPanel">                                
+	                        <div class="hBox" style="border-top:4px solid #006b54;" id="feedbox">
+	                            <div class="header">
+	                                <h3>{!FeedName}</h3>
+	                            </div>                    
+	                            <chatter:feed entityId="{!FeedDisplayId}" showPublisher="false"/>
+	                            <apex:form >
+	                                <apex:commandLink action="{!viewAllFeeds}" value="Reset Feed" id="resetFeed" rerender="FeedDisplayPanel"/>
+	                            </apex:form>    
+	                        </div>             
+                        </apex:outputpanel>
+                    </td>
+                    
+                </tr>
+                
+                <tr style="vertical-align:top;">        
+                    <td>
+                        <div class="hBox" style="border-top:4px solid #006b54;" id="searchbox">
+                            <apex:form >                
+                                <div class="header">
+                                    <h3>Add New Search</h3>                        
+                                </div>                    
+                                <apex:tabpanel switchtype="client">
+                                    <apex:tab label="Standard">
+                                    </apex:tab>
+                        
+			                        <apex:tab label="Advanced">
+			                            <apex:inputText value="{!adv_query}" id="theTextInput"/>                    
+			                            <apex:selectList value="{!queryObject}" multiselect="false" size="1">
+			                                <apex:selectOption itemvalue="Legislation" itemlabel="Legislation"/>
+			                                <apex:selectOption itemvalue="Legislator" itemlabel="Legislator"/>                                                
+			                            </apex:selectList>
+			                            <apex:commandButton title="Submit Query" action="{!runAdvSearch}" value="Submit"/>            
+                                    </apex:tab>
+                                </apex:tabpanel>
+                            </apex:form>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
     </apex:pageblock>
-
 </apex:page>
