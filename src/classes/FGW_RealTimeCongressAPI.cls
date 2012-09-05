@@ -153,10 +153,51 @@ global class FGW_RealTimeCongressAPI implements FGW_IAPI{
                 Legislation__c leg = new Legislation__c();	
                 leg.Name = b.bill_id;
                 leg.Bill_Title__c = b.official_title;
-                returnList.add(leg);            
+                leg.Bill_Number__c = Decimal.valueOf(b.x_number);
+                leg.Bill_Prefix__c = 
+                leg.Congressional_Session__c = b.session;
+                leg.Legislative_Body__c = b.chamber;
+                if (b.summary != null && b.summary.length() > 32000) leg.Summary__c = b.summary.substring(0, 31999);
+                else leg.Summary__c = b.summary;
+                leg.Bill_Type__c = b.bill_type;
+                leg.Sponsor_Id__c = b.sponsor_id;                
+                //basic summaries will not have certain information
+                if (b.sponsor != null){                
+                    leg.Sponsor_Info__c = b.sponsor.first_name + ' ' + b.sponsor.last_name + ' ' + 
+                                        (b.sponsor.name_suffix != null? b.sponsor.name_suffix : '') + ', ' + 
+                                        b.sponsor.chamber + ' (' + b.sponsor.party + b.sponsor.state + b.sponsor.district + ')';  
+                }                
+                leg.Amendment_Count__c = b.amendments_count;
+                if (b.keywords != null){                                                
+                    for (String keyword : b.keywords){
+                	   leg.Categories__c += keyword + ';';
+                    }
+                }                
+                if (b.cosponsors != null){
+                    leg.Cosponsors_Count__c = b.cosponsors.size();
+                    for (FGW_JSONObject_RTC.Legislator l : b.cosponsors){
+                        leg.Cosponsors__c += l.first_name + ' ' + l.last_name + ' ' + l.name_suffix + ', ' + 
+                                             l.chamber + ' (' + l.party + l.state + l.district + ') \\n';                    
+                    }
+                }                
+                if(b.last_action != null)leg.Status__c = b.last_action.text;
+                if(b.last_action_at != null)leg.Status_Change_Date__c = DateTime.valueOf((b.last_action_at.replace('T', ' ')).replace('Z', ' '));
+                if(b.introduced_at != null)leg.Introduced_Date__c = DateTime.valueOf((b.introduced_at.replace('T', ' ')).replace('Z', ' ')); 
+                if(b.senate_passage_result_at != null)leg.Senate_Passage_Date__c = Datetime.valueOf((b.senate_passage_result_at.replace('T', ' ')).replace('Z', ' '));
+                if(b.house_passage_result_at != null)leg.House_Passage_Date__c = Datetime.valueOf((b.house_passage_result_at.replace('T', ' ')).replace('Z', ' '));
+                if(b.enacted_at != null)leg.Enacted_Date__c = Datetime.valueOf((b.enacted_at.replace('T', ' ')).replace('Z', ' '));
+                if(b.vetoed_at != null)leg.Vetoed_Date__c = Datetime.valueOf((b.vetoed_at.replace('T', ' ')).replace('Z', ' '));
+                if(b.awaiting_signature_since != null)leg.Awaiting_Signature_Date__c = Datetime.valueOf((b.awaiting_signature_since.replace('T', ' ')).replace('Z', ' '));
+                leg.Description__c = b.popular_title;
+                leg.Senate_Passage_Status__c = b.senate_passage_result;                
+                leg.House_Passage_Status__c = b.house_passage_result;                
+                leg.Enacted__c = b.enacted;                
+                leg.Vetoed__c = b.vetoed;                
+                leg.Awaiting_Signature__c = b.awaiting_signature;                
+                leg.Passage_Vote_Count__c = b.passage_votes_count;                                                                
+                returnList.add(leg);
             }   
-        }
-        
+        }        
         return returnList;
     }        
     
@@ -243,8 +284,7 @@ global class FGW_RealTimeCongressAPI implements FGW_IAPI{
                 	String JSONBody = res.getBody();
                 	//replace apex protected words
                 	JSONBody = JSONBody.replace('number', 'x_number');
-                	JSONBody = JSONBody.replace(' as ', ' x_as ');                	
-                	
+                	JSONBody = JSONBody.replace(' as ', ' x_as ');
                     deserializedObj = (FGW_JSONObject_RTC)JSON.deserialize(JSONBody, FGW_JSONObject_RTC.class);
                     returnList.add(deserializedObj);                
                 }
