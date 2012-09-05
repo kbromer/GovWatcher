@@ -181,7 +181,7 @@ by Salesforce.com Foundation
                 
                     <td>
                         <apex:outputpanel id="FeedDisplayPanel">                                
-	                        <div class="hBox" style="border-top:4px solid #006b54;" id="feedbox">
+	                        <div class="hBox" style="border-top:4px solid #006b54;height:300px;" id="feedbox">
 	                            <div class="header">
 	                                <h3>{!FeedName}</h3>
 	                            </div>                    
