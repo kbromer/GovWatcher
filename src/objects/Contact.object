@@ -207,6 +207,16 @@
         <label>FGW Legislator Console Fields</label>
     </fieldSets>
     <fields>
+        <fullName>Active_Member__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>True if an active member of Congress</description>
+        <externalId>false</externalId>
+        <inlineHelpText>True if an active member of Congress</inlineHelpText>
+        <label>Active Member</label>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
         <fullName>Bioguide_ID__c</fullName>
         <externalId>false</externalId>
         <label>Bioguide ID</label>
@@ -261,6 +271,50 @@
         <unique>false</unique>
     </fields>
     <fields>
+        <fullName>Congressional_Website__c</fullName>
+        <externalId>false</externalId>
+        <label>Congressional Website</label>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Url</type>
+    </fields>
+    <fields>
+        <fullName>FEC_ID__c</fullName>
+        <description>Congress member&apos;s Federal Election Comimission ID</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Congress member&apos;s Federal Election Comimission ID</inlineHelpText>
+        <label>FEC ID</label>
+        <length>255</length>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Facebook_ID__c</fullName>
+        <description>Congress member&apos;s Facebook ID</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Congress member&apos;s Facebook ID</inlineHelpText>
+        <label>Facebook ID</label>
+        <length>255</length>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Govtrack_ID__c</fullName>
+        <description>Unique ID for Govtrack.us</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Unique ID for Govtrack.us</inlineHelpText>
+        <label>Govtrack ID</label>
+        <length>255</length>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
         <fullName>LeadSource</fullName>
         <picklist>
             <picklistValues>
@@ -288,6 +342,16 @@
         <type>Picklist</type>
     </fields>
     <fields>
+        <fullName>Nickname__c</fullName>
+        <externalId>false</externalId>
+        <label>Nickname</label>
+        <length>255</length>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
         <fullName>Party_Affiliation__c</fullName>
         <externalId>false</externalId>
         <label>Party Affiliation</label>
@@ -312,6 +376,36 @@
         </picklist>
         <trackFeedHistory>false</trackFeedHistory>
         <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>Twitter_ID__c</fullName>
+        <description>Twitter handle</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Twitter handle</inlineHelpText>
+        <label>Twitter ID</label>
+        <length>255</length>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Web_Contact_Form__c</fullName>
+        <externalId>false</externalId>
+        <label>Web Contact Form</label>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Url</type>
+    </fields>
+    <fields>
+        <fullName>Youtube_Site__c</fullName>
+        <description>Congress member&apos;s Youtube site</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Congress member&apos;s Youtube site</inlineHelpText>
+        <label>Youtube Site</label>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Url</type>
     </fields>
     <listViews>
         <fullName>AllContacts</fullName>
