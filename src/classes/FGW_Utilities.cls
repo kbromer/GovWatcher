@@ -41,12 +41,13 @@ public with sharing class FGW_Utilities{
     	
     	try{    	
     	    if (obj instanceof Contact){
+    	    	system.debug('Have CONTACT');
                 Contact c = (Contact)obj;
-                result = new FGW_Search_Result__c();
-                if ((c.Name.length()) > 80)
-                	result.Name = c.Name.subString(0, 79);
-                else
-                    result.Name = c.Name;    	
+                result = new FGW_Search_Result__c();                
+                result.Name = c.Bioguide_ID__c;    	
+                result.Full_Name__c = c.Title + ' ' + c.FirstName + ' ' + c.LastName;
+                
+                                    
             }
             else if (obj instanceof Legislation__c){
                 Legislation__c l = (Legislation__c)obj;
