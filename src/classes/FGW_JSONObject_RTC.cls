@@ -136,17 +136,30 @@ public with sharing class FGW_JSONObject_RTC{
     }
     
     public class Legislator{
-        public String title = '';
-        public String nickname = '';
-        public String district = '';
-        public String bioguide_id = '';
-        public String govtrack_id = '';
-        public String last_name = '';
-        public String name_suffix = '';
-        public String party = '';
-        public String first_name = '';
-        public String state = '';
-        public String chamber = '';
+    	public Legislator legislator;
+        public String title;
+        public String nickname;
+        public String district;
+        public String bioguide_id;
+        public String govtrack_id;
+        public String last_name;
+        public String name_suffix;
+        public String party;
+        public String first_name;
+        public String state;
+        public String chamber;
+        public boolean in_office;
+        public String phone;
+        public String fax;
+        public String website;
+        public String webform;
+        public String email;
+        public String congress_office;
+        public String fec_id;
+        public String twitter_id;
+        public String youtube_url;
+        public String facebook_id;
+        public String birthdate;
     }
     
     public class Amendment{    	
