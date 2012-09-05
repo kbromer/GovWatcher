@@ -40,14 +40,11 @@ public with sharing class FGW_Utilities{
     	FGW_Search_Result__c result;
     	
     	try{    	
-    	    if (obj instanceof Contact){
-    	    	system.debug('Have CONTACT');
+    	    if (obj instanceof Contact){    	    	
                 Contact c = (Contact)obj;
                 result = new FGW_Search_Result__c();                
                 result.Name = c.Bioguide_ID__c;    	
                 result.Full_Name__c = c.Title + ' ' + c.FirstName + ' ' + c.LastName;
-                
-                                    
             }
             else if (obj instanceof Legislation__c){
                 Legislation__c l = (Legislation__c)obj;
@@ -56,12 +53,9 @@ public with sharing class FGW_Utilities{
                     result.Name = (l.Name).subString(0, 79);
                 else
                     result.Name = l.Name;
-                result.Full_Name__c = l.Bill_Title__c;                    
-                    
-                            
+                result.Full_Name__c = l.Bill_Title__c;                            
             }
-            else{
-        
+            else{        
                 throw new FGW_Exception.SearchConversionException();
             }
     	}catch(Exception e){
