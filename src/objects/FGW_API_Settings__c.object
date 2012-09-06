@@ -46,5 +46,14 @@
         <type>Text</type>
         <unique>false</unique>
     </fields>
+    <fields>
+        <fullName>Selectable__c</fullName>
+        <defaultValue>true</defaultValue>
+        <description>If this API should be available when presenting API options for searches &amp; queries</description>
+        <externalId>false</externalId>
+        <inlineHelpText>If this API should be available when presenting API options for searches &amp; queries</inlineHelpText>
+        <label>Selectable</label>
+        <type>Checkbox</type>
+    </fields>
     <label>FGW_API_Settings</label>
 </CustomObject>
