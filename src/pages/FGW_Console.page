@@ -41,7 +41,7 @@ by Salesforce.com Foundation
                 border-radius: 5px;
                 background: white;
                 border-top: 4px solid #006b54;
-                height: 300px;
+                height: 80%;
                 /*padding: 5px 20px 20px 10px;*/
             }
                 .hBox .header{
@@ -60,6 +60,13 @@ by Salesforce.com Foundation
                     height: 64px;
                     width: 64px;
                 }
+            .searchfeedbody{
+                
+            }   
+            h2 {    
+                font-size:115%;            
+                padding: 5px 20px 20px 10px;
+            }             
     </style>
     <script type="text/javascript">
     
@@ -101,12 +108,12 @@ by Salesforce.com Foundation
     <apex:pageblock id="pageblockid">
         <div id="pbdiv">
             <table width="100%" id="wrapTable">                
-                <tr style="vertical-align:top;">
+                <tr style="vertical-align:top;height:80%;">
                     <td id="searchTD" width="75%">
                         <div id="accordion">
                             
                             <div class="header">
-                                <h3><a href="#">Tracked Legislation</a></h3>
+                                <h3><a href="#">Tracked Legislation ({!legislationFollowSize})</a></h3>
                             </div>                   
                             <div class="hBox" style="border-top:4px solid #006b54;" id="legislationbox">
                                 <apex:form >
@@ -115,14 +122,11 @@ by Salesforce.com Foundation
 					                       <apex:facet name="header">Your Follow Status</apex:facet>
 					                       <chatter:follow entityId="{!leg.Id}"/>
                                         </apex:column>  
-					                    <apex:column >
-					                        <apex:facet name="header">Legislation Name</apex:facet>
-					                        <apex:outputtext value="{!leg.Name}"/>
-					                    </apex:column>
-					                    <apex:column >
-					                         <apex:facet name="header">Legislation Status</apex:facet>
-					                         <apex:outputtext value="{!leg.Status__c}"/>
-					                    </apex:column>
+					                    <apex:repeat value="{!$ObjectType.Legislation__c.FieldSets.FGW_Legislation_Console_Fields}" var="l">
+                                            <apex:column value="{!leg[l]}">
+                                                <apex:facet name="header">{!l.Label}</apex:facet> 
+                                            </apex:column>
+                                        </apex:repeat>					                    
 					                    <apex:column >
 					                        <apex:facet name="header">Stop Tracking?</apex:facet>
 					                        <apex:outputtext value="Unfollow"/>                                                        
@@ -139,20 +143,21 @@ by Salesforce.com Foundation
                             </div>      
             
                             <div class="header">
-                                <h3><a href="#">Tracked Legislators</a></h3>
+                                <h3><a href="#">Tracked Legislators ({!legislatorFollowSize})</a></h3>
                             </div>  
                             <div class="hBox" style="border-top:4px solid #006b54;" id="legislatorbox">
                                 <apex:form >  
                                
                                     <apex:pageblocktable value="{!followedLegislators}" var="con"> 
 					                    <apex:column >
-					                         <apex:facet name="header">Your Follow Status</apex:facet>  
-					                         <chatter:follow entityId="{!con.Id}"/>                      
+					                        <apex:facet name="header">Your Follow Status</apex:facet>  
+					                        <chatter:follow entityId="{!con.Id}"/>                      
 					                    </apex:column>
-					                    <apex:column >
-					                        <apex:facet name="header">Legislator Name</apex:facet>
-					                        <apex:outputtext value="{!con.Name}"/>
-					                    </apex:column>                    
+                                        <apex:repeat value="{!$ObjectType.Contact.FieldSets.FGW_Legislator_Console_Fields}" var="c">
+                                            <apex:column value="{!con[c]}">
+                                                <apex:facet name="header">{!c.Label}</apex:facet> 
+                                            </apex:column>
+                                        </apex:repeat>					                                      
 					                    <apex:column >
 					                        <apex:facet name="header">Stop Tracking?</apex:facet>
 					                        <apex:outputtext value="Unfollow"/>                                                        
@@ -173,16 +178,25 @@ by Salesforce.com Foundation
                                 <h3 id="searchResults"><a href="#"><apex:outputpanel id="sheader">Search Results ({!searchResultsSize})</apex:outputpanel></a></h3>                        
                             </div>        
                             
-                            <div class="hBox" style="border-top:4px solid #006b54;" id="resultsbox">
+                            <div class="hBox" style="border-top:4px solid #006b54;" id="resultsbox"> 
                                 <apex:outputpanel id="panel">
-                                <apex:form >                
+                                <apex:form >
+                                    <apex:commandButton title="Track Results" action="{!trackMarkedResults}" value="Track Marked Results" rendered="{!searchResultsSize > 0}"/>
+                                    Select <a href="javascript:ChangeFeed();">All|</a><a href="javascript:();">None</a>                  
                                     <apex:pageBlockTable var="s" value="{!searchResults}" >
+                                        <apex:column >
+                                            <apex:facet name="header">Track Record</apex:facet>
+                                            <center>
+                                            <apex:inputcheckbox value="{!s.isSelected}" style="text-align: center;margin-left:auto;margin-right:auto;"/>
+                                            </center>                                                                                                            
+                                        </apex:column>   
                                         <apex:repeat value="{!$ObjectType.FGW_Search_Result__c.FieldSets.FGW_Search_Result_Console_Fields}" var="f">
                                             <apex:column value="{!s.SearchResult[f]}">
                                                 <apex:facet name="header">{!f.Label}</apex:facet> 
                                             </apex:column>
                                         </apex:repeat> 
-                                    </apex:pageBlockTable>
+                                                                           
+                                    </apex:pageBlockTable>                                    
                                 </apex:form>
                                 </apex:outputpanel>
                             </div>     
@@ -193,9 +207,9 @@ by Salesforce.com Foundation
                 
                     <td>
                         <apex:outputpanel id="FeedDisplayPanel">                                
-	                        <div class="hBox" style="border-top:4px solid #006b54;height:300px;" id="feedbox">
-	                            <div class="header">
-	                                <h3>{!FeedName}</h3>
+	                        <div class="hBox" style="border-top:4px solid #006b54;height:100%;padding: 5px 20px 20px 10px;" id="feedbox">
+	                            <div>
+	                                <h2>{!FeedName}</h2>
 	                            </div>                    
 	                            <chatter:feed entityId="{!FeedDisplayId}" showPublisher="false"/>
 	                            <apex:form >
@@ -209,21 +223,24 @@ by Salesforce.com Foundation
                 
                 <tr style="vertical-align:top;">        
                     <td>
-                        <div class="hBox" style="border-top:4px solid #006b54;" id="searchbox">
+                        <div class="hBox" style="border-top:4px solid #006b54;height:20%;padding: 5px 20px 20px 10px;" id="searchbox">
                             <apex:form >                
-                                <div class="header">
-                                    <h3>Add New Search</h3>                        
+                                <div>
+                                    <h2>Add New Search</h2>                        
                                 </div>                    
                                 <apex:tabpanel switchtype="client">
                                     <apex:tab label="Standard"> 
                                     </apex:tab>
                         
 			                        <apex:tab label="Advanced">
-			                            <apex:inputText value="{!adv_query}" id="theTextInput"/>                    
+			                            <apex:inputTextarea rows="5" cols="100" value="{!adv_query}" id="theTextInput" />                    
 			                            <apex:selectList value="{!queryObject}" multiselect="false" size="1">
 			                                <apex:selectOption itemvalue="Legislation" itemlabel="Legislation"/>
 			                                <apex:selectOption itemvalue="Legislator" itemlabel="Legislator"/>                                                
 			                            </apex:selectList>
+			                            <apex:selectList value="{!searchAPIName}" multiselect="false" size="1">
+                                            <apex:selectOptions value="{!APIOptions}"/>                                                                                            
+                                        </apex:selectList>			                            
 			                            <apex:commandButton title="Submit Query" action="{!runAdvSearch}" onClick="openSearchResults()" onComplete="fadeBackIn()" rerender="panel,sheader" value="Submit"/>            
                                     </apex:tab>
                                 </apex:tabpanel>                                
