@@ -35,7 +35,7 @@
 global with sharing class FGW_Constants {
 
     //possible filter operators for query requests
-    global enum operators{Equals, LessThan, LessThanEqualTo, GreaterThan, GreatThanEqualTo, NotEqual, Match, MatchCS, Exists, ValueIn, ValueNotIn, All}
+    global enum operators{Equals, LessThan, LessThanEqualTo, GreaterThan, GreaterThanEqualTo, NotEqual, Match, MatchCS, Exists, ValueIn, ValueNotIn, All}
     //query type, full or headers    
     global enum queryReturntype{Full, Basic}
     
