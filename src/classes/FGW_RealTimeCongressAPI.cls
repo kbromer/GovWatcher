@@ -159,9 +159,9 @@ global class FGW_RealTimeCongressAPI implements FGW_IAPI{
             for (FGW_JSONObject_RTC.Bill b : JSObj.bills){
                 Legislation__c leg = new Legislation__c();	
                 leg.Name = b.bill_id;
-                leg.Bill_Title__c = b.official_title;
+                leg.Bill_Title__c = b.official_title.length() > 255 ? b.official_title.substring(0,254) : b.official_title;
                 leg.Bill_Number__c = Decimal.valueOf(b.x_number);
-                leg.Bill_Prefix__c = 
+                leg.Bill_Prefix__c = (b.chamber == 'house' ? 'hr' : 's');
                 leg.Congressional_Session__c = b.session;
                 leg.Legislative_Body__c = b.chamber;
                 if (b.summary != null && b.summary.length() > 32000) leg.Summary__c = b.summary.substring(0, 31999);
@@ -170,9 +170,9 @@ global class FGW_RealTimeCongressAPI implements FGW_IAPI{
                 leg.Sponsor_Id__c = b.sponsor_id;                
                 //basic summaries will not have certain information
                 if (b.sponsor != null){                
-                    leg.Sponsor_Info__c = b.sponsor.first_name + ' ' + b.sponsor.last_name + ' ' + 
-                                        (b.sponsor.name_suffix != null? b.sponsor.name_suffix : '') + ', ' + 
-                                        b.sponsor.chamber + ' (' + b.sponsor.party + b.sponsor.state + b.sponsor.district + ')';  
+                    leg.Sponsor_Info__c = b.sponsor.first_name + ' ' + b.sponsor.last_name +  
+                                        (b.sponsor.name_suffix != null? ' ' + b.sponsor.name_suffix : '') + ', ' + 
+                                        b.sponsor.chamber + ' (' + b.sponsor.party + ' ' + b.sponsor.state + '-' + b.sponsor.district + ')';  
                 }                
                 leg.Amendment_Count__c = b.amendments_count;
                 if (b.keywords != null){                                                
@@ -181,10 +181,11 @@ global class FGW_RealTimeCongressAPI implements FGW_IAPI{
                     }
                 }                
                 if (b.cosponsors != null){
+                	leg.Cosponsors__c = '';
                     leg.Cosponsors_Count__c = b.cosponsors.size();
                     for (FGW_JSONObject_RTC.Legislator l : b.cosponsors){
-                        leg.Cosponsors__c += l.first_name + ' ' + l.last_name + ' ' + l.name_suffix + ', ' + 
-                                             l.chamber + ' (' + l.party + l.state + l.district + ') \\n';                    
+                        leg.Cosponsors__c += l.first_name + ' ' + l.last_name + (b.sponsor.name_suffix != null? ' ' + b.sponsor.name_suffix : '') + ', ' + 
+                                             l.chamber + ' (' + l.party + ' ' + l.state + '-' + l.district + ')<br/>';                    
                     }
                 }                
                 if(b.last_action != null)leg.Status__c = b.last_action.text;
@@ -297,6 +298,42 @@ global class FGW_RealTimeCongressAPI implements FGW_IAPI{
     
     /** Call & Parsing Methods **/    
     
+    private FGW_RequestFilterParameters condenseRFP(FGW_RequestFilterParameters rfp){
+    	FGW_RequestFilterParameters rrfp = new FGW_RequestFilterParameters();
+        rrfp.objectName = rfp.objectName;
+        rrfp.queryReturnType = rfp.queryReturnType;
+        rrfp.adv_query = rfp.adv_query;
+        rrfp.APIName = rfp.APIName;
+        rrfp.SavedSearchId = rfp.SavedSearchId;
+        rrfp.fieldNames = new List<String>();
+        rrfp.boolOperators = new List<FGW_Constants.operators>();
+        rrfp.comparisonValues = new List<String>();
+    	
+    	Map<String, Integer> fieldNameMap = new Map<String, Integer>();
+        
+        Integer index = 0;    	    	
+    	
+    	for (String s : rfp.fieldNames){
+    	    if (!fieldNameMap.containsKey(s)){
+                fieldNameMap.put(s, index);
+                rrfp.fieldNames.add(s);
+                rrfp.boolOperators.add(FGW_Constants.operators.ValueIn);
+                rrfp.comparisonValues.add(rfp.comparisonValues[index]);
+            }
+            else{
+                Integer name_index = fieldNameMap.get(s);
+                String existingValues = rrfp.comparisonValues[name_index];
+                system.debug('ExistinValues: ' + existingValues);
+                existingValues += '|' + rfp.comparisonValues[index];
+                system.debug('ExistinValues: ' + existingValues);                                                                                
+                rrfp.comparisonValues.add(name_index, existingValues);
+                rrfp.boolOperators.add(name_index, FGW_Constants.operators.ValueIn);
+    	    }	    	
+            index++;
+    	}
+        return rrfp;
+    }
+    
     //handles the callout and return the JSON Object for further parsing
     private List<FGW_JSONObject_RTC> runQueries(String collection, List<FGW_RequestFilterParameters> params){
     	
@@ -317,9 +354,9 @@ global class FGW_RealTimeCongressAPI implements FGW_IAPI{
                     //exclude the page parameter if using the legislators api
                     if (collection != 'legislators.getList')
                         req = buildHTTPRequest(collection, rfp, '&per_page=50&page=' + current_page);
-                    else
+                    else{
                         req = buildHTTPRequest(collection, rfp, '');
-                    
+                    }
                     res = doCallout(req);
             
                     if (res.getStatusCode() == 200){                
@@ -367,15 +404,20 @@ global class FGW_RealTimeCongressAPI implements FGW_IAPI{
         	parameter_string = params.adv_query;        	
         }
         
-        else{           
+        else{       
+        	//condense URL conditions for more efficient querying when available
+        	params = condenseRFP(params);
+        	    
             Integer i = 0;
             //loop through the objects params and construct our query string
-            for (i=0; i < params.objectNames.size(); i++){
-                parameter_string += constructParameter(params.objectNames[i], params.fieldNames[i], params.boolOperators[i], params.comparisonValues[i]);
-                parameter_string += '&';
+            for (i=0; i < params.fieldNames.size(); i++){
+                parameter_string += constructParameter(params.objectName, params.fieldNames[i], params.boolOperators[i], params.comparisonValues[i]);
+                parameter_string += '&'; 
             }
             //trim off the last s, for savings. 
-            parameter_string = parameter_string.substring(0, parameter_string.length());                            	   
+            system.debug('PARAMETER STRING: ' + parameter_string);
+            parameter_string = parameter_string.substring(0, parameter_string.length());           
+            system.debug('PARAMETER STRING: ' + parameter_string);                 	   
         }
                 
         //take only what you need to survive...
@@ -412,8 +454,32 @@ global class FGW_RealTimeCongressAPI implements FGW_IAPI{
     	
     	Map<String, String> translationMap = RTC_Translation.get(objName);
     	
-    	//special handling for things like bioguide id of votes
-    	//if we're only doing votes, need to restrict the returned values as well
+    	return_parameter += translationMap.get(fieldName);
+         //global enum operators{Equals, LessThan, LessThanEqualTo, GreaterThan, GreatThanEqualTo, NotEqual, Match, MatchCS, Exists, ValueIn, ValueNotIn, All}
+        if(operator == FGW_Constants.operators.Equals)
+    	    return_parameter += '=' + value;    	
+    	else if (operator == FGW_Constants.operators.LessThan)
+            return_parameter += '__lt=' + value;    	   
+    	else if (operator == FGW_Constants.operators.LessThanEqualTo)
+            return_parameter += '__lte=' + value;    	   
+    	else if (operator == FGW_Constants.operators.GreaterThan)
+            return_parameter += '__gt=' + value;    	   
+    	else if (operator == FGW_Constants.operators.GreaterThanEqualTo)
+            return_parameter += '__gte=' + value;    	   
+    	else if (operator == FGW_Constants.operators.NotEqual)
+            return_parameter += '__ne=' + value;    	   
+    	else if (operator == FGW_Constants.operators.Match) 
+            return_parameter += '__match=' + value;    	
+    	else if (operator == FGW_Constants.operators.MatchCS)
+            return_parameter += '__match_s=' + value;    	
+    	else if (operator == FGW_Constants.operators.Exists)
+            return_parameter += '__exists=' + value;    	   
+    	else if (operator == FGW_Constants.operators.ValueIn)
+            return_parameter += '__in=' + value;    	
+    	else if (operator == FGW_Constants.operators.ValueNotIn)
+            return_parameter += '__nin=' + value;    	   
+    	else if (operator == FGW_Constants.operators.All)
+            return_parameter += '__all=' + value;    	   
     	
     	return return_parameter;
     }    
@@ -444,7 +510,7 @@ global class FGW_RealTimeCongressAPI implements FGW_IAPI{
         //legislators - state, district, chamber
         Map<String, String> LegislatorMap = new Map<String, String>();
         LegislatorMap.put('Chamber__c', 'chamber');
-        LegislatorMap.put('Bioguide_Id__c', 'bioguide_id');
+        LegislatorMap.put('Bioguide_ID__c', 'bioguide_id');
         LegislatorMap.put('Congressional_State__c', ''); 
         LegislatorMap.put('Congressional_District__c','');
         LegislatorMap.put('Party_Affiliation__c', '');                
@@ -457,7 +523,9 @@ global class FGW_RealTimeCongressAPI implements FGW_IAPI{
         RTCMap.put('Amendment__c', AmendmentMap);        
                 
         //bills - ????????????????????????????
-               
+        Map<String, String> BillMap = new Map<String, String>();
+        BillMap.put('Bill_Id__c', 'bill_id');
+        RTCMap.put('Legislation__c', BillMap);       
         
         return RTCMap;
     }
