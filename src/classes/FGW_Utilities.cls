@@ -98,15 +98,15 @@ public with sharing class FGW_Utilities{
                 //should only be one since we're only searching on the IDs of the relevant object, the params
                 //can be deconstructed in the API class
                 if (haveRFP){
-                	String cValues = rfp.comparisonValues[0];
-                	cValues += '|' + sr.Name;
-                	rfp.comparisonValues[0] = cValues;
+                	rfp.comparisonValues.add(sr.Name);
+                	rfp.boolOperators.add(FGW_Constants.operators.Equals);
+                	rfp.fieldNames.add(sr.isContact__c ? 'Bioguide_ID__c' : 'Bill_Id__c');                	
                 }
                 //we need to create a new RFP for this object for this API name
                 else{                	
                 	rfp.objectName = objName;
                     rfp.fieldNames = new List<String>{sr.isContact__c ? 'Bioguide_ID__c' : 'Bill_Id__c'};
-                    rfp.boolOperators = new List<FGW_Constants.operators>{FGW_Constants.operators.ValueIn};
+                    rfp.boolOperators = new List<FGW_Constants.operators>{FGW_Constants.operators.Equals};
                     rfp.comparisonValues = new List<String>{sr.Name};               
                     rfp.queryReturnType = FGW_Constants.queryReturntype.Full;
                     rfp.APIName = sr.API_Name__c;
@@ -121,7 +121,7 @@ public with sharing class FGW_Utilities{
     			FGW_RequestFilterParameters rfp = new FGW_RequestFilterParameters();
     			rfp.objectName = objName;
     			rfp.fieldNames = new List<String>{sr.isContact__c ? 'Bioguide_ID__c' : 'Bill_Id__c'};
-    			rfp.boolOperators = new List<FGW_Constants.operators>{FGW_Constants.operators.ValueIn};
+    			rfp.boolOperators = new List<FGW_Constants.operators>{FGW_Constants.operators.Equals};
     			rfp.comparisonValues = new List<String>{sr.Name};    			
     			rfp.queryReturnType = FGW_Constants.queryReturntype.Full;
     			rfp.APIName = sr.API_Name__c;
@@ -139,6 +139,40 @@ public with sharing class FGW_Utilities{
     }
     
     
+    /** Sorts a list of RequestFilterParameter object by APIName, objectName, List of Parameters **/
+    public static Map<String, Map<String, List<FGW_RequestFilterParameters>>> sortRequestFilterParameters(List<FGW_RequestFilterParameters> rfpList){
+            Map<String, Map<String, List<FGW_RequestFilterParameters>>> rfpByAPINameandObject = new Map<String, Map<String, List<FGW_RequestFilterParameters>>>(); 
+                
+            for (FGW_RequestFilterParameters rfp : rfpList){
+            
+            //do we already have collection for this API? 
+            if (rfpByAPINameandObject.containsKey(rfp.APIName)){
+                Map<String, List<FGW_RequestFilterParameters>> rfpByObject = rfpByAPINameandObject.get(rfp.APIName);
+                //do we have an object ready for this collection?
+                if (rfpByObject.containsKey(rfp.objectName)){
+                    List<FGW_RequestFilterParameters> fList = rfpByObject.get(rfp.objectName);
+                    fList.add(rfp);
+                    rfpByObject.put(rfp.objectName, fList);
+                    rfpByAPINameandObject.put(rfp.APIName, rfpByObject);                                                                                   
+                }
+                //need a whole new map here
+                else{
+                    Map<String, List<FGW_RequestFilterParameters>> newRFPObject = new Map<String, List<FGW_RequestFilterParameters>>();
+                    newRFPObject.put(rfp.objectName, new List<FGW_RequestFilterParameters>{rfp});
+                    rfpByAPINameandObject.put(rfp.APIName, newRFPObject);
+                }            
+            }
+            
+            //we need a new collection for this API
+            else{
+                List<FGW_RequestFilterParameters> rList = new List<FGW_RequestFilterParameters>{rfp};
+                Map<String, List<FGW_RequestFilterParameters>> nMap = new Map<String, List<FGW_RequestFilterParameters>>();
+                nMap.put(rfp.objectName, rList);                
+                rfpByAPINameandObject.put(rfp.APIName, nMap);               
+            }
+        }        
+    	return rfpByAPINameandObject;
+    }
     
     
     public static testMethod void testconvertSearchResultsToParameters(){
