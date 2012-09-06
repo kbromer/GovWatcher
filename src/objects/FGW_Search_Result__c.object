@@ -41,7 +41,7 @@
     <fieldSets>
         <fullName>FGW_Search_Result_Console_Fields</fullName>
         <availableFields>
-            <field>Id</field>
+            <field>CreatedDate</field>
             <isRequired>false</isRequired>
         </availableFields>
         <availableFields>
@@ -53,11 +53,11 @@
             <isRequired>false</isRequired>
         </availableFields>
         <availableFields>
-            <field>SystemModstamp</field>
+            <field>Id</field>
             <isRequired>false</isRequired>
         </availableFields>
         <availableFields>
-            <field>CreatedDate</field>
+            <field>SystemModstamp</field>
             <isRequired>false</isRequired>
         </availableFields>
         <availableFields>
@@ -82,7 +82,7 @@
             <isRequired>false</isRequired>
         </displayedFields>
         <displayedFields>
-            <field>LastModifiedDate</field>
+            <field>Retrieved_At__c</field>
             <isRequired>false</isRequired>
         </displayedFields>
         <label>FGW Search Result Console Fields</label>
@@ -108,6 +108,15 @@
         <type>TextArea</type>
     </fields>
     <fields>
+        <fullName>Retrieved_At__c</fullName>
+        <description>Datetime this search result was retrieved</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Datetime this search result was retrieved</inlineHelpText>
+        <label>Retrieved At</label>
+        <required>false</required>
+        <type>DateTime</type>
+    </fields>
+    <fields>
         <fullName>Saved_Search__c</fullName>
         <deleteConstraint>SetNull</deleteConstraint>
         <description>Search used to retrieve this result, if applicable</description>
@@ -119,6 +128,15 @@
         <relationshipName>Search_Results</relationshipName>
         <required>false</required>
         <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>isContact__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>System field indicating if this search result is a Contact-based search result or legislation-based</description>
+        <externalId>false</externalId>
+        <inlineHelpText>System field indicating if this search result is a Contact-based search result or legislation-based</inlineHelpText>
+        <label>isContact</label>
+        <type>Checkbox</type>
     </fields>
     <label>Search Result</label>
     <nameField>
