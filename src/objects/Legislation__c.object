@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
     <actionOverrides>
         <actionName>Accept</actionName>
         <type>Default</type>
@@ -720,21 +720,6 @@ HYPERLINK(&quot;http://hdl.loc.gov/loc.uscongress/legislation.&quot; + text(Cong
     </fields>
     <label>Legislation</label>
     <listViews>
-        <fullName>Active</fullName>
-        <columns>NAME</columns>
-        <columns>Full_Bill_Number__c</columns>
-        <columns>Bill_Title__c</columns>
-        <columns>Status__c</columns>
-        <columns>Date_Bill_Info_Updated__c</columns>
-        <filterScope>Everything</filterScope>
-        <filters>
-            <field>Active__c</field>
-            <operation>equals</operation>
-            <value>1</value>
-        </filters>
-        <label>Active Legislation</label>
-    </listViews>
-    <listViews>
         <fullName>All</fullName>
         <columns>Active__c</columns>
         <columns>NAME</columns>
@@ -743,11 +728,6 @@ HYPERLINK(&quot;http://hdl.loc.gov/loc.uscongress/legislation.&quot; + text(Cong
         <columns>Status__c</columns>
         <columns>UPDATEDBY_USER</columns>
         <columns>LAST_UPDATE</columns>
-        <filterScope>Everything</filterScope>
-        <label>All</label>
-    </listViews>
-    <listViews>
-        <fullName>All1</fullName>
         <filterScope>Everything</filterScope>
         <label>All</label>
     </listViews>
@@ -761,20 +741,14 @@ HYPERLINK(&quot;http://hdl.loc.gov/loc.uscongress/legislation.&quot; + text(Cong
     <searchLayouts>
         <customTabListAdditionalFields>Full_Bill_Number__c</customTabListAdditionalFields>
         <customTabListAdditionalFields>Bill_Title__c</customTabListAdditionalFields>
-        <customTabListAdditionalFields xsi:nil="true"/>
         <customTabListAdditionalFields>Status__c</customTabListAdditionalFields>
-        <customTabListAdditionalFields xsi:nil="true"/>
         <lookupDialogsAdditionalFields>Full_Bill_Number__c</lookupDialogsAdditionalFields>
         <lookupDialogsAdditionalFields>Bill_Title__c</lookupDialogsAdditionalFields>
-        <lookupDialogsAdditionalFields xsi:nil="true"/>
         <lookupDialogsAdditionalFields>Status__c</lookupDialogsAdditionalFields>
-        <lookupDialogsAdditionalFields xsi:nil="true"/>
         <searchFilterFields>NAME</searchFilterFields>
         <searchResultsAdditionalFields>Full_Bill_Number__c</searchResultsAdditionalFields>
         <searchResultsAdditionalFields>Bill_Title__c</searchResultsAdditionalFields>
-        <searchResultsAdditionalFields xsi:nil="true"/>
         <searchResultsAdditionalFields>Status__c</searchResultsAdditionalFields>
-        <searchResultsAdditionalFields xsi:nil="true"/>
     </searchLayouts>
     <sharingModel>ReadWrite</sharingModel>
 </CustomObject>
