@@ -43,17 +43,19 @@ public with sharing class FGW_Console_CTRL{
     public String adv_query{get;set;} 
     public String queryObject{get;set;}
     public Integer searchResultsSize{get{return searchResults.size();}}
+    public Integer legislatorFollowSize{get{return followedLegislators.size();}}
+    public Integer legislationFollowSize{get{return followedLegislation.size();}}
     
     //search results
     public List<SearchResult> searchResults{get;set;}
     
     //the name of the non-default API to use for this query 
-    public String APIOverrideName{get; set;}
+    public String searchAPIName{get; set;}
+    public List<SelectOption> APIOptions{get;set;}
+    
     private Map<String, FGW_API_Settings__c> availableFedAPIs;
     private Map<String, FGW_API_Settings__c> availableStateAPIs;
-    
-    
-    
+      
     public FGW_Console_CTRL(){
         AppSettings = FGW_Constants.AppSettings;
         ChatterUserId = AppSettings.Chatter_User_Id__c; 
@@ -62,14 +64,18 @@ public with sharing class FGW_Console_CTRL{
         Map<String, FGW_API_Settings__c> allAPIs = FGW_API_Settings__c.getAll();
         availableFedAPIs = new Map<String, FGW_API_Settings__c>();
         availableStateAPIs = new Map<String, FGW_API_Settings__c>();
+        APIOptions = new List<SelectOption>();
         
         for (String s : allAPIs.keySet()){
         	FGW_API_Settings__c a = allAPIs.get(s);
         	if (a.API_Type__c == 'Federal')
         	   availableFedAPIs.put(a.Name, a);
         	else if (a.API_Type__c == 'State')
-        	   availableStateAPIs.put(a.Name, a);
+        	   availableStateAPIs.put(a.Name, a);        
+            APIOptions.add(new SelectOption(a.Name,a.Name));
         }
+        
+        searchAPIName = AppSettings.Federal_API_Name__c;
         
         List<FGW_Search_Result__c> existingResults = new List<FGW_Search_Result__c>();
         existingResults = [select Name from FGW_Search_Result__c order by LastModifiedDate desc];
@@ -141,8 +147,13 @@ public with sharing class FGW_Console_CTRL{
         FGW_RequestFilterParameters rfp = new FGW_RequestFilterParameters();
         rfp.adv_query = adv_query;
         rfp.queryReturnType = FGW_Constants.queryReturntype.Basic;
-        if (APIOverrideName != null && APIOverrideName != '')
-            rfp.APIName = APIOverrideName;
+        if (queryObject == 'Legislation')
+            rfp.objectName = 'Legislation__c';
+        else
+            rfp.objectName = 'Contact';            
+        
+        if (searchAPIName != null && searchAPIName != '')
+            rfp.APIName = searchAPIName;
         else
             rfp.APIName = FGW_Constants.FederalAPI.Name;                    
         
@@ -152,53 +163,56 @@ public with sharing class FGW_Console_CTRL{
         return null;        
     }
     
-
+    
+    public PageReference trackMarkedResults(){ 
+    	
+    	//hold the bioguide or bill ids to be tracked
+    	List<FGW_Search_Result__c> srList = new List<FGW_Search_Result__c>();
+    	
+    	//assignt he remaining result back to the original collection for display
+    	List<SearchResult> remainingResults = new List<SearchResult>();    	
+    	
+    	for (SearchResult sr : searchResults){
+    	   	if (sr.isSelected)
+                srList.add(sr.SearchResult);
+            else
+                remainingResults.add(sr);    	   	       		
+    	}    	
+    	
+    	//remove any selected ones from the list as well
+    	searchResults.clear();
+    	searchResults = remainingResults;    	    	
+    	
+    	//Convert the search results
+    	Integer tracked_objects = FGW_Main.convertSearchResults(srList);
+    	
+    	//check to see if the number of object tracked is less than the number selected, if so, there's a mismatch
+    	//and we need to issue a warning    	
+    	if (tracked_objects < srList.size()){
+    		
+    	}
+    	
+    	return null;
+    }
+    
+    
+    
     
     
     private List<SearchResult> runSearches(List<FGW_RequestFilterParameters> rfps){
-        //get the default APIs for State & Federal
-        FGW_IAPI default_FedAPI = FGW_APIFactory.getDefault_Federal_API_Instance();
-        FGW_IAPI default_StateAPI = FGW_APIFactory.getDefault_State_API_Instance();        
+      
+        List<Sobject> searchObjs = new List<Sobject>();
         
-        List<SearchResult> searchResults = new List<SearchResult>();
+        searchObjs = FGW_Main.runSearch(rfps);  
         
-        for (FGW_RequestFilterParameters rfp : rfps){
-            
-            //hold the result, either Legislation__c or Contacts here
-            List<SObject> searchObjs = new List<SObject>();
-            
-            //use the default federal API
-            if (rfp.APIName == FGW_Constants.FederalAPI.Name){
-                if (queryObject == 'Legislation')
-                    searchObjs = default_FedAPI.getBills(rfps);        	
-                else if (queryObject == 'Legislator')
-                    searchObjs = default_FedAPI.getLegislators(rfps);        
-            }
-            //use the default state API     	   
-            else if (rfp.APIName == FGW_Constants.StateAPI.Name){
-            	if (queryObject == 'Legislation')
-                    searchObjs = default_StateAPI.getBills(rfps);         
-                else if (queryObject == 'Legislator')
-                    searchObjs = default_StateAPI.getLegislators(rfps); 
-            }
+        for (SObject obj : searchObjs){
+            FGW_Search_Result__c sr = FGW_Utilities.convertObjectToSearchResult(obj);
+            sr.Retrieved_At__c = system.now();
+  //          if(rfp.SavedSearchID != null) sr.Saved_Search__c = rfp.SavedSearchId;
+            sr.API_Name__c  = searchAPIName;                        
+            searchResults.add(new SearchResult(sr));
+        }      
         
-            //its a non-default API, so we need a new API object to accomodate
-            else{            	
-            	FGW_IAPI custom_API = FGW_APIFactory.getAPI_Instance(rfp.APIName);
-            	
-            	if (queryObject == 'Legislation')
-                    searchObjs = custom_API.getBills(rfps);         
-                else if (queryObject == 'Legislator')
-                    searchObjs = custom_API.getLegislators(rfps); 
-            }
-        
-            for (SObject obj : searchObjs){
-            	FGW_Search_Result__c sr = FGW_Utilities.convertObjectToSearchResult(obj);
-                if(rfp.SavedSearchID != null) sr.Saved_Search__c = rfp.SavedSearchId;
-                sr.API_Name__c  = rfp.APIName;                        
-            	searchResults.add(new SearchResult(sr));
-            }      
-        }
         return searchResults;
     }
     
