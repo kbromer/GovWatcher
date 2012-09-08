@@ -33,9 +33,14 @@
 * @description Global interface for congressional APIs, supports multiple implementations 
 */
 global interface FGW_IAPI{
+    //Methods to retrieve information from the data source given a list of parameters
     List<Legislation__c> getBills(List<FGW_RequestFilterParameters> params);    
     List<Amendment__c> getAmendments(List<FGW_RequestFilterParameters> params);
     List<Legislator_Vote__c> getVotes(List<FGW_RequestFilterParameters> params);    
     List<Contact> getLegislators(List<FGW_RequestFilterParameters> params);
     List<Roll_Vote__c> getRollVotes(List<FGW_RequestFilterParameters> params);
+    
+    //Returns the most recent status code of the data source, should default to -1(no request yet made)
+    //and return 0(bad request), 1(good request) or the HTTP request response
+    Integer getStatusCode();    
 }
