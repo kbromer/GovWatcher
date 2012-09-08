@@ -406,9 +406,10 @@ global class FGW_RealTimeCongressAPI implements FGW_IAPI{
         	parameter_string = params.adv_query;        	
         }
         
-        else{       
+        else{  
         	//condense URL conditions for more efficient querying when available
-        	params = condenseRFP(params);
+        	if (ResourceName != 'legislators.getList')
+        	   params = condenseRFP(params);
         	    
             Integer i = 0;
             //loop through the objects params and construct our query string
@@ -426,7 +427,7 @@ global class FGW_RealTimeCongressAPI implements FGW_IAPI{
         if (ResourceName == 'bills.json' && params.queryReturnType == FGW_Constants.queryReturntype.Basic){
             parameter_string += '&sections=basic';            
         }
-        //if we're using the older API, include the key in the URL
+        //if we're using the older API, include the key in the URL and remove any advanced query operators
         if (ResourceName == 'legislators.getList'){
         	parameter_string += '&apikey=' + this.API_Key;
         }
