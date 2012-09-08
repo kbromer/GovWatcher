@@ -117,8 +117,21 @@ public with sharing class FGW_Console_CTRL{
                 legIds.add(es.parentid);
             }
         }
-                
-        followedLegislation = [select Name, Status__c from Legislation__c where Id IN :legIds];
+        
+          //use fieldset to make sure we're getting the correct data...
+        String q = 'select Name, Id, ';
+        for(Schema.FieldSetMember f : SObjectType.Legislation__c.FieldSets.FGW_Legislation_Console_Fields.getFields()) {
+            String s = f.getFieldPath();
+            if (s.toUpperCase() != 'ID' && s.toUpperCase() != 'NAME')
+                q += f.getFieldPath() + ', ';
+        }
+
+        q = q.subString(0, q.length() - 2);
+        
+        q += ' from Legislation__c where id IN :legIds';
+        
+        followedLegislation = Database.query(q);  
+        
         return followedLegislation;
     }    
     
@@ -139,7 +152,22 @@ public with sharing class FGW_Console_CTRL{
                 conIds.add(es.parentid);
             }
         }
-        followedLegislators = [select Name from Contact where Id IN :conIds];       
+        
+        
+        //use fieldset to make sure we're getting the correct data...
+        String q = 'select Name, Id, ';
+        for(Schema.FieldSetMember f : SObjectType.Contact.FieldSets.FGW_Legislator_Console_Fields.getFields()) {
+            String s = f.getFieldPath();
+            if (s.toUpperCase() != 'ID' && s.toUpperCase() != 'NAME')
+                q += f.getFieldPath() + ', ';
+        }
+
+        q = q.subString(0, q.length() - 2);
+        
+        q += ' from Contact where id IN :conIds';
+        
+        followedLegislators = Database.query(q);  
+        
         return followedLegislators;
     }
     
