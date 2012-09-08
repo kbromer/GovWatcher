@@ -39,6 +39,7 @@ global class FGW_RealTimeCongressAPI implements FGW_IAPI{
     private final Map<String, MAP<String, String>> RTC_Translation;
     //non-final to make endpoint switching easier if needed
     private String Endpoint;
+    private Integer StatusCode;
     
     //keep the list around in case we need it...    
     private List<FGW_JSONObject_RTC> resultsList;    
@@ -46,9 +47,12 @@ global class FGW_RealTimeCongressAPI implements FGW_IAPI{
     public FGW_RealTimeCongressAPI(){
     	API_Config = FGW_API_Settings__c.getInstance('Real Time Congress');
     	API_Key = API_Config.API_Key__c;
-    	Endpoint = API_Config.API_Endpoint__c;    
+    	Endpoint = API_Config.API_Endpoint__c;
+    	statusCode = -1;    
     	RTC_Translation = getRTCMap();    	
-    }    
+    }        
+    
+    global Integer getStatusCode(){return StatusCode;}
     
     global List<Legislation__c> getBills(List<FGW_RequestFilterParameters> params){
     	
@@ -185,7 +189,7 @@ global class FGW_RealTimeCongressAPI implements FGW_IAPI{
                     leg.Cosponsors_Count__c = b.cosponsors.size();
                     for (FGW_JSONObject_RTC.Legislator l : b.cosponsors){
                         leg.Cosponsors__c += l.first_name + ' ' + l.last_name + (b.sponsor.name_suffix != null? ' ' + b.sponsor.name_suffix : '') + ', ' + 
-                                             l.chamber + ' (' + l.party + ' ' + l.state + '-' + l.district + ')<br/>';                    
+                                             l.chamber + ' (' + l.party + ' ' + l.state + '-' + l.district + ') \r\n';                    
                     }
                 }                
                 if(b.last_action != null)leg.Status__c = b.last_action.text;
@@ -358,7 +362,7 @@ global class FGW_RealTimeCongressAPI implements FGW_IAPI{
                         req = buildHTTPRequest(collection, rfp, '');
                     }
                     res = doCallout(req);
-            
+                    StatusCode = res.getStatusCode();
                     if (res.getStatusCode() == 200){                
                     	String JSONBody = res.getBody();
                     	//replace apex protected words
@@ -391,8 +395,6 @@ global class FGW_RealTimeCongressAPI implements FGW_IAPI{
         }            
         return returnList;        
     }
-    
-    
     
     //construct the request, one request per filter param object
     private HttpRequest buildHTTPRequest(String ResourceName, FGW_RequestFilterParameters params, String page_param){
