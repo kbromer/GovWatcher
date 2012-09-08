@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomLabels xmlns="http://soap.sforce.com/2006/04/metadata">
     <labels>
+        <fullName>FGW_Chatter_ConversionPost</fullName>
+        <categories>GovWatcher</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>FGW_Chatter_ConversionPost</shortDescription>
+        <value>I&apos;m now actively tracking {!Name}</value>
+    </labels>
+    <labels>
         <fullName>FGW_ErrorConsole_Help_Text</fullName>
         <categories>GovWatcher</categories>
         <language>en_US</language>
