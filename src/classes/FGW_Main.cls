@@ -80,10 +80,42 @@ public with sharing class FGW_Main{
     	
     	List<sobject> sobjs = FGW_Main.runSearch(rfpList);
         
-    	insert sobjs;
+        List<id> newIds = new List<Id>();
+        List<Contact> newCons = new List<Contact>();
+        List<Legislation__c> newBills = new List<Legislation__c>();
+                
+        //save a query 
+        Boolean hasCons = false;
+        Boolean hasBills = false;        
+                        
+    	Database.Saveresult[] srs = Database.insert(sobjs);
+    	for (Database.saveresult sr : srs){
+    		if(sr.isSuccess()){        
+                newIds.add(sr.getId());
+                if (('' + sr.getId()).subString(0,3) == '003')
+                    hasCons = true;
+                else
+                    hasBills = true;                                        
+    		
+                converted_records_count++;    		  
+    		}    	
+    	}    	
     	
+    	List<Sobject> newobjs = new List<sobject>();
     	
+    	//get new contacts
+    	if (hasCons){
+    	   newCons = [select id, Name from Contact where ID IN :newIds];
+    	   newobjs.addAll((List<sobject>)newCons);
+    	}    	       	
+    	//get new bills
+    	if (hasBills){
+    	   newBills = [select id, Name from Legislation__c where ID IN :newIds];
+    	   newobjs.addAll((List<sobject>)newBills);    	   
+    	}    	   
     	
+    	if (!newobjs.isEmpty())
+    	   FGW_ChatterUtilities.chatterResultConversion(newobjs);
     	
     	return converted_records_count;
     }     
