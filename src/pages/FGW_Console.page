@@ -40,8 +40,8 @@ by Salesforce.com Foundation
                 box-shadow: 0 0 1px #CCC;
                 border-radius: 5px;
                 background: white;
-                border-top: 4px solid #006b54;   
-                height: 100%;                             
+                border-top: 4px solid #006b54;
+                overflow: auto;                                       
                 /*padding: 5px 20px 20px 10px;*/
             }
                 .hBox .header{
@@ -69,7 +69,12 @@ by Salesforce.com Foundation
                 margin-top: auto;
                 margin-bottom: auto;                
                 z-index: 5555 !important;            
-            }     
+            }
+            .tabHeader{
+                background:white;
+                height:100%;
+            }
+                 
     </style>
     <script type="text/javascript">
     
@@ -81,7 +86,7 @@ by Salesforce.com Foundation
             j$( "#loadingwheel" ).position({
                 of: j$("#resultsTDdiv"),
                 my: "center",
-                at: "center"
+                at: "center", 
             });            
             
             j$( "#accordion" ).accordion({active: 0, fillSpace: true});
@@ -111,20 +116,20 @@ by Salesforce.com Foundation
     <apex:sectionHeader title="GovWatcher" subtitle="Track and Search for Legislation and Legislators"/>
     <apex:pageblock id="pageblockid">
             <table width="100%" id="wrapTable">  
-                <tr style="vertical-align:top;">
+                <tr style="vertical-align:top;" height="1px">
                     <td id="resultsTD" width="75%">
                         <apex:outputpanel id="resultsTDPanel">
                         <div id="resultsTDdiv" style="height:100%;">                
                         <div id="loadingwheel">
                             <apex:image url="{!URLFOR($Resource.FGW_Images, 'ajax_loader_green.gif')}"/>                
                         </div>                    
-                        <div id="accordion">                          
+                        <div id="accordion" style="height:690px;">                          
                             <div class="header">
                                 <h3><a href="#">Tracked Legislation ({!legislationFollowSize})</a></h3>
                             </div>   
                             <div class="hBox" style="border-top:4px solid #006b54;" id="legislationbox">
                                 <apex:form >
-                                    <apex:pageblocktable value="{!followedLegislation}" var="leg">
+                                    <apex:pageblocktable value="{!followedLegislation}" var="leg" style="height:100%;">
 					                    <apex:column >
 					                       <apex:facet name="header">Your Follow Status</apex:facet>
 					                       <chatter:follow entityId="{!leg.Id}"/>
@@ -215,14 +220,15 @@ by Salesforce.com Foundation
                 
                     <td>
                         <apex:outputpanel id="FeedDisplayPanel">                                
-	                        <div class="hBox" style="border-top:4px solid #006b54;padding: 5px 20px 20px 10px;" id="feedbox">
+	                        <div class="hBox" style="border-top:4px solid #006b54;padding: 5px 20px 20px 10px;height:670px;" id="feedbox">
 	                            <div>
 	                                <h2>{!FeedName}'s Feed</h2>
+	                                <apex:form >
+                                        <apex:commandLink style="font-size:10px;" action="{!viewAllFeeds}" value="Return to {!ChatterUserName}'s Feed" rendered="{!FeedName != ChatterUserName}" id="resetFeed" rerender="FeedDisplayPanel"/>
+                                    </apex:form>  
 	                            </div>                    
 	                            <chatter:feed entityId="{!FeedDisplayId}" showPublisher="false"/>
-	                            <apex:form >
-	                                <apex:commandLink action="{!viewAllFeeds}" value="Return to {!FeedName}'s Feed" id="resetFeed" rerender="FeedDisplayPanel"/>
-	                            </apex:form>    
+	                              
 	                        </div>             
                         </apex:outputpanel>
                     </td>                        
@@ -230,12 +236,12 @@ by Salesforce.com Foundation
                 
                 <tr>    
                     <td colspan="2">
-                        <div class="hBox" style="border-top:4px solid #006b54;padding: 5px 20px 20px 10px;" id="searchbox">
+                        <div class="hBox" style="border-top:4px solid #006b54;height:400px;padding: 5px 20px 20px 10px;" id="searchbox">
                             <apex:form >                
                                 <div>
                                     <h2>Add New Search</h2>                        
                                 </div>                    
-                                <apex:tabpanel switchtype="client">
+                                <apex:tabpanel switchtype="client" headerClass="tabHeader" tabClass="tabHeader" styleClass="tabHeader">
                                     <apex:tab label="Standard"> 
                                     </apex:tab>
                         

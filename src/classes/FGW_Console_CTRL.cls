@@ -40,6 +40,7 @@ public with sharing class FGW_Console_CTRL{
     public List<Legislation__c> followedLegislation;
     public List<Contact> followedLegislators;
     public String FeedName{get;set;}     
+    public final String ChatterUserName{get;set;}
     public String adv_query{get;set;} 
     public String queryObject{get;set;}
     public Integer searchResultsSize{get{return searchResults.size();}}
@@ -61,6 +62,7 @@ public with sharing class FGW_Console_CTRL{
         ChatterUserId = AppSettings.Chatter_User_Id__c; 
         FeedDisplayId = ChatterUserId;
         FeedName = [select Name from User where Id = :ChatterUserId].Name;
+        ChatterUserName = FeedName;
         Map<String, FGW_API_Settings__c> allAPIs = FGW_API_Settings__c.getAll();
         availableFedAPIs = new Map<String, FGW_API_Settings__c>();
         availableStateAPIs = new Map<String, FGW_API_Settings__c>();
