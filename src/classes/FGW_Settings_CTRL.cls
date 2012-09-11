@@ -39,7 +39,10 @@ public with sharing class FGW_Settings_CTRL {
     public Boolean isEditingAppSettings{get;private set;}
     public List<FGW_Error__c> errorList{get;set;}
     public Integer errorCount{get{return errorList.size();}} 
-    
+    public List<FGW_API_Settings__c> existingAPIs{get; set;}
+    public FGW_API_Settings__c newdatasource{get{return newdatasource!=null?newdatasource:new FGW_API_Settings__c();}set;}
+    public Boolean showEditBlock{get;set;}
+    public String datasourcetext{get;set;}
     
     public FGW_Settings_CTRL(){
 
@@ -51,13 +54,15 @@ public with sharing class FGW_Settings_CTRL {
         errorList = [select Error_Datetime__c, Error_Line_Number__c, Error_Message__c, Error_Stack_Trace__c,
                             Error_Type__c, Friendly_Message__c, Id from FGW_Error__c order by Error_Datetime__c desc];
         
+        existingAPIs = FGW_API_Settings__c.getAll().values();
+        showEditBlock = false;
         
         
         //set the GovWatcher scheduled job, if possible
         
         
     }
-    
+     
     
     
     
@@ -71,12 +76,63 @@ public with sharing class FGW_Settings_CTRL {
     	return null;
     }
     
+     public PageReference cancelDS(){
+        datasourcetext = '';
+        //dump the current one
+        newdatasource = new FGW_API_Settings__c();
+        activeTabPanel = 'ds_settings';        
+        //turn off the edit block
+        showEditBlock=false;        
+        return null;
+    }
     
-    public PageReference editApp_settings(){
+    public PageReference editApp_settings(){ 
     	return null;
     }
-      
     
+    public PageReference createNewDS(){
+        Boolean editDSSource = false;
+        for (FGW_API_Settings__c f : existingAPIs){
+        	if (datasourcetext == f.Name){
+        	    newdatasource = f;
+                editDSSource = true;                        	       
+        	    break;
+        	}	   
+        }
+        if (!editDSSource)
+            newdatasource = new FGW_API_Settings__c();
+        
+        showEditBlock = true;    	   
+        return null;
+    }      
+    public PageReference saveDSSettings(){
+        Boolean isInsert;
+        if (newdatasource.id != null)
+            isInsert = false;
+        else
+            isInsert = true;            
+        
+        upsert(newdatasource);      
+        showEditBlock = false;  
+        
+        if (isInsert)
+            existingAPIs.add(newdatasource);
+        newdatasource = null;
+        return null;    
+    }
+    public PageReference deleteDS(){
+    	Integer delete_element_index = 0;
+    	for (FGW_API_Settings__c f : existingAPIs){
+            if (datasourcetext == f.Name){
+                newdatasource = f;                                          
+                break;
+            }      
+            delete_element_index++;
+        }
+        delete newdatasource;
+        existingAPIs.remove(delete_element_index);
+        return null;    	
+    }
 
 
 }

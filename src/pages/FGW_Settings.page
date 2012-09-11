@@ -8,23 +8,54 @@
        
         <apex:TabPanel switchtype="client" value="{!activeTabPanel}" id="tabpanel">
             <apex:tab label="Application Configuration" name="app_settings">
-                <apex:form >
-                    
-                    
-                    
-                    
+                <apex:form >                    
                     <apex:outputPanel style="text-align: center; display: block; margin-left:auto; margin-right:auto;">
                         <apex:commandButton value="Save" rendered="{!isEditingAppSettings}" action="{!saveAppSettings}"/>  
                         <apex:commandButton value="Cancel" rendered="{!isEditingAppSettings}" action="{!cancel}"/>
                         <apex:commandButton value="Edit" rendered="{!NOT(isEditingAppSettings)}" action="{!editApp_settings}" rerender="tabpanel"/>
-                    </apex:outputPanel>            
-            
+                    </apex:outputPanel>
                 </apex:form>
-            
             </apex:tab>
             
-            <apex:tab label="API Configuration" name="api_settings">
-            
+            <apex:tab label="Data Source Configuration" name="ds_settings">                
+                <apex:outputtext value="{!$Label.FGW_DataSource_Help_Text}" style="font-style: italic;"/>
+                <apex:form >    
+                    <apex:outputPanel id="DSConfigOutputPanel">                    
+                        <apex:PageBlockSection columns="1" title="Data Source Configuration" collapsible="false">
+                            <apex:pageBlockTable var="api" value="{!existingAPIs}">                
+	                            <apex:column > 
+                                    <apex:facet name="header"></apex:facet>                                    
+                                    <a href="javascript:EditDataSource('{!api.Name}');">edit</a>|<a href="javascript:if (window.confirm('Are you sure?')) DeleteDataSource('{!api.Name}');">del</a>
+                                </apex:column>
+	                            <apex:column value="{!api.Name}"/>
+	                            <apex:column value="{!api.API_Type__c}"/>
+	                            <apex:column value="{!api.Class_Name__c}"/>
+	                            <apex:column value="{!api.API_Endpoint__c}"/>
+	                            <apex:column value="{!api.API_Key__c}"/>
+                                <apex:column value="{!api.Selectable__c}"/>                                
+                            </apex:pageBlockTable>
+                            <apex:commandLink action="{!createNewDS}" value="Add New Data Source" id="addDSUILink" rerender="DSConfigOutputPanel" rendered="{!NOT(showEditBlock)}" />
+                        </apex:Pageblocksection>  
+                        <apex:actionFunction action="{!deleteDS}" name="DeleteDataSource" rerender="DSConfigOutputPanel">
+                            <apex:param name="dsname" value="" assignTo="{!datasourcetext}"/>
+                        </apex:actionFunction>                           
+                        <apex:actionFunction action="{!createNewDS}" name="EditDataSource" rerender="DSConfigOutputPanel">
+                            <apex:param name="dsname" value="" assignTo="{!datasourcetext}"/>
+                        </apex:actionFunction>  
+                        <apex:pageblocksection collapsible="false" showheader="false" columns="2" rendered="{!showEditBlock}">
+                            <apex:inputfield value="{!newdatasource.Name}"/>
+                            <apex:inputfield value="{!newdatasource.API_Type__c}"/>
+                            <apex:inputfield value="{!newdatasource.Class_Name__c}"/>
+                            <apex:inputfield value="{!newdatasource.API_Endpoint__c}"/>
+                            <apex:inputfield value="{!newdatasource.API_Key__c}"/>
+                            <apex:inputfield value="{!newdatasource.Selectable__c}"/>                                 
+                        </apex:PageBlockSection>                        
+                        <apex:outputPanel style="text-align: center; display: block; margin-left:auto; margin-right:auto;">
+                            <apex:commandButton value="Save" action="{!saveDSSettings}" rendered="{!showEditBlock}" rerender="DSConfigOutputPanel"/>  
+                            <apex:commandButton value="Cancel" action="{!cancelDS}" rendered="{!showEditBlock}"/>                            
+                        </apex:outputPanel>                                             
+                    </apex:outputPanel>
+                </apex:form>
             </apex:tab>     
             
             <apex:tab label="Error Console" name="error_console">
