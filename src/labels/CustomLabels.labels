@@ -9,6 +9,14 @@
         <value>I&apos;m now actively tracking {!Name}</value>
     </labels>
     <labels>
+        <fullName>FGW_DataSource_Help_Text</fullName>
+        <categories>GovWatcher</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>FGW_DataSource_Help_Text</shortDescription>
+        <value>This tab can be used to configure new data sources for GovWatcher, include APIs and flat files.   You&apos;ll need to have already created a new class that implements the GovWatcher API interface to add an additional option.  You can also edit and adjust API Keys and credentials here.</value>
+    </labels>
+    <labels>
         <fullName>FGW_ErrorConsole_Help_Text</fullName>
         <categories>GovWatcher</categories>
         <language>en_US</language>
