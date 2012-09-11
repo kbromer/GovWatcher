@@ -42,5 +42,15 @@ global interface FGW_IAPI{
     
     //Returns the most recent status code of the data source, should default to -1(no request yet made)
     //and return 0(bad request), 1(good request) or the HTTP request response
-    Integer getStatusCode();    
+    Integer getStatusCode();
+    
+    //holds the mapping between GovWatcher fields and the API fields.  Used to determine
+    //what search criteria to make available for any given data source, and to indicate
+    //what types of collections are available for the source
+    //format is <ObjectName, <GovWatcherFieldName, APIFieldNameParameter>>. 
+    //Example: <'Legislation__c', <'Bill_Id__c', 'bill_id'>>
+    //NOTE: Special optional 'FullText' parameter is acceptable for GovWatcherFieldName if the 
+    //API/collection allows a full text search. For example, the Real Time Congress API accepts full text search 
+    //for a variety of collections, for bills, it would be:  <'Legislation__c', <'FullText', 'search'>>
+    Map<String, Map<String, String>> getFieldMapping();
 }
