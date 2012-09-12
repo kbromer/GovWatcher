@@ -40,7 +40,7 @@ public with sharing class FGW_ChatterUtilities {
         
         for (sobject obj : conversionresults){
             if (obj.id != null){
-                feeditemInserts.add(FGW_ChatterUtilities.createFeedItem(obj));
+                feeditemInserts.add(FGW_ChatterUtilities.createConversionFeedItem(obj));
                 esInserts.add(new EntitySubscription(ParentId = obj.id, SubscriberId = FGW_Constants.AppSettings.Chatter_User_Id__c));
             }            	
         }
@@ -49,14 +49,51 @@ public with sharing class FGW_ChatterUtilities {
         if(!feeditemInserts.isEmpty()) insert feeditemInserts;
     	
     }
-    private static FeedItem createFeedItem(Sobject obj){
+    
+    
+    //map of bill id plus either the amendment ID (string) or the total count of amendments if more than
+    //one (integer)
+    public static void chatterAmendmentAddition(Map<String, Object> amendmentMap){
+        List<FeedItem> feeditemInserts = new List<FeedItem>();
+        
+        List<Legislation__c> legList = [select id, Bill_ID__c from Legislation__c where Bill_ID__c IN :amendmentMap.keySet()];
+        Map<String, ID> legIDsByBillID = new Map<String, ID>();
+        for (Legislation__c l : legList){
+        	legIDsByBillID.put(l.Bill_ID__c, l.id);
+        }
+                                    
+    	for (String s : amendmentMap.keySet()){
+            feeditemInserts.add(createNewAmendmentFeedItem(legIDsByBillId.get(s), s, amendmentMap.get(s)));    		
+    	}
+    	if(!feeditemInserts.isEmpty()) insert feeditemInserts;    	
+    }
+    
+    private static FeedItem createConversionFeedItem(Sobject obj){
         FeedItem fi = new FeedItem(
             Type = 'TextPost',
             ParentId = obj.Id,
             CreatedById = FGW_Constants.AppSettings.Chatter_User_Id__c,
             Body = System.label.FGW_Chatter_ConversionPost.replace('{!Name}', (String)obj.get('Name'))            
-        );                
-            	        
+        );              
         return fi;    	    	  
+    }
+    
+    private static FeedItem createNewAmendmentFeedItem(Id LegId, String Bill_id, object obj){
+    	FeedItem fi = new FeedItem(
+            Type = 'TextPost',    
+            CreatedById = FGW_Constants.AppSettings.Chatter_User_Id__c,
+            ParentId = LegId                        
+        );
+        
+        //its a single insert, so we have an amendment id
+        if(obj instanceof String){
+        	fi.Body = System.Label.FGW_Chatter_SingleAmendmentInsertPost.replace('{!Bill}', Bill_id).replace('{!Name}', (string)obj);
+        }
+        
+        //multiple amendments, so we just indicate how many are inserted 
+        else{
+        	fi.Body = system.label.FGW_Chatter_MultipleAmendmentInsertPost.replace('{!Bill}', Bill_id).replace('{!Name}', String.valueOf((Integer)obj));
+        }
+    	return fi;    	
     }
 }
