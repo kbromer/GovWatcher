@@ -41,4 +41,10 @@ global with sharing class FGW_RequestFilterParameters {
     global String adv_query;
     global String APIName;    
     global Id SavedSearchId;
+    
+    public FGW_RequestFilterParameters(){
+    	fieldNames = new List<String>();
+    	boolOperators = new List<FGW_Constants.operators>();
+    	comparisonValues = new List<String>();
+    }
 }
