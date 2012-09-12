@@ -57,7 +57,7 @@
             <isRequired>false</isRequired>
         </availableFields>
         <availableFields>
-            <field>Bill_Id__c</field>
+            <field>Bill_ID__c</field>
             <isRequired>false</isRequired>
         </availableFields>
         <availableFields>
@@ -203,12 +203,13 @@
         <type>Checkbox</type>
     </fields>
     <fields>
-        <fullName>Bill_Id__c</fullName>
+        <fullName>Bill_ID__c</fullName>
+        <description>Unique ID for this Legislation, should be the same as the Legislation Name and is required as it provides an External ID for binding Roll Votes, Sponsorship and Amendments as needed.</description>
         <externalId>true</externalId>
-        <inlineHelpText>unique id for congress</inlineHelpText>
-        <label>Bill_Id</label>
+        <inlineHelpText>Unique ID for this Legislation, should be the same as the Legislation Name and is required as it provides an External ID for binding Roll Votes, Sponsorship and Amendments as needed.</inlineHelpText>
+        <label>Bill ID</label>
         <length>255</length>
-        <required>false</required>
+        <required>true</required>
         <trackFeedHistory>false</trackFeedHistory>
         <trackHistory>false</trackHistory>
         <type>Text</type>
