@@ -48,10 +48,16 @@ public virtual class FGW_Exception extends Exception{
     
     
     public static void generateError(Exception e, String s){
-        FGW_Exception.createErrorObject(system.now(), e.getLineNumber(), e.getMessage(), e.getStackTraceString(), e.getTypeName(), s);
+        if (system.isFuture())
+            FGW_Exception.createErrorObject(system.now(), e.getLineNumber(), e.getMessage(), e.getStackTraceString(), e.getTypeName(), s);
+        else
+            FGW_Exception.createErrorObjectFuture(system.now(), e.getLineNumber(), e.getMessage(), e.getStackTraceString(), e.getTypeName(), s);                        
     }
     
     @future
+    public static void createErrorObjectFuture(Datetime d, Integer line_number, String message, String stack_trace, String type_name, String friendly_message){
+        createErrorObject(d, line_number, message, stack_trace, type_name, friendly_message);
+    }     
     public static void createErrorObject(Datetime d, Integer line_number, String message, String stack_trace, String type_name, String friendly_message){    	
     	
         FGW_Error__c error = new FGW_Error__c(
