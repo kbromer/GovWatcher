@@ -147,7 +147,20 @@ global class FGW_RealTimeCongressAPI implements FGW_IAPI{
         for (FGW_JSONObject_RTC JSObj : resultList){
             for (FGW_JSONObject_RTC.Amendment a : JSObj.amendments){
                 Amendment__c amd = new Amendment__c();  
-                amd.Name = a.x_number;
+                amd.Name = a.amendment_id;
+                amd.Amendment_ID__c = a.amendment_id;
+                amd.Chamber__c = a.chamber;
+                if (a.description != null && a.description != '')
+                    amd.Description__c = a.description;            
+                else
+                    amd.Description__c = a.purpose;   
+                amd.Bill_ID__c = a.bill_id;                    
+                if(a.last_action_at != null)amd.Last_Action_At__c = Datetime.valueOf((a.last_action_at.replace('T', ' ')).replace('Z', ' '));
+                amd.Number__c = a.x_number;
+                if(a.offered_at != null)amd.Offered_At__c = Datetime.valueOf((a.offered_at.replace('T', ' ')).replace('Z', ' '));
+                amd.Session__c = a.session;
+                amd.Sponsor_Type__c = a.sponsor_type;    
+                amd.Status__c = a.state;
                 returnList.add(amd);            
             }   
         }
@@ -163,6 +176,7 @@ global class FGW_RealTimeCongressAPI implements FGW_IAPI{
             for (FGW_JSONObject_RTC.Bill b : JSObj.bills){
                 Legislation__c leg = new Legislation__c();	
                 leg.Name = b.bill_id;
+                leg.Bill_ID__c = b.bill_id;
                 leg.Bill_Title__c = b.official_title.length() > 255 ? b.official_title.substring(0,254) : b.official_title;
                 leg.Bill_Number__c = Decimal.valueOf(b.x_number);
                 leg.Bill_Prefix__c = (b.chamber == 'house' ? 'hr' : 's');
@@ -319,6 +333,7 @@ global class FGW_RealTimeCongressAPI implements FGW_IAPI{
     	
     	for (String s : rfp.fieldNames){
     	    if (!fieldNameMap.containsKey(s)){
+                system.debug('STRING S: ' + s);
                 fieldNameMap.put(s, index);
                 rrfp.fieldNames.add(s);
                 rrfp.boolOperators.add(FGW_Constants.operators.ValueIn);
@@ -411,9 +426,12 @@ global class FGW_RealTimeCongressAPI implements FGW_IAPI{
         	if (ResourceName != 'legislators.getList')
         	   params = condenseRFP(params);
         	    
+            system.debug('PARAMS FIELDNAME 0 ' + params.fieldNames[0]);        	    
             Integer i = 0;
             //loop through the objects params and construct our query string
             for (i=0; i < params.fieldNames.size(); i++){
+            	system.debug('Integer i ' + i);
+            	system.debug(params.objectName + ' ' + params.fieldNames[i] + ' ' + params.boolOperators[i] + ' ' + params.comparisonValues[i]);
                 parameter_string += constructParameter(params.objectName, params.fieldNames[i], params.boolOperators[i], params.comparisonValues[i]);
                 parameter_string += '&'; 
             }
@@ -522,13 +540,13 @@ global class FGW_RealTimeCongressAPI implements FGW_IAPI{
         
         //amendments - billid
         Map<String, String> AmendmentMap = new Map<String, String>();
-        AmendmentMap.put('Legislation__r.Name', 'bill_id');
+        AmendmentMap.put('Bill_ID__c', 'bill_id');
         AmendmentMap.put('Name', 'amendment_id');
         RTCMap.put('Amendment__c', AmendmentMap);        
                 
         //bills - ????????????????????????????
         Map<String, String> BillMap = new Map<String, String>();
-        BillMap.put('Bill_Id__c', 'bill_id');
+        BillMap.put('Bill_ID__c', 'bill_id');
         BillMap.put('Categories__c', 'keywords');
         BillMap.put('FullText', 'search');
         RTCMap.put('Legislation__c', BillMap);       
