@@ -163,6 +163,7 @@ public with sharing class FGW_JSONObject_RTC{
     }
     
     public class Amendment{    	
+        public String amendment_id;
         public String session;
         public String x_number;
         public String chamber;
