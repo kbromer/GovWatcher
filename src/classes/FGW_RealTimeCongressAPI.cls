@@ -49,7 +49,7 @@ global class FGW_RealTimeCongressAPI implements FGW_IAPI{
     	API_Key = API_Config.API_Key__c;
     	Endpoint = API_Config.API_Endpoint__c;
     	statusCode = -1;    
-    	RTC_Translation = getRTCMap();    	
+    	RTC_Translation = getFieldMapping();    	
     }        
     
     global Integer getStatusCode(){return StatusCode;}
@@ -438,6 +438,7 @@ global class FGW_RealTimeCongressAPI implements FGW_IAPI{
 
        // Instantiate a new HTTP request, GET method, set endpoint
         HttpRequest req = new HttpRequest();
+        req.setTimeout(60000);
         req.setEndpoint(url);        
         req.setMethod('GET');
         req.setHeader('X-APIKEY', API_Key);
@@ -488,7 +489,7 @@ global class FGW_RealTimeCongressAPI implements FGW_IAPI{
     }    
 
     //construct a map of <ObjectName, Map<FieldName, API_Field_Name>> for use in building query params
-    private Map<String, Map<String, String>> getRTCMap(){
+    global Map<String, Map<String, String>> getFieldMapping(){
         
         Map<String, Map<String, String>> RTCMap = new Map<String, Map<String, String>>();
         
@@ -528,11 +529,10 @@ global class FGW_RealTimeCongressAPI implements FGW_IAPI{
         //bills - ????????????????????????????
         Map<String, String> BillMap = new Map<String, String>();
         BillMap.put('Bill_Id__c', 'bill_id');
+        BillMap.put('Categories__c', 'keywords');
+        BillMap.put('FullText', 'search');
         RTCMap.put('Legislation__c', BillMap);       
         
         return RTCMap;
     }
-
-
-
 }
