@@ -50,6 +50,27 @@
         <unique>false</unique>
     </fields>
     <fields>
+        <fullName>Active__c</fullName>
+        <defaultValue>false</defaultValue>
+        <externalId>false</externalId>
+        <label>Active</label>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Advanced__c</fullName>
+        <defaultValue>false</defaultValue>
+        <externalId>false</externalId>
+        <label>Advanced</label>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Search_Description__c</fullName>
+        <externalId>false</externalId>
+        <label>Search Description</label>
+        <required>false</required>
+        <type>TextArea</type>
+    </fields>
+    <fields>
         <fullName>Search_Parameters__c</fullName>
         <description>A semicolon delimited list of query parameters, operations and values.</description>
         <externalId>false</externalId>
@@ -59,30 +80,10 @@
         <type>LongTextArea</type>
         <visibleLines>3</visibleLines>
     </fields>
-    <fields>
-        <fullName>Search_Universe__c</fullName>
-        <description>The universe to apply this search (State, Federal, etc.)</description>
-        <externalId>false</externalId>
-        <inlineHelpText>The universe to apply this search (State, Federal, etc.)</inlineHelpText>
-        <label>Search Universe</label>
-        <picklist>
-            <picklistValues>
-                <fullName>Federal</fullName>
-                <default>false</default>
-            </picklistValues>
-            <picklistValues>
-                <fullName>State</fullName>
-                <default>false</default>
-            </picklistValues>
-            <sorted>false</sorted>
-        </picklist>
-        <type>Picklist</type>
-    </fields>
     <label>Saved Search</label>
     <nameField>
-        <displayFormat>QUERY-{MMDDYY}-{00000}</displayFormat>
-        <label>Search Number</label>
-        <type>AutoNumber</type>
+        <label>Search Name</label>
+        <type>Text</type>
     </nameField>
     <pluralLabel>Saved Searches</pluralLabel>
     <searchLayouts/>
