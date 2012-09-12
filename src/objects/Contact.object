@@ -218,7 +218,7 @@
     </fields>
     <fields>
         <fullName>Bioguide_ID__c</fullName>
-        <externalId>false</externalId>
+        <externalId>true</externalId>
         <label>Bioguide ID</label>
         <length>255</length>
         <required>false</required>
