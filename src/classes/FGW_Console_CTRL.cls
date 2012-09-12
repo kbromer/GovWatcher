@@ -42,10 +42,68 @@ public with sharing class FGW_Console_CTRL{
     public String FeedName{get;set;}     
     public final String ChatterUserName{get;set;}
     public String adv_query{get;set;} 
+    public String advqueryObject{get;set;}
     public String queryObject{get;set;}
     public Integer searchResultsSize{get{return searchResults.size();}}
     public Integer legislatorFollowSize{get{return followedLegislators.size();}}
     public Integer legislationFollowSize{get{return followedLegislation.size();}}
+    public Integer savedSearchesSize{get{return SavedSearches.size();}}
+    public List<FGW_Saved_Search__c> SavedSearches;
+    public List<FGW_Saved_Search__c> getSavedSearches(){
+    	   SavedSearches = new List<FGW_Saved_Search__c>();
+    	   SavedSearches = [select id, Name, API_Name__c, Search_Description__c, Active__c, Advanced__c from FGW_Saved_Search__c];
+    	   return SavedSearches;
+    }
+    public Id searchObjId{get;set;}
+    public FGW_Saved_Search__c loadedSearch{get;set;}    
+    
+    private FGW_IAPI defaultAPI = FGW_APIFactory.getDefault_Federal_API_Instance();
+    
+    //available object for the default API to search over
+    public List<SelectOption> availableObjs;
+    public List<SelectOption> getavailableObjs(){                    	   
+    	availableObjs = new List<SelectOption>();
+    	availableObjs.add(new SelectOption('', '-Select-'));
+    	
+    	//get the default API for the search
+    	if (defaultAPI.getFieldMapping().containsKey('Contact')){
+            availableObjs.add(new SelectOption('Contact', 'Legislator'));                		
+    	}
+    	if(defaultAPI.getFieldMapping().containsKey('Legislation__c')){
+    		availableObjs.add(new SelectOption('Legislation__c', 'Legislation'));
+    	}
+    	return availableObjs; 
+    }
+    
+    public List<String> objectSearchFields;
+    public List<String> getobjectSearchFields(){
+        List<String> newList = new List<String>();
+        if (queryObject != null && queryObject != ''){    
+        	system.debug('QUERYOBJECT' + queryObject);
+            Map<String, String> fieldMap = defaultAPI.getFieldMapping().get(queryObject);
+            //remove the fulltext search field from the field list if it exists
+            if (fieldMap.containsKey('FullText'))
+                fieldMap.remove('FullText');
+
+            newList.addAll(fieldMap.keySet());                    	
+        }
+    	
+    	return newList;    	
+    }
+    
+    //search object to hold fields
+    public sobject searchObject;
+    public sobject getsearchObject(){
+    	
+    	if (queryObject != null && queryObject != ''){    
+    	   //get the selected query object from the picklist
+    	   Type t = Type.forName(queryObject);
+    	   //create a new object type of the selected queryObject, and put it in the
+    	   //search object so we can use the sobject fields
+            searchObject = (sobject)t.newInstance();
+    	}            
+        return searchObject;    	
+    }    
     
     //search results
     public List<SearchResult> searchResults{get;set;}
@@ -78,6 +136,8 @@ public with sharing class FGW_Console_CTRL{
         }
         
         searchAPIName = AppSettings.Federal_API_Name__c;
+        //set a default query object
+        queryObject = '';        
         
         List<FGW_Search_Result__c> existingResults = new List<FGW_Search_Result__c>();
         existingResults = [select Name from FGW_Search_Result__c order by LastModifiedDate desc];
@@ -177,7 +237,7 @@ public with sharing class FGW_Console_CTRL{
         FGW_RequestFilterParameters rfp = new FGW_RequestFilterParameters();
         rfp.adv_query = adv_query;
         rfp.queryReturnType = FGW_Constants.queryReturntype.Basic;
-        if (queryObject == 'Legislation')
+        if (advqueryObject == 'Legislation')
             rfp.objectName = 'Legislation__c';
         else
             rfp.objectName = 'Contact';            
@@ -225,8 +285,10 @@ public with sharing class FGW_Console_CTRL{
     	return null;
     }
     
-    
-    
+    public PageReference deleteSavedSearch(){
+    	return null;
+    }
+    public PageReference editSavedSearch(){return null;}
     
     
     private List<SearchResult> runSearches(List<FGW_RequestFilterParameters> rfps){

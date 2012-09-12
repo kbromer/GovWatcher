@@ -41,8 +41,7 @@ by Salesforce.com Foundation
                 border-radius: 5px;
                 background: white;
                 border-top: 4px solid #006b54;
-                overflow: auto;                                       
-                /*padding: 5px 20px 20px 10px;*/
+                overflow: auto;
             }
                 .hBox .header{
                     font-size:115%;
@@ -70,11 +69,18 @@ by Salesforce.com Foundation
                 margin-bottom: auto;                
                 z-index: 5555 !important;            
             }
-            .tabHeader{
-                background:white;
-                height:100%;
+            .activetabHeader{
+                font-family: verdana;
+                font-weight: bold;
             }
-                 
+            
+            .inactivetabHeader{
+                background:white;
+                font-family: verdana;
+                font-style:italic;
+                                                             
+            }
+            .tabBody{}     
     </style>
     <script type="text/javascript">
     
@@ -109,20 +115,24 @@ by Salesforce.com Foundation
             j$("#loadingwheel").hide();
             j$("#resultsTDdiv").children(':not(#loadingwheel)').fadeTo('fast', 1);        
         }
-        
+        function resetAccordian(){
+            j$( "#accordion" ).accordion({active: 0, fillSpace: true});
+            stopDataUIEffects();
+        }
         
     </script>
     
     <apex:sectionHeader title="GovWatcher" subtitle="Track and Search for Legislation and Legislators"/>
     <apex:pageblock id="pageblockid">
             <table width="100%" id="wrapTable">  
-                <tr style="vertical-align:top;" height="1px">
+                <tr style="vertical-align:top;">                                        
                     <td id="resultsTD" width="75%">
-                        <apex:outputpanel id="resultsTDPanel">
-                        <div id="resultsTDdiv" style="height:100%;">                
+                        <apex:outputpanel id="ResultsTDpanel">                        
+                        <div id="resultsTDdiv" style="height:100%;">
                         <div id="loadingwheel">
                             <apex:image url="{!URLFOR($Resource.FGW_Images, 'ajax_loader_green.gif')}"/>                
                         </div>                    
+                        
                         <div id="accordion" style="height:690px;">                          
                             <div class="header">
                                 <h3><a href="#">Tracked Legislation ({!legislationFollowSize})</a></h3>
@@ -193,8 +203,10 @@ by Salesforce.com Foundation
                             <div class="hBox" style="border-top:4px solid #006b54;" id="resultsbox"> 
                                 <apex:outputpanel id="panel">
                                 <apex:form >
-                                    <apex:commandButton title="Track Results" action="{!trackMarkedResults}" onClick="runTrackUIEffects()" onComplete="stopDataUIEffects()" reRender="FeedDisplayPanel,resultsTDpanel" value="Track Marked Results" rendered="{!searchResultsSize > 0}"/>
-                                    Select <a href="javascript:ChangeFeed();">All|</a><a href="javascript:();">None</a>                  
+                                    <apex:outputpanel rendered="{!searchResultsSize > 0}">
+                                        <apex:commandbutton title="Track Results" action="{!trackMarkedResults}" onClick="runTrackUIEffects()" onComplete="resetAccordian()" reRender="ResultsTDpanel,FeedDisplayPanel" value="Track Marked Results" />
+                                        Select <a href="javascript:ChangeFeed();">All|</a><a href="javascript:();">None</a>                  
+                                    </apex:outputpanel>
                                     <apex:pageBlockTable var="s" value="{!searchResults}" >
                                         <apex:column >
                                             <apex:facet name="header">Track Record</apex:facet>
@@ -212,12 +224,13 @@ by Salesforce.com Foundation
                                 </apex:form>
                                 </apex:outputpanel>
                             </div>     
-                            
-                        </div><!--close accordian--> 
+                                    
+                        </div><!--close accordian-->
+                        
                         </div>        
-                        </apex:outputpanel>                        
+                        </apex:outputpanel>                
                     </td>
-                
+                             
                     <td>
                         <apex:outputpanel id="FeedDisplayPanel">                                
 	                        <div class="hBox" style="border-top:4px solid #006b54;padding: 5px 20px 20px 10px;height:670px;" id="feedbox">
@@ -239,24 +252,59 @@ by Salesforce.com Foundation
                         <div class="hBox" style="border-top:4px solid #006b54;height:400px;padding: 5px 20px 20px 10px;" id="searchbox">
                             <apex:form >                
                                 <div>
-                                    <h2>Add New Search</h2>                        
-                                </div>                    
-                                <apex:tabpanel switchtype="client" headerClass="tabHeader" tabClass="tabHeader" styleClass="tabHeader">
-                                    <apex:tab label="Standard"> 
-                                    </apex:tab>
-                        
-			                        <apex:tab label="Advanced">
-			                            <apex:inputTextarea rows="5" cols="100" value="{!adv_query}" id="theTextInput" />                    
-			                            <apex:selectList value="{!queryObject}" multiselect="false" size="1">
-			                                <apex:selectOption itemvalue="Legislation" itemlabel="Legislation"/>
-			                                <apex:selectOption itemvalue="Legislator" itemlabel="Legislator"/>                                                
-			                            </apex:selectList>
-			                            <apex:selectList value="{!searchAPIName}" multiselect="false" size="1">
-                                            <apex:selectOptions value="{!APIOptions}"/>                                                                                            
-                                        </apex:selectList>			                            
-			                            <apex:commandButton title="Submit Query" action="{!runAdvSearch}" onClick="runSearchUIEffects()" onComplete="stopDataUIEffects()" rerender="panel,sheader" value="Submit"/>            
-                                    </apex:tab>
-                                </apex:tabpanel>                                
+                                    <h2>Search Options</h2>                        
+                                </div>
+                                <apex:outputpanel id="searchPanel">                    
+                                    <apex:pageblocksection columns="2" collapsible="false" id="searchBlockSection">
+                                        <apex:pageblocksection columns="1" collapsible="false" id="searchCriteriaSection" title="Create or Edit Searches">
+                                            <apex:tabpanel switchtype="client" activetabClass="activetabHeader" inactivetabClass="inactivetabHeader" width="100%" height="320px">
+                                                <apex:tab label="Standard" styleclass="tabBody"> 
+                                                    <apex:actionFunction name="rerenderSearchCriteria" rerender="searchCriteria" status="myStatus"/>
+                                                    <apex:outputpanel id="searchCriteria">                                        
+                                                        <apex:selectList value="{!queryObject}" multiselect="false" size="1" onChange="rerenderSearchCriteria();">
+                                                            <apex:selectOptions value="{!availableObjs}"/>
+                                                        </apex:selectList>                                                            
+                                                        <apex:actionStatus startText="Loading Search Fields..." id="myStatus" />                                             
+                                                        <apex:pageBlockSection columns="2" showHeader="false">
+                                                            <apex:repeat value="{!objectSearchFields}" var="osf">
+                                                                <apex:inputField value="{!searchObject[osf]}"/>
+                                                            </apex:repeat>                                                                                         
+                                                        </apex:pageBlockSection>
+                                                    </apex:outputpanel>
+                                                </apex:tab>
+                                                <apex:tab label="Advanced" styleclass="tabBody">
+	                                                <apex:inputTextarea rows="5" cols="100" value="{!adv_query}" id="theTextInput" />                    
+	                                                <apex:selectList value="{!advqueryObject}" multiselect="false" size="1">
+	                                                    <apex:selectOption itemvalue="Legislation" itemlabel="Legislation"/>
+				                                        <apex:selectOption itemvalue="Legislator" itemlabel="Legislator"/>                                                
+				                                    </apex:selectList>
+				                                    <apex:selectList value="{!searchAPIName}" multiselect="false" size="1">
+	                                                    <apex:selectOptions value="{!APIOptions}"/>                                                                                            
+	                                                </apex:selectList>			                            
+				                                    <apex:commandButton title="Submit Query" action="{!runAdvSearch}" onClick="runSearchUIEffects()" onComplete="stopDataUIEffects()" rerender="panel,sheader" value="Submit"/>            
+	                                            </apex:tab>
+                                            </apex:tabpanel>  
+                                        </apex:pageblocksection>
+                                        <apex:pageblocksection title="Existing Saved Searches ({!savedSearchesSize})" collapsible="false" id="savedsearchsection" columns="1">
+                                            <apex:pageblocktable var="searchobj" value="{!SavedSearches}">
+                                                <apex:column > 
+                                                    <apex:facet name="header"></apex:facet>                                    
+                                                    <a href="javascript:EditSavedSearch('{!searchobj.id}');">edit</a>|<a href="javascript:if (window.confirm('Are you sure?')) DeleteSavedSearch('{!searchobj.id}');">del</a>
+                                                </apex:column>
+                                                <apex:column value="{!searchobj.Active__c}"/>                                                
+                                                <apex:column value="{!searchobj.Name}"/>
+                                                <apex:column value="{!searchobj.API_Name__c}"/>
+                                                <apex:column value="{!searchobj.Search_Description__c}"/> 
+                                            </apex:pageblocktable>
+                                            <apex:actionFunction action="{!deleteSavedSearch}" name="DeleteSavedSearch" rerender="DSConfigOutputPanel">
+                                                <apex:param name="dsname" value="" assignTo="{!searchObjId}"/>
+                                            </apex:actionFunction>                           
+                                            <apex:actionFunction action="{!editSavedSearch}" name="EditSavedSearch" rerender="DSConfigOutputPanel">
+                                                <apex:param name="dsname" value="" assignTo="{!searchObjId}"/>
+                                            </apex:actionFunction>  
+                                        </apex:pageblocksection>     
+                                    </apex:pageblocksection>
+                                </apex:outputpanel>                                       
                             </apex:form>
                         </div>
                     </td>
