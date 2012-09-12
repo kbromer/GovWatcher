@@ -100,12 +100,12 @@ public with sharing class FGW_Utilities{
                 if (haveRFP){
                 	rfp.comparisonValues.add(sr.Name);
                 	rfp.boolOperators.add(FGW_Constants.operators.Equals);
-                	rfp.fieldNames.add(sr.isContact__c ? 'Bioguide_ID__c' : 'Bill_Id__c');                	
+                	rfp.fieldNames.add(sr.isContact__c ? 'Bioguide_ID__c' : 'Bill_ID__c');                	
                 }
                 //we need to create a new RFP for this object for this API name
                 else{                	
                 	rfp.objectName = objName;
-                    rfp.fieldNames = new List<String>{sr.isContact__c ? 'Bioguide_ID__c' : 'Bill_Id__c'};
+                    rfp.fieldNames = new List<String>{sr.isContact__c ? 'Bioguide_ID__c' : 'Bill_ID__c'};
                     rfp.boolOperators = new List<FGW_Constants.operators>{FGW_Constants.operators.Equals};
                     rfp.comparisonValues = new List<String>{sr.Name};               
                     rfp.queryReturnType = FGW_Constants.queryReturntype.Full;
@@ -120,7 +120,7 @@ public with sharing class FGW_Utilities{
     		else{
     			FGW_RequestFilterParameters rfp = new FGW_RequestFilterParameters();
     			rfp.objectName = objName;
-    			rfp.fieldNames = new List<String>{sr.isContact__c ? 'Bioguide_ID__c' : 'Bill_Id__c'};
+    			rfp.fieldNames = new List<String>{sr.isContact__c ? 'Bioguide_ID__c' : 'Bill_ID__c'};
     			rfp.boolOperators = new List<FGW_Constants.operators>{FGW_Constants.operators.Equals};
     			rfp.comparisonValues = new List<String>{sr.Name};    			
     			rfp.queryReturnType = FGW_Constants.queryReturntype.Full;
