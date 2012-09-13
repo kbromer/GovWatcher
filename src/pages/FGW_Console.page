@@ -140,8 +140,13 @@ by Salesforce.com Foundation
                             <div class="hBox" style="border-top:4px solid #006b54;" id="legislationbox">
                                 <apex:form >
                                     <apex:pageblocktable value="{!followedLegislation}" var="leg" style="height:100%;">
+					                    <apex:column headervalue="Record">
+                                            <apex:outputlink target="_blank" title="Legislation" value="{!URLFOR($Action.Legislation__c.View, leg.Id)}">
+                                            View
+                                            </apex:outputlink>                                    
+                                        </apex:column>
 					                    <apex:column >
-					                       <apex:facet name="header">Your Follow Status</apex:facet>
+					                       <apex:facet name="header">Follow? </apex:facet>
 					                       <chatter:follow entityId="{!leg.Id}"/>
                                         </apex:column>  
 					                    <apex:repeat value="{!$ObjectType.Legislation__c.FieldSets.FGW_Legislation_Console_Fields}" var="l">
@@ -150,8 +155,8 @@ by Salesforce.com Foundation
                                             </apex:column>
                                         </apex:repeat>					                    
 					                    <apex:column >
-					                        <apex:facet name="header">Stop Tracking?</apex:facet>
-					                        <apex:outputtext value="Unfollow"/>                                                        
+					                        <apex:facet name="header">Track?</apex:facet>
+					                        <apex:outputtext value="Stop Tracking"/>                                                        
 					                    </apex:column>
 					                    <apex:column > 
 					                        <apex:facet name="header">Feed</apex:facet>
@@ -170,9 +175,14 @@ by Salesforce.com Foundation
                             <div class="hBox" style="border-top:4px solid #006b54;" id="legislatorbox">
                                 <apex:form >  
                                
-                                    <apex:pageblocktable value="{!followedLegislators}" var="con"> 
+                                    <apex:pageblocktable value="{!followedLegislators}" var="con" style="height:100%;"> 
+					                    <apex:column headervalue="Record">
+                                            <apex:outputlink target="_blank" title="Legislation" value="{!URLFOR($Action.Contact.View, con.Id)}">
+                                            View
+                                            </apex:outputlink>                                    
+                                        </apex:column>
 					                    <apex:column >
-					                        <apex:facet name="header">Your Follow Status</apex:facet>  
+					                        <apex:facet name="header">Follow? </apex:facet>  
 					                        <chatter:follow entityId="{!con.Id}"/>                      
 					                    </apex:column>
                                         <apex:repeat value="{!$ObjectType.Contact.FieldSets.FGW_Legislator_Console_Fields}" var="c">
@@ -181,8 +191,8 @@ by Salesforce.com Foundation
                                             </apex:column>
                                         </apex:repeat>					                                      
 					                    <apex:column >
-					                        <apex:facet name="header">Stop Tracking?</apex:facet>
-					                        <apex:outputtext value="Unfollow"/>                                                        
+					                        <apex:facet name="header">Track?</apex:facet>
+					                        <apex:outputtext value="Stop Tracking"/>                                                        
 					                    </apex:column>
 					                    <apex:column >
 					                        <apex:facet name="header">Feed</apex:facet>
