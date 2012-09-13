@@ -188,7 +188,7 @@ public with sharing class FGW_JSONObject_RTC{
     public class Roll_Vote{
         public String session;
         public String chamber;
-        public Integer year;
+        public String year;
         public String vote_type;
         public String question;
         public String result;    	
