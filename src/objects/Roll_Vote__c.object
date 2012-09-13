@@ -39,6 +39,17 @@
     <enableHistory>false</enableHistory>
     <enableReports>false</enableReports>
     <fields>
+        <fullName>Amendment_ID__c</fullName>
+        <description>Amendment ID, if one is available</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Amendment ID, if one is available</inlineHelpText>
+        <label>Amendment ID</label>
+        <length>255</length>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
         <fullName>Amendment__c</fullName>
         <deleteConstraint>SetNull</deleteConstraint>
         <description>The associated Amendment, if there is one.</description>
@@ -52,6 +63,28 @@
         <type>Lookup</type>
     </fields>
     <fields>
+        <fullName>Bill_ID__c</fullName>
+        <description>Bill ID, if one is available</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Bill ID, if one is available</inlineHelpText>
+        <label>Bill ID</label>
+        <length>255</length>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Chamber__c</fullName>
+        <description>Chamber this roll vote occurred in</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Chamber this roll vote occurred in</inlineHelpText>
+        <label>Chamber</label>
+        <length>255</length>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
         <fullName>Date_Voted__c</fullName>
         <description>Date/Time at which vote was taken.</description>
         <externalId>false</externalId>
@@ -61,30 +94,52 @@
         <type>DateTime</type>
     </fields>
     <fields>
-        <fullName>Date_of_Vote__c</fullName>
+        <fullName>Democrat_Nay__c</fullName>
+        <description>Total number of Democrat &apos;Nay&apos; votes</description>
         <externalId>false</externalId>
-        <label>Date of Vote</label>
+        <inlineHelpText>Total number of Democrat &apos;Nay&apos; votes</inlineHelpText>
+        <label>Democrat Nay</label>
+        <precision>3</precision>
         <required>false</required>
-        <type>Date</type>
+        <scale>0</scale>
+        <type>Number</type>
+        <unique>false</unique>
     </fields>
     <fields>
-        <fullName>Desired_Vote__c</fullName>
-        <description>How we want legislators to vote.</description>
+        <fullName>Democrat_Not_Voting__c</fullName>
+        <description>Total Democrat not voting</description>
         <externalId>false</externalId>
-        <inlineHelpText>How we want legislators to vote.</inlineHelpText>
-        <label>Desired Vote</label>
-        <picklist>
-            <picklistValues>
-                <fullName>Yea</fullName>
-                <default>false</default>
-            </picklistValues>
-            <picklistValues>
-                <fullName>Nay</fullName>
-                <default>false</default>
-            </picklistValues>
-            <sorted>false</sorted>
-        </picklist>
-        <type>Picklist</type>
+        <inlineHelpText>Total Democrat not voting</inlineHelpText>
+        <label>Democrat Not Voting</label>
+        <precision>3</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Democrat_Present__c</fullName>
+        <description>Total number of Democrat votes of &apos;Present&apos;</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Total number of Democrat votes of &apos;Present&apos;</inlineHelpText>
+        <label>Democrat Present</label>
+        <precision>3</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Democrat_Yea__c</fullName>
+        <description>Total number of Democrat &apos;Yea&apos; votes</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Total number of Democrat &apos;Yea&apos; votes</inlineHelpText>
+        <label>Democrat Yea</label>
+        <precision>3</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <type>Number</type>
+        <unique>false</unique>
     </fields>
     <fields>
         <fullName>Legislation__c</fullName>
@@ -98,34 +153,63 @@
         <type>Lookup</type>
     </fields>
     <fields>
-        <fullName>Num_Nay_Votes__c</fullName>
-        <description>Pulls the number of Yea votes from related Legislator Vote records</description>
+        <fullName>Republican_Nay__c</fullName>
+        <description>Total number of Republican &apos;Nay&apos; votes</description>
         <externalId>false</externalId>
-        <inlineHelpText>Number of Yea votes from related Legislator Vote records</inlineHelpText>
-        <label>Num Nay Votes</label>
-        <summaryFilterItems>
-            <field>Legislator_Vote__c.Vote__c</field>
-            <operation>equals</operation>
-            <value>Nay</value>
-        </summaryFilterItems>
-        <summaryForeignKey>Legislator_Vote__c.Roll_Vote__c</summaryForeignKey>
-        <summaryOperation>count</summaryOperation>
-        <type>Summary</type>
+        <inlineHelpText>Total number of Republican &apos;Nay&apos; votes</inlineHelpText>
+        <label>Republican Nay</label>
+        <precision>3</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <type>Number</type>
+        <unique>false</unique>
     </fields>
     <fields>
-        <fullName>Num_Yea_Votes__c</fullName>
-        <description>Pulls the number of Yea votes from related Legislator Vote records</description>
+        <fullName>Republican_Not_Voting__c</fullName>
+        <description>Total Republican not voting</description>
         <externalId>false</externalId>
-        <inlineHelpText>Number of Yea votes from related Legislator Vote records</inlineHelpText>
-        <label>Num Yea Votes</label>
-        <summaryFilterItems>
-            <field>Legislator_Vote__c.Vote__c</field>
-            <operation>equals</operation>
-            <value>Yea</value>
-        </summaryFilterItems>
-        <summaryForeignKey>Legislator_Vote__c.Roll_Vote__c</summaryForeignKey>
-        <summaryOperation>count</summaryOperation>
-        <type>Summary</type>
+        <inlineHelpText>Total Republican not voting</inlineHelpText>
+        <label>Republican Not Voting</label>
+        <precision>3</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Republican_Present__c</fullName>
+        <description>Total number of Republican votes of &apos;Present&apos;</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Total number of Republican votes of &apos;Present&apos;</inlineHelpText>
+        <label>Republican Present</label>
+        <precision>3</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Republican_Yea__c</fullName>
+        <description>Total number of Republican &apos;Yea&apos; votes</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Total number of Republican &apos;Yea&apos; votes</inlineHelpText>
+        <label>Republican Yea</label>
+        <precision>3</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Required_for_Passage__c</fullName>
+        <description>Requirement for passage</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Requirement for passage</inlineHelpText>
+        <label>Required for Passage</label>
+        <length>50</length>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
     </fields>
     <fields>
         <fullName>Result__c</fullName>
@@ -137,14 +221,24 @@
         <unique>false</unique>
     </fields>
     <fields>
-        <fullName>Roll_Id__c</fullName>
+        <fullName>Roll_ID__c</fullName>
         <caseSensitive>false</caseSensitive>
         <externalId>true</externalId>
-        <label>Roll Id</label>
+        <label>Roll ID</label>
         <length>255</length>
         <required>false</required>
         <type>Text</type>
         <unique>true</unique>
+    </fields>
+    <fields>
+        <fullName>Roll_Question__c</fullName>
+        <description>The question this roll vote is addressing</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The question this roll vote is addressing</inlineHelpText>
+        <label>Roll Question</label>
+        <length>32768</length>
+        <type>LongTextArea</type>
+        <visibleLines>3</visibleLines>
     </fields>
     <fields>
         <fullName>Roll_Type__c</fullName>
@@ -156,13 +250,85 @@
         <unique>false</unique>
     </fields>
     <fields>
-        <fullName>Score_This_Vote__c</fullName>
-        <defaultValue>false</defaultValue>
-        <description>If checked, this vote will count towards our scoring system for legislators.</description>
+        <fullName>Session__c</fullName>
+        <description>Session this Roll vote occurred in</description>
         <externalId>false</externalId>
-        <inlineHelpText>If checked, this vote will count towards our scoring system for legislators.</inlineHelpText>
-        <label>Score This Vote</label>
-        <type>Checkbox</type>
+        <inlineHelpText>Session this Roll vote occurred in</inlineHelpText>
+        <label>Session</label>
+        <length>10</length>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Total_Nay__c</fullName>
+        <description>Total number of &apos;Nay&apos; votes</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Total number of &apos;Nay&apos; votes</inlineHelpText>
+        <label>Total Nay</label>
+        <precision>3</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Total_Not_Voting__c</fullName>
+        <description>Total not voting</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Total not voting</inlineHelpText>
+        <label>Total Not Voting</label>
+        <precision>3</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Total_Present__c</fullName>
+        <description>Total number of votes of &apos;Present&apos;</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Total number of votes of &apos;Present&apos;</inlineHelpText>
+        <label>Total Present</label>
+        <precision>3</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Total_Yea__c</fullName>
+        <description>Total number of &apos;Yea&apos; votes</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Total number of &apos;Yea&apos; votes</inlineHelpText>
+        <label>Total Yea</label>
+        <precision>3</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Vote_Method__c</fullName>
+        <description>Method by which the vote was taken</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Method by which the vote was taken</inlineHelpText>
+        <label>Vote Method</label>
+        <length>255</length>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Vote_Taken__c</fullName>
+        <description>How the vote was conducted</description>
+        <externalId>false</externalId>
+        <inlineHelpText>How the vote was conducted</inlineHelpText>
+        <label>Vote Taken</label>
+        <length>255</length>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
     </fields>
     <fields>
         <fullName>Vote_Type__c</fullName>
@@ -171,6 +337,17 @@
         <inlineHelpText>passage, cloture, leadership, nomination, quorum, other</inlineHelpText>
         <label>Vote Type</label>
         <length>255</length>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Year__c</fullName>
+        <description>Year in which this vote occurred</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Year in which this vote occurred</inlineHelpText>
+        <label>Year</label>
+        <length>4</length>
         <required>false</required>
         <type>Text</type>
         <unique>false</unique>
