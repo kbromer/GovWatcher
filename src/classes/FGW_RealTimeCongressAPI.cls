@@ -279,12 +279,52 @@ global class FGW_RealTimeCongressAPI implements FGW_IAPI{
                 Roll_Vote__c rv = new Roll_Vote__c();  
                 
                 rv.Name = r.roll_id;
-                
+                rv.Roll_ID__c = r.roll_id;
+                if (r.voted_at != null)rv.Date_Voted__c = Datetime.valueOf((r.voted_at.replace('T', ' ')).replace('Z', ' '));
                 if (r.amendment_id != null && r.amendment_id != '')
-                    rv.Amendment__c = r.amendment_id;
+                    rv.Amendment_ID__c = r.amendment_id;
                 else{
-                	rv.Legislation__c = r.bill_id;
-                }                    
+                	rv.Bill_ID__c = r.bill_id;
+                }
+                rv.Result__c = r.result;
+                rv.Roll_Type__c = r.roll_type;
+                rv.Vote_Type__c = r.vote_type;
+                rv.Session__c = r.session;
+                rv.Chamber__c = r.chamber;
+                rv.Year__c = r.year;
+                rv.Required_for_Passage__c = r.required;
+                rv.Roll_Question__c = r.question;
+                rv.Vote_Method__c = r.how;
+                
+                //get vote breakdowns
+                for (String s : r.vote_breakdown.keySet()){
+                	for (FGW_JSONObject_RTC.Vote_Result v : r.vote_breakdown.get(s)){
+                        if (s == 'Total'){
+                        	rv.Total_Nay__c = v.Nay;
+                        	rv.Total_Not_Voting__c = v.Not_Voting;
+                        	rv.Total_Present__c = v.Present;
+                        	rv.Total_Yea__c = v.Yea;
+                        }                           
+                        //go get the party result
+                        else{
+                        	for (String pname : v.party.keySet()){
+                                FGW_JSONObject_RTC.Party_Result p = v.party.get(pname);
+                                if (pname == 'D'){
+                                    rv.Democrat_Nay__c = p.Nay;
+                                    rv.Democrat_Not_Voting__c = p.Not_Voting;
+                                    rv.Democrat_Present__c = p.Present;
+                                    rv.Democrat_Yea__c = p.Yea;                                                                    	
+                                }   
+                                else if (pname == 'R'){
+                                	rv.Republican_Nay__c = p.Nay;
+                                	rv.Republican_Not_Voting__c = p.Not_Voting;
+                                	rv.Republican_Present__c = p.Present;
+                                	rv.Republican_Yea__c = p.Yea;
+                                }   
+                        	}                        	
+                        }
+                	}
+                }                              
                 returnList.add(rv);            
             }   
         }  	
