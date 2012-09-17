@@ -47,7 +47,7 @@ global class FGW_RealTimeCongressAPI implements FGW_IAPI{
     public FGW_RealTimeCongressAPI(){
     	API_Config = FGW_API_Settings__c.getInstance('Real Time Congress');
     	API_Key = API_Config.API_Key__c;
-    	Endpoint = API_Config.API_Endpoint__c;
+    	Endpoint = API_Config.API_Endpoint__c; 
     	statusCode = -1;    
     	RTC_Translation = getFieldMapping();    	
     }        
@@ -193,6 +193,7 @@ global class FGW_RealTimeCongressAPI implements FGW_IAPI{
                                         b.sponsor.chamber + ' (' + b.sponsor.party + ' ' + b.sponsor.state + '-' + b.sponsor.district + ')';  
                 }                
                 leg.Amendment_Count__c = b.amendments_count;
+                leg.Categories__c = '';
                 if (b.keywords != null){                                                
                     for (String keyword : b.keywords){
                 	   leg.Categories__c += keyword + ';';
@@ -275,7 +276,7 @@ global class FGW_RealTimeCongressAPI implements FGW_IAPI{
         List<Roll_Vote__c> returnList = new List<Roll_Vote__c>();       
         
         for (FGW_JSONObject_RTC JSObj : resultList){
-            for (FGW_JSONObject_RTC.Roll_Vote r : JSObj.rollvotes){
+            for (FGW_JSONObject_RTC.Roll_Vote r : JSObj.votes){
                 Roll_Vote__c rv = new Roll_Vote__c();  
                 
                 rv.Name = r.roll_id;
@@ -286,7 +287,7 @@ global class FGW_RealTimeCongressAPI implements FGW_IAPI{
                 else{
                 	rv.Bill_ID__c = r.bill_id;
                 }
-                rv.Result__c = r.result;
+                rv.Result__c = r.result; 
                 rv.Roll_Type__c = r.roll_type;
                 rv.Vote_Type__c = r.vote_type;
                 rv.Session__c = r.session;
@@ -295,36 +296,28 @@ global class FGW_RealTimeCongressAPI implements FGW_IAPI{
                 rv.Required_for_Passage__c = r.required;
                 rv.Roll_Question__c = r.question;
                 rv.Vote_Method__c = r.how;
-                
-                //get vote breakdowns
-                for (String s : r.vote_breakdown.keySet()){
-                	for (FGW_JSONObject_RTC.Vote_Result v : r.vote_breakdown.get(s)){
-                        if (s == 'Total'){
-                        	rv.Total_Nay__c = v.Nay;
-                        	rv.Total_Not_Voting__c = v.Not_Voting;
-                        	rv.Total_Present__c = v.Present;
-                        	rv.Total_Yea__c = v.Yea;
-                        }                           
-                        //go get the party result
-                        else{
-                        	for (String pname : v.party.keySet()){
-                                FGW_JSONObject_RTC.Party_Result p = v.party.get(pname);
-                                if (pname == 'D'){
-                                    rv.Democrat_Nay__c = p.Nay;
-                                    rv.Democrat_Not_Voting__c = p.Not_Voting;
-                                    rv.Democrat_Present__c = p.Present;
-                                    rv.Democrat_Yea__c = p.Yea;                                                                    	
-                                }   
-                                else if (pname == 'R'){
-                                	rv.Republican_Nay__c = p.Nay;
-                                	rv.Republican_Not_Voting__c = p.Not_Voting;
-                                	rv.Republican_Present__c = p.Present;
-                                	rv.Republican_Yea__c = p.Yea;
-                                }   
-                        	}                        	
-                        }
-                	}
-                }                              
+                rv.Total_Nay__c = r.vote_breakdown.total.Nay;
+                rv.Total_Not_Voting__c = r.vote_breakdown.total.Not_Voting;
+                rv.Total_Present__c = r.vote_breakdown.total.Present;
+                rv.Total_Yea__c = r.vote_breakdown.total.Yea; 
+                      
+                for (String s : r.vote_breakdown.party.keySet()){
+                    FGW_JSONObject_RTC.Vote_Result vb = r.vote_breakdown.party.get(s);
+                    if (s == 'R'){
+                        system.debug('REPUBLICAN YEA ' + vb.Yea);
+                        rv.Republican_Nay__c = vb.Nay;
+                        rv.Republican_Not_Voting__c = vb.Not_Voting;
+                        rv.Republican_Present__c = vb.Present;
+                        rv.Republican_Yea__c = vb.Yea;
+                    }
+                    if (s == 'D'){
+                        system.debug('DEM YEA ' + vb.Yea);
+                        rv.Democrat_Nay__c = vb.Nay;
+                        rv.Democrat_Not_Voting__c = vb.Not_Voting;
+                        rv.Democrat_Present__c = vb.Present;
+                        rv.Democrat_Yea__c = vb.Yea;
+                    }
+                }                             
                 returnList.add(rv);            
             }   
         }  	
@@ -338,15 +331,15 @@ global class FGW_RealTimeCongressAPI implements FGW_IAPI{
         List<Legislator_Vote__c> returnList = new List<Legislator_Vote__c>();       
         
         for (FGW_JSONObject_RTC JSObj : resultList){
-            for (FGW_JSONObject_RTC.Roll_Vote rv : JSObj.rollvotes){
+            for (FGW_JSONObject_RTC.Roll_Vote rv : JSObj.votes){
             	for (String s : rv.voter_ids.keySet()){
-                    for (FGW_JSONObject_RTC.Vote v : rv.voters.get(s)){                    
+        /*            for (FGW_JSONObject_RTC.Vote v : rv.voters.get(s)){                    
                     
                         Legislator_Vote__c lv = new Legislator_Vote__c();  
                         lv.Roll_Vote__c = rv.bill_id;
                         lv.Legislator__c = v.voter.bioguide_id;
                         returnList.add(lv);
-                    }                        
+                    }*/                        
             	}           
             }   
         }   
@@ -567,6 +560,7 @@ global class FGW_RealTimeCongressAPI implements FGW_IAPI{
         RollVoteMap.put('Legislation__c.Name', 'bill_id');
         RollVoteMap.put('Amendment__c.Name', 'amendment_id');
         RollVoteMap.put('Roll_Vote__c.Vote_Type__c', 'vote_type');
+        RollVoteMap.put('Bill_ID__c', 'bill_id');
         RTCMap.put('Roll_Vote__c', RollVoteMap);
         
         //legislators - state, district, chamber
