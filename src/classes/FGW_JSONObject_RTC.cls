@@ -36,7 +36,7 @@ public with sharing class FGW_JSONObject_RTC{
 	
 	public List<Amendment> amendments;
 	public List<Bill> bills;	
-	public List<Roll_Vote> rollvotes;
+	public List<Roll_Vote> votes;
 	
 	//used for legislators only
 	public Response response;	
@@ -201,9 +201,9 @@ public with sharing class FGW_JSONObject_RTC{
         public Bill bill;
         public String amendment_id;
         public Amendment amendment;
-        public Map<String, List<Vote>> voter_ids;
-        public Map<String, List<Vote>> voters;
-        public Map<String, List<Vote_Result>> vote_breakdown;                  	
+        public Map<String, String> voter_ids;
+        //public Map<String, List<Vote>> voters;
+        public Vote_Breakdown vote_breakdown;                  	
     }
     
     public class Vote_Result{
@@ -211,15 +211,21 @@ public with sharing class FGW_JSONObject_RTC{
     	public Integer Nay;
     	public Integer Present;
     	public Integer Yea;
-    	public Map<String, Party_Result> party;    	
+    	public Map<String, Vote_Result> party;    	
     }
     
+    public class Vote_Breakdown{
+    	public Vote_Result total;
+    	public Map<String, Vote_Result> party;    	
+    }
+    
+    /*
     public class Party_Result{
     	public Integer Not_Voting;
         public Integer Nay;
         public Integer Present;
         public Integer Yea;    	
-    }
+    }*/
     
     public static testMethod void testBillObjectModel(){
     	FGW_JSONObject_RTC deserializedBill = (FGW_JSONObject_RTC)JSON.deserialize(FGW_TestUtilities_TEST.getBillJSON(), FGW_JSONObject_RTC.class);
@@ -228,6 +234,44 @@ public with sharing class FGW_JSONObject_RTC{
     
     public static testMethod void testVoteObjectModel(){
         FGW_JSONObject_RTC deserializedVote = (FGW_JSONObject_RTC)JSON.deserialize(FGW_TestUtilities_TEST.getVoteJSON(), FGW_JSONObject_RTC.class);
+           
+            for (FGW_JSONObject_RTC.Roll_Vote r : deserializedVote.votes){
+                Roll_Vote__c rv = new Roll_Vote__c();                  
+                rv.Name = r.roll_id;
+                rv.Roll_ID__c = r.roll_id;
+                if (r.voted_at != null)rv.Date_Voted__c = Datetime.valueOf((r.voted_at.replace('T', ' ')).replace('Z', ' '));
+                if (r.amendment_id != null && r.amendment_id != '')
+                    rv.Amendment_ID__c = r.amendment_id;
+                else{
+                    rv.Bill_ID__c = r.bill_id;
+                }
+                rv.Result__c = r.result; 
+                rv.Roll_Type__c = r.roll_type;
+                rv.Vote_Type__c = r.vote_type;
+                rv.Session__c = r.session;
+                rv.Chamber__c = r.chamber;
+                rv.Year__c = r.year;
+                rv.Required_for_Passage__c = r.required;
+                rv.Roll_Question__c = r.question;
+                rv.Vote_Method__c = r.how;
+                system.debug(r.question);
+                system.debug(r.vote_breakdown);
+                //get total vote breakdowns
+                system.debug('TOTAL YEA ' + r.vote_breakdown.total.Yea);
+                for (String s : r.vote_breakdown.party.keySet()){
+                	FGW_JSONObject_RTC.Vote_Result vb = r.vote_breakdown.party.get(s);
+                	if (s == 'R'){
+                		system.debug('REPUBLICAN YEA ' + vb.Yea);
+                	}
+                	if (s == 'D'){
+                        system.debug('DEM YEA ' + vb.Yea);
+                    }
+                	
+                }       
+        
+            }
+        
+        
         system.assertNotEquals(deserializedVote, null);    	
     }
     
