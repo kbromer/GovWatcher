@@ -37,7 +37,8 @@ global class FGW_APIFactory {
     public static FGW_Application_Settings__c AppSettings = FGW_Constants.AppSettings;
 
     public static FGW_IAPI getDefault_Federal_API_Instance(){
-        return getAPI_Instance(AppSettings.Federal_API_Name__c);
+    	system.debug('AppSETTINGS: ' + AppSettings.Federal_API_Name__c);
+        return FGW_APIFactory.getAPI_Instance(AppSettings.Federal_API_Name__c);
     }
     
     public static FGW_IAPI getDefault_State_API_Instance(){
