@@ -112,9 +112,11 @@ public with sharing class FGW_Main{
     	   newobjs.addAll((List<sobject>)newBills);    	   
     	}    
     	
+    	
+    	List<String> billIds = new List<String>();
+    	
     	//if we're configured to retrieve all amendments, get the list on creation of the legislation object
     	if (hasBills && FGW_Constants.AppSettings.Amendment_Tracking__c == 'All Amendments'){
-    		List<String> billIds = new List<String>();
     		for (Legislation__c l : newBills){
     			billIds.add(l.Bill_Id__c);    			
     		}
@@ -123,7 +125,17 @@ public with sharing class FGW_Main{
     		}    		
     	}
     	
-    		   
+    	//if we're configured to retrieve all roll votes, get the list on creation of the legislation object
+    	if (hasBills && FGW_Constants.AppSettings.Roll_Vote_Tracking__c == 'All Roll Votes'){
+            if (billIds.isEmpty()){                            
+                for (Legislation__c l : newBills){
+                    billIds.add(l.Bill_Id__c);              
+                }
+            }                
+            if (!billIds.isEmpty()){
+                FGW_Main.getBillRollVotes(billIds);
+            }           
+        }    		   
     	
     	if (!newobjs.isEmpty())
     	   FGW_ChatterUtilities.chatterResultConversion(newobjs);
@@ -131,22 +143,71 @@ public with sharing class FGW_Main{
     	return converted_records_count;
     }     
     
-    
-    
     //take a list of full bill ids and add the associated rollvotes
     @future(callout=true)
     private static void getBillRollVotes(List<String> billIds){
-    
-    
-    
+        //construct a list of RFPs based on the provided billIds
+        FGW_RequestFilterParameters rfp = new FGW_RequestFilterParameters();
+        rfp.APIName = FGW_Constants.AppSettings.Federal_API_Name__c;
+        rfp.objectName = 'Roll_Vote__c';
+        rfp.queryReturnType = FGW_Constants.queryReturntype.Full;        
+         
+        for (String s : billIds){
+            rfp.fieldNames.add('Bill_ID__c');
+            rfp.boolOperators.add(FGW_Constants.operators.Equals);
+            rfp.comparisonValues.add(s);
+        }                               
+
+        FGW_IAPI API = FGW_APIFactory.getDefault_Federal_API_Instance();
+        List<Roll_Vote__c> RollVoteList = new List<Roll_Vote__c>();
+        Map<String, List<FGW_RequestFilterParameters>> rfpMap = new Map<String, List<FGW_RequestFilterParameters>>();
+        rfpMap.put('Roll_Vote__c', new List<FGW_RequestFilterParameters>{rfp});
+        RollVoteList = (List<Roll_Vote__c>)FGW_Main.runObjectQuery(rfpMap, API);
+        
+        //map for chatter coms
+        Map<String, Object> ChatterMap = new Map<String, Object>();
+        
+        //connect rollvote to their amendments or bills...
+        for (Roll_Vote__c rv : RollVoteList){
+        	if (rv.Amendment_ID__c != null && rv.Amendment_ID__c != ''){
+                Amendment__c a = new Amendment__c();
+                a.Amendment_ID__c = rv.Amendment_ID__c;
+                rv.Amendment__r = a;
+        	}
+        	//link it both ways if possible 
+        	if (rv.Bill_ID__c != null && rv.Bill_ID__c != ''){
+        		Legislation__c l = new Legislation__c();
+        		l.Bill_ID__c = rv.Bill_ID__c;
+        		rv.Legislation__r = l;
+        	}
+        	if (rv.Bill_ID__c != null){
+                if (ChatterMap.containsKey(rv.Bill_ID__c)){
+                    if (ChatterMap.get(rv.Bill_ID__c) instanceof Integer){                    
+                        Integer i = (Integer)ChatterMap.get(rv.Bill_ID__c);                  
+                        i++;
+                        ChatterMap.put(rv.Bill_ID__c, i);
+                    }
+                    else{                   
+                        Integer i = 2;
+                        ChatterMap.put(rv.Bill_ID__c, i);
+                    }                               
+                }        	                
+                else{               
+                    ChatterMap.put(rv.Bill_ID__c, rv.Roll_ID__c);
+                }
+        	}                            
+        }                
+        
+        database.insert(RollVoteList, false);        
+        FGW_ChatterUtilities.chatterRollVoteAddition(ChatterMap);      
     }
     
     
     //take a list of full bill ids and add the associated amendments
     @future(callout=true)
     private static void getBillAmendments(List<String> billIds){
+    
         //construct a list of RFPs based on the provided billIds
-        
         FGW_RequestFilterParameters rfp = new FGW_RequestFilterParameters();
         rfp.APIName = FGW_Constants.AppSettings.Federal_API_Name__c;
         rfp.objectName = 'Amendment__c';
@@ -187,7 +248,7 @@ public with sharing class FGW_Main{
         	}        	
         }
     	
-    	insert AmendmentList;
+    	Database.insert(AmendmentList, false);
     	FGW_ChatterUtilities.chatterAmendmentAddition(ChatterMap);    	
     } 
     
