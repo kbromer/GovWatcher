@@ -52,7 +52,7 @@
                         </apex:PageBlockSection>                        
                         <apex:outputPanel style="text-align: center; display: block; margin-left:auto; margin-right:auto;">
                             <apex:commandButton value="Save" action="{!saveDSSettings}" rendered="{!showEditBlock}" rerender="DSConfigOutputPanel"/>  
-                            <apex:commandButton value="Cancel" action="{!cancelDS}" rendered="{!showEditBlock}"/>                            
+                            <apex:commandButton value="Cancel" action="{!cancelDS}" rendered="{!showEditBlock}" immediate="true"/>                            
                         </apex:outputPanel>                                             
                     </apex:outputPanel>
                 </apex:form>
