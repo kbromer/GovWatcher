@@ -40,6 +40,19 @@
         <unique>false</unique>
     </fields>
     <fields>
+        <fullName>Roll_Vote_Tracking__c</fullName>
+        <description>Set the behavior of Roll Vote tracking when tracking legislation 
+(&apos;None&apos;, &apos;Updates Only&apos;, &apos;All Roll Votes&apos;)</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Set the behavior of Roll Vote tracking when tracking legislation 
+(&apos;None&apos;, &apos;Updates Only&apos;, &apos;All Roll Votes&apos;)</inlineHelpText>
+        <label>Roll Vote Tracking</label>
+        <length>50</length>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
         <fullName>State_API_Name__c</fullName>
         <description>The class name of the State congressional API to be used for queries</description>
         <externalId>false</externalId>
