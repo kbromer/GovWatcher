@@ -25,8 +25,17 @@
         <name>CustomLabels</name>
     </types>
     <types>
-        <members>*</members>
+        <members>Amendment__c</members>
         <members>Contact</members>
+        <members>Contact_Leg_junction__c</members>
+        <members>FGW_API_Settings__c</members>
+        <members>FGW_Application_Settings__c</members>
+        <members>FGW_Error__c</members>
+        <members>FGW_Saved_Search__c</members>
+        <members>FGW_Search_Result__c</members>
+        <members>Legislation__c</members>
+        <members>Legislator_Vote__c</members>
+        <members>Roll_Vote__c</members>
         <name>CustomObject</name>
     </types>
     <types>
@@ -40,6 +49,7 @@
     <types>
         <members>GovTrack_API</members>
         <members>NYTimes_API</members>
+        <members>Sunlight_Congress_API</members>
         <members>Sunlight_OpenStates</members>
         <members>Sunlight_RealTimeCongress</members>
         <name>RemoteSiteSetting</name>
