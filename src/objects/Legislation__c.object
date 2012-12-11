@@ -389,7 +389,7 @@
         <description>E.g. for the 112th congress select 112.  Must be filled in for Thomas link to work.</description>
         <externalId>false</externalId>
         <inlineHelpText>E.g. for the 112th congress select 112.  Must be filled in for Thomas link to work.</inlineHelpText>
-        <label>Congressional Session</label>
+        <label>Session</label>
         <picklist>
             <picklistValues>
                 <fullName>112</fullName>
@@ -677,7 +677,7 @@
         <trackFeedHistory>false</trackFeedHistory>
         <trackHistory>false</trackHistory>
         <type>LongTextArea</type>
-        <visibleLines>5</visibleLines>
+        <visibleLines>3</visibleLines>
     </fields>
     <fields>
         <fullName>THOMAS_link__c</fullName>
