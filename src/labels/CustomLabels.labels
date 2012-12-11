@@ -9,6 +9,38 @@
         <value>I&apos;m now actively tracking {!Name}</value>
     </labels>
     <labels>
+        <fullName>FGW_Chatter_MultipleAmendmentInsertPost</fullName>
+        <categories>GovWatcher</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>FGW_Chatter_MultipleAmendmentInsertPost</shortDescription>
+        <value>I&apos;ve inserted {!Name} new Amendments for {!Bill}</value>
+    </labels>
+    <labels>
+        <fullName>FGW_Chatter_MultipleRollVoteInsertPost</fullName>
+        <categories>GovWatcher</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>FGW_Chatter_MultipleRollVoteInsertPost</shortDescription>
+        <value>I&apos;ve inserted {!Name} new Roll Votes for {!Bill}</value>
+    </labels>
+    <labels>
+        <fullName>FGW_Chatter_SingleAmendmentInsertPost</fullName>
+        <categories>GovWatcher</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>FGW_Chatter_SingleAmendmentInsertPost</shortDescription>
+        <value>I&apos;ve created a new Amendment for {!Bill}: {!Name}</value>
+    </labels>
+    <labels>
+        <fullName>FGW_Chatter_SingleRollVoteInsertPost</fullName>
+        <categories>GovWatcher</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>FGW_Chatter_SingleRollVoteInsertPost</shortDescription>
+        <value>I&apos;ve created a new Roll Vote for {!Bill}: {!Name}</value>
+    </labels>
+    <labels>
         <fullName>FGW_DataSource_Help_Text</fullName>
         <categories>GovWatcher</categories>
         <language>en_US</language>
