@@ -52,10 +52,11 @@
     </fields>
     <fields>
         <fullName>Bill_ID__c</fullName>
+        <description>ID of the associated Bill, used to join the two objects together</description>
         <externalId>false</externalId>
-        <formula>Legislation__r.Name</formula>
-        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <inlineHelpText>ID of the associated Bill, used to join the two objects together</inlineHelpText>
         <label>Bill ID</label>
+        <length>50</length>
         <required>false</required>
         <type>Text</type>
         <unique>false</unique>
