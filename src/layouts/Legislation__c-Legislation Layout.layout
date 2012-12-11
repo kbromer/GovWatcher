@@ -16,8 +16,8 @@
                 <field>Bill_Number__c</field>
             </layoutItems>
             <layoutItems>
-                <behavior>Edit</behavior>
-                <field>Bill_Id__c</field>
+                <behavior>Required</behavior>
+                <field>Bill_ID__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
@@ -212,6 +212,21 @@
         <style>CustomLinks</style>
     </layoutSections>
     <relatedLists>
+        <fields>NAME</fields>
+        <fields>Roll_Question__c</fields>
+        <fields>Date_Voted__c</fields>
+        <fields>Roll_Type__c</fields>
+        <fields>Chamber__c</fields>
+        <relatedList>Roll_Vote__c.Legislation__c</relatedList>
+    </relatedLists>
+    <relatedLists>
+        <fields>NAME</fields>
+        <fields>Chamber__c</fields>
+        <fields>Status__c</fields>
+        <fields>Description__c</fields>
+        <relatedList>Amendment__c.Legislation__c</relatedList>
+    </relatedLists>
+    <relatedLists>
         <fields>TASK.SUBJECT</fields>
         <fields>TASK.WHO_NAME</fields>
         <fields>ACTIVITY.TASK</fields>
@@ -235,18 +250,14 @@
         <relatedList>Contact_Leg_junction__c.Legislation__c</relatedList>
     </relatedLists>
     <relatedLists>
-        <fields>NAME</fields>
-        <relatedList>Roll_Vote__c.Legislation__c</relatedList>
-    </relatedLists>
-    <relatedLists>
-        <fields>NAME</fields>
-        <relatedList>Amendment__c.Legislation__c</relatedList>
-    </relatedLists>
-    <relatedLists>
         <relatedList>RelatedNoteList</relatedList>
     </relatedLists>
     <relatedLists>
         <relatedList>RelatedEntityHistoryList</relatedList>
+    </relatedLists>
+    <relatedLists>
+        <fields>NAME</fields>
+        <relatedList>Action__c.Legislation__c</relatedList>
     </relatedLists>
     <showEmailCheckbox>false</showEmailCheckbox>
     <showHighlightsPanel>true</showHighlightsPanel>
