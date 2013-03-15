@@ -48,7 +48,7 @@ public virtual class FGW_Exception extends Exception{
     
     
     public static void generateError(Exception e, String s){
-        if (system.isFuture())
+        if (system.isFuture() || system.isBatch())
             FGW_Exception.createErrorObject(system.now(), e.getLineNumber(), e.getMessage(), e.getStackTraceString(), e.getTypeName(), s);
         else
             FGW_Exception.createErrorObjectFuture(system.now(), e.getLineNumber(), e.getMessage(), e.getStackTraceString(), e.getTypeName(), s);                        
