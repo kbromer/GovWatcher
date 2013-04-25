@@ -149,11 +149,11 @@ by Salesforce.com Foundation
 					                       <apex:facet name="header">Follow? </apex:facet>
 					                       <chatter:follow entityId="{!leg.Id}"/>
                                         </apex:column>  
-					                    <apex:repeat value="{!$ObjectType.Legislation__c.FieldSets.FGW_Legislation_Console_Fields}" var="l">
+					                     <apex:repeat value="{!$ObjectType.Legislation__c.FieldSets.FGW_Legislation_Console_Fields}" var="l">
                                             <apex:column value="{!leg[l]}">
-                                                <apex:facet name="header">{!l.Label}</apex:facet> 
+                                                <apex:facet name="header">{!l.Label}</apex:facet>  
                                             </apex:column>
-                                        </apex:repeat>					                    
+                                        </apex:repeat>			 		                    
 					                    <apex:column >
 					                        <apex:facet name="header">Track?</apex:facet>
 					                        <apex:outputtext value="Stop Tracking"/>                                                        
@@ -163,7 +163,7 @@ by Salesforce.com Foundation
 					                        <a href="javascript:ChangeFeed('{!leg.Id}');">View</a>                        
 					                    </apex:column>                          
 					                </apex:pageblocktable>
-                                    <apex:actionFunction action="{!assignFeedName}" name="ChangeFeed" rerender="FeedDisplayPanel">
+                                    <apex:actionFunction action="{!assignFeedName}" name="ChangeFeed" rerender="FeedDisplayPanel"> 
                                         <apex:param name="feedDisplayId" value="" assignTo="{!FeedDisplayId}"/>
                                     </apex:actionFunction>
                                 </apex:form>
