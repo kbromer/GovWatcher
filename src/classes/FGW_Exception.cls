@@ -42,10 +42,8 @@ public virtual class FGW_Exception extends Exception{
     }
     
     //error recognizing API-returned object for search results
-    public class SearchConversionException extends FGW_Exception{}
-    
-    public class CalloutStatusException extends FGW_Exception{}
-    
+    public class SearchConversionException extends FGW_Exception{}    
+    public class CalloutStatusException extends FGW_Exception{}    
     
     public static void generateError(Exception e, String s){
         if (system.isFuture() || system.isBatch())
@@ -57,7 +55,8 @@ public virtual class FGW_Exception extends Exception{
     @future
     public static void createErrorObjectFuture(Datetime d, Integer line_number, String message, String stack_trace, String type_name, String friendly_message){
         createErrorObject(d, line_number, message, stack_trace, type_name, friendly_message);
-    }     
+    }    
+     
     public static void createErrorObject(Datetime d, Integer line_number, String message, String stack_trace, String type_name, String friendly_message){    	
     	
         FGW_Error__c error = new FGW_Error__c(
